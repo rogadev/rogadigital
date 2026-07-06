@@ -49,12 +49,12 @@
 		"eslint-plugin-astro": "^2.1.1",
 		"eslint-plugin-svelte": "^3.20.0",
 		"globals": "^17.7.0",
-		"oxlint": "^1.71.0",
-		"prettier": "^3.9.3",
+		"oxlint": "^1.72.0",
+		"prettier": "^3.9.4",
 		"prettier-plugin-astro": "^0.14.1",
 		"prettier-plugin-svelte": "^4.1.1",
 		"svelte-eslint-parser": "^1.8.0",
-		"typescript-eslint": "^8.62.0",
+		"typescript-eslint": "^8.62.1",
 		"vitest": "^4.1.9"
 	}
 }
