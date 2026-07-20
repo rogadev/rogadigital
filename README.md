@@ -34,8 +34,8 @@ Portfolio and business website for **Roga Digital** — a software studio buildi
 ### Install & run
 
 ```bash
-git clone https://github.com/rogadev/ryanroga.com.git
-cd ryanroga.com
+git clone https://github.com/rogadev/rogadigital.git
+cd rogadigital
 pnpm install
 pnpm dev
 ```
