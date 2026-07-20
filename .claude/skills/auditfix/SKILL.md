@@ -37,7 +37,7 @@ If there are **no advisories, nothing outdated, and no Dependabot PRs**, report 
 In order, because each step feeds the next:
 
 1. `pnpm update` — pulls every dep to the latest version allowed by its range and refreshes `pnpm-lock.yaml`.
-2. `pnpm audit --fix` — for advisories not resolved by the range update, this writes/extends entries in the `pnpm.overrides` block of `package.json` (the repo already pins advisories this way — match that pattern, don't invent a new one).
+2. `pnpm audit --fix override` — for advisories not resolved by the range update, this writes/extends entries in the `pnpm.overrides` block of `package.json` (the repo already pins advisories this way — match that pattern, don't invent a new one). **The `override` argument is required on pnpm 11** — bare `pnpm audit --fix` fails with `ERR_PNPM_INVALID_FIX_OPTION`. (`--fix update` is the other accepted value; it bumps ranges instead of pinning overrides, which step 1 has already done.) Skip this step entirely when step 2's `pnpm audit` already reported zero vulnerabilities — there is nothing to pin.
 3. `pnpm install` — apply any override changes to the lockfile.
 4. `pnpm audit` — confirm it now reports **0 vulnerabilities**. If advisories remain, they have no in-range fix; surface them to the user with the advisory and the version that would resolve it, rather than forcing a major bump.
 
