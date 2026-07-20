@@ -3,7 +3,7 @@
  */
 
 export const SITE_TITLE = 'Roga Digital · Software Studio';
-export const SITE_TAGLINE = 'Built, shipped, and still running.';
+export const SITE_TAGLINE = 'Built, shipped, and still on call.';
 export const SITE_DESCRIPTION =
 	'Roga Digital is a software studio building internal tools, dashboards, integrations, and AI features for businesses. Full-stack web development, systems architecture, product management, and AI consulting from Ryan Roga.';
 export const SITE_AUTHOR = 'Ryan Roga';
