@@ -181,7 +181,7 @@ function buildTree({ title, eyebrow, footnote }: OgInput) {
 								type: 'div',
 								props: {
 									style: { color: TOKENS.fgMuted, display: 'flex' },
-									children: 'roga.dev',
+									children: 'rogadigital.com',
 								},
 							},
 						],
