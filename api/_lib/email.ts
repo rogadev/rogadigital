@@ -1,6 +1,6 @@
 // The ONLY place the destination address exists. Never move this to src/.
 const TO_ADDRESS = 'ryan@roga.dev';
-const FROM_ADDRESS = 'Roga Digital <support@roga.dev>';
+const FROM_ADDRESS = 'Roga Digital <ryan@roga.dev>';
 
 export function isEmailConfigured(): boolean {
 	return Boolean(process.env.RESEND_API_KEY);
