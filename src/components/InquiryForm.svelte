@@ -52,7 +52,7 @@
 		const script = document.createElement('script');
 		script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 		script.async = true;
-		script.onload = render;
+		script.addEventListener('load', render, { once: true });
 		document.head.appendChild(script);
 	});
 
