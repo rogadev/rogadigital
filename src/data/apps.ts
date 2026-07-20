@@ -36,7 +36,7 @@ export const LAB_APPS: LabApp[] = [
 		tag: 'SaaS',
 	},
 	{
-		name: 'TripDesk',
+		name: 'Roga Dispatch',
 		url: 'https://trips.roga.dev',
 		description:
 			'Dispatch and billing platform for medical and assisted-transport companies — coordinate drivers, auto-generate recurring trips, and invoice by payor.',

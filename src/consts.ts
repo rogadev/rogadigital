@@ -29,6 +29,7 @@ export const SUPPORT_PRODUCTS = [
 	{ slug: 'ezeval', label: 'EzEval' },
 	{ slug: 'outlooks', label: 'Employment and Education Outlooks' },
 	{ slug: 'carevo', label: 'Carevo Lot Logistics' },
+	{ slug: 'dispatch', label: 'Roga Dispatch' },
 	{ slug: 'other', label: 'Other / general' },
 ] as const;
 
