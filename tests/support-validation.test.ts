@@ -44,7 +44,7 @@ describe('validateSubmission', () => {
 	});
 
 	it('accepts every known product slug', () => {
-		for (const slug of ['copycleanse', 'ezeval', 'outlooks', 'carevo', 'other']) {
+		for (const slug of ['copycleanse', 'ezeval', 'outlooks', 'carevo', 'dispatch', 'other']) {
 			expect(validateSubmission({ ...valid, product: slug }).ok).toBe(true);
 		}
 	});
