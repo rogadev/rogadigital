@@ -30,6 +30,7 @@ export const SUPPORT_PRODUCTS = [
 	{ slug: 'outlooks', label: 'Employment and Education Outlooks' },
 	{ slug: 'carevo', label: 'Carevo Lot Logistics' },
 	{ slug: 'dispatch', label: 'Roga Dispatch' },
+	{ slug: 'puntledge', label: 'Puntledge Tube Report' },
 	{ slug: 'other', label: 'Other / general' },
 ] as const;
 

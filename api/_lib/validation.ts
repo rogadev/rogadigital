@@ -16,10 +16,19 @@ export interface SupportSubmission extends CommonFields {
 
 export type ContactSubmission = CommonFields;
 
+export interface MediaSubmission extends CommonFields {
+	outlet: string;
+	/** Optional free-text deadline — empty string when not provided. */
+	deadline: string;
+}
+
 export type ValidationResult = { ok: true; data: SupportSubmission } | { ok: false; error: string };
 
 export type ContactValidationResult =
 	{ ok: true; data: ContactSubmission } | { ok: false; error: string };
+
+export type MediaValidationResult =
+	{ ok: true; data: MediaSubmission } | { ok: false; error: string };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PRODUCT_SLUGS = new Set<string>(SUPPORT_PRODUCTS.map((p) => p.slug));
@@ -74,6 +83,24 @@ export function validateContactSubmission(body: unknown): ContactValidationResul
 	return validateCommonFields(body);
 }
 
+export function validateMediaSubmission(body: unknown): MediaValidationResult {
+	const common = validateCommonFields(body);
+	if (!common.ok) return common;
+
+	const record = body as Record<string, unknown>;
+	const outlet = asTrimmedString(record.outlet);
+	if (!outlet || outlet.length > 200) {
+		return { ok: false, error: 'Please provide your outlet or organization.' };
+	}
+
+	const deadline = asTrimmedString(record.deadline) ?? '';
+	if (deadline.length > 200) {
+		return { ok: false, error: 'Please keep the deadline under 200 characters.' };
+	}
+
+	return { ok: true, data: { ...common.data, outlet, deadline } };
+}
+
 export function buildEmail(
 	data: SupportSubmission,
 	submittedAt: string,
@@ -106,6 +133,27 @@ export function buildContactEmail(
 			``,
 			`Name: ${data.name}`,
 			`Email: ${data.email}`,
+			`Submitted: ${submittedAt}`,
+			``,
+			`Message:`,
+			data.message,
+		].join('\n'),
+	};
+}
+
+export function buildMediaEmail(
+	data: MediaSubmission,
+	submittedAt: string,
+): { subject: string; text: string } {
+	return {
+		subject: `[Media] ${data.outlet}: ${data.name}`,
+		text: [
+			`New media inquiry via roga.dev/media`,
+			``,
+			`Name: ${data.name}`,
+			`Email: ${data.email}`,
+			`Outlet: ${data.outlet}`,
+			`Deadline: ${data.deadline || 'Not specified'}`,
 			`Submitted: ${submittedAt}`,
 			``,
 			`Message:`,

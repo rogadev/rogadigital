@@ -4,13 +4,22 @@
 	interface Props {
 		endpoint: string;
 		showProduct?: boolean;
+		showMedia?: boolean;
+		messageLabel?: string;
 	}
 
-	const { endpoint, showProduct = false }: Props = $props();
+	const {
+		endpoint,
+		showProduct = false,
+		showMedia = false,
+		messageLabel = 'How can I help?',
+	}: Props = $props();
 
 	let name = $state('');
 	let email = $state('');
 	let product = $state('other');
+	let outlet = $state('');
+	let deadline = $state('');
 	let message = $state('');
 	let website = $state(''); // honeypot
 	let token = $state('');
@@ -71,6 +80,7 @@
 					website,
 					token,
 					...(showProduct ? { product } : {}),
+					...(showMedia ? { outlet, deadline } : {}),
 				}),
 			});
 			let body: { ok?: boolean; error?: string } = {};
@@ -138,6 +148,40 @@
 			</div>
 		</div>
 
+		{#if showMedia}
+			<div class="grid gap-6 sm:grid-cols-2">
+				<div class="flex flex-col gap-2">
+					<label for="support-outlet" class="text-sm font-medium text-fg">
+						Outlet / organization
+					</label>
+					<input
+						id="support-outlet"
+						name="outlet"
+						type="text"
+						required
+						maxlength="200"
+						autocomplete="organization"
+						bind:value={outlet}
+						class="min-h-11 rounded-md border border-border bg-bg px-3 text-fg"
+					/>
+				</div>
+				<div class="flex flex-col gap-2">
+					<label for="support-deadline" class="text-sm font-medium text-fg">
+						Deadline <span class="font-normal text-fg-subtle">(optional)</span>
+					</label>
+					<input
+						id="support-deadline"
+						name="deadline"
+						type="text"
+						maxlength="200"
+						placeholder="e.g. Friday 5pm PT"
+						bind:value={deadline}
+						class="min-h-11 rounded-md border border-border bg-bg px-3 text-fg"
+					/>
+				</div>
+			</div>
+		{/if}
+
 		{#if showProduct}
 			<div class="flex flex-col gap-2">
 				<label for="support-product" class="text-sm font-medium text-fg">Product</label>
@@ -156,7 +200,7 @@
 		{/if}
 
 		<div class="flex flex-col gap-2">
-			<label for="support-message" class="text-sm font-medium text-fg">How can I help?</label>
+			<label for="support-message" class="text-sm font-medium text-fg">{messageLabel}</label>
 			<textarea
 				id="support-message"
 				name="message"
