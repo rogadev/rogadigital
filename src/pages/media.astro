@@ -1,0 +1,132 @@
+---
+import InquiryForm from '../components/InquiryForm.svelte';
+import Section from '../components/Section.astro';
+import { SITE_LOCATION } from '../consts';
+import Base from '../layouts/Base.astro';
+
+const title = 'Media · Roga Digital';
+const description =
+	'Media inquiries for Ryan Roga and Roga Digital. Interviews, quotes, background, and fact-checks — send your query with a deadline and get a fast reply by email.';
+
+const helpful = [
+	'Your outlet and the story you’re working on — a sentence or two is plenty.',
+	'What you need: an interview, a quote, background, screenshots, or a fact-check.',
+	'Your deadline and timezone. Deadline-flagged queries get answered first.',
+	'Preferred format — email answers, a phone call, or video.',
+];
+
+const facts = [
+	{ label: 'Name', value: 'Ryan Roga' },
+	{ label: 'Title', value: 'Founder, Roga Digital — full-stack developer' },
+	{ label: 'Based', value: SITE_LOCATION },
+	{
+		label: 'Current project',
+		value:
+			'Puntledge Tube Report — a river-conditions site for Puntledge River floaters in the Comox Valley, with real-time conditions for deciding whether it’s a good day to float.',
+	},
+];
+---
+
+<Base title={title} description={description}>
+	<!-- Hero -->
+	<section class="border-b border-border">
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<div class="grid gap-12 pt-20 pb-16 sm:pt-28 sm:pb-20 lg:grid-cols-12 lg:gap-16">
+				<div class="lg:col-span-7">
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Media</p>
+					<h1 class="mt-6 text-4xl font-medium tracking-tight text-balance sm:text-5xl lg:text-6xl">
+						Working on <span class="text-fg-muted">a story?</span>
+					</h1>
+					<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty sm:text-xl">
+						I'm happy to talk to reporters, producers, and student journalists — interviews, quotes,
+						background, or a quick fact-check about my projects, including the Puntledge Tube
+						Report. Send your query below and flag your deadline.
+					</p>
+				</div>
+				<div class="lg:col-span-5">
+					<dl
+						class="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-3"
+					>
+						<div class="bg-bg-soft px-4 py-4">
+							<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Reply</dt>
+							<dd class="mt-1 text-sm text-fg">≤ 48 h · faster on deadline</dd>
+						</div>
+						<div class="bg-bg-soft px-4 py-4">
+							<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Format</dt>
+							<dd class="mt-1 text-sm text-fg">Email · phone · video</dd>
+						</div>
+						<div class="bg-bg-soft px-4 py-4">
+							<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Timezone</dt>
+							<dd class="mt-1 text-sm text-fg">Pacific (PT)</dd>
+						</div>
+					</dl>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Form -->
+	<section class="border-b border-border">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<div class="mx-auto max-w-2xl">
+				<InquiryForm
+					endpoint="/api/media"
+					showMedia
+					messageLabel="What's your query?"
+					client:load
+				/>
+				<p class="mt-6 text-sm text-fg-subtle text-pretty">
+					This form is protected by Cloudflare Turnstile. Your details are used only to reply to
+					your message — see the <a
+						href="/privacy"
+						class="text-fg-muted underline-offset-4 hover:underline">privacy policy</a
+					>.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- What's helpful to include -->
+	<Section
+		eyebrow="Before you send"
+		heading="What's helpful to include."
+		dek="None of this is required — but the more of it you include, the faster and more useful the reply."
+	>
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<ul class="divide-y divide-border border-y border-border" role="list">
+				{
+					helpful.map((item, i) => (
+						<li class="flex items-start gap-6 py-5">
+							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase pt-0.5">
+								{String(i + 1).padStart(2, '0')}
+							</span>
+							<span class="text-fg text-pretty">{item}</span>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</Section>
+
+	<!-- Quick facts -->
+	<Section
+		eyebrow="Quick facts"
+		heading="For attribution."
+		dek="The short version, so nothing needs a follow-up email."
+	>
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<dl class="divide-y divide-border border-y border-border">
+				{
+					facts.map((f) => (
+						<div class="grid gap-2 py-5 sm:grid-cols-12 sm:gap-6">
+							<dt class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase sm:col-span-3 sm:pt-0.5">
+								{f.label}
+							</dt>
+							<dd class="text-fg text-pretty sm:col-span-9">{f.value}</dd>
+						</div>
+					))
+				}
+			</dl>
+		</div>
+	</Section>
+</Base>

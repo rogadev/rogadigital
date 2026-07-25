@@ -21,7 +21,15 @@ const { title, description, ogPath, noindex = false } = Astro.props;
  *   /og/work/[slug].png               — individual case study
  *   /og/insights/[slug].png           — individual insights post
  */
-const STATIC_PAGE_OGS = new Set(['about', 'contact', 'services', 'resume', 'work', 'insights']);
+const STATIC_PAGE_OGS = new Set([
+	'about',
+	'contact',
+	'services',
+	'resume',
+	'work',
+	'insights',
+	'media',
+]);
 
 function deriveOgPath(pathname: string): string {
 	const trimmed = pathname.replace(/\/$/, '');

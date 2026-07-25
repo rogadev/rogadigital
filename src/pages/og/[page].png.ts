@@ -38,6 +38,11 @@ const pages: Record<string, OgConfig> = {
 		title: 'Notes from the work.',
 		footnote: 'Studio updates · tooling · AI takes',
 	},
+	media: {
+		eyebrow: 'Media',
+		title: 'Working on a story?',
+		footnote: 'Interviews · background · fact-checks',
+	},
 };
 
 export const getStaticPaths: GetStaticPaths = () =>
