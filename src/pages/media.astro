@@ -6,24 +6,19 @@ import Base from '../layouts/Base.astro';
 
 const title = 'Media · Roga Digital';
 const description =
-	'Media inquiries for Ryan Roga and Roga Digital. Interviews, quotes, background, and fact-checks — send your query with a deadline and get a fast reply by email.';
+	'Media inquiries for Ryan Roga and Roga Digital. Interviews, quotes, background, and fact-checks.';
 
 const helpful = [
-	'Your outlet and the story you’re working on — a sentence or two is plenty.',
 	'What you need: an interview, a quote, background, screenshots, or a fact-check.',
-	'Your deadline and timezone. Deadline-flagged queries get answered first.',
-	'Preferred format — email answers, a phone call, or video.',
+	'The story you’re working on — a sentence or two is plenty.',
+	'Your deadline and timezone, if you have one. I’ll prioritize time-sensitive requests.',
+	'Preferred format — email, a phone call, or video.',
 ];
 
 const facts = [
 	{ label: 'Name', value: 'Ryan Roga' },
 	{ label: 'Title', value: 'Founder, Roga Digital — full-stack developer' },
 	{ label: 'Based', value: SITE_LOCATION },
-	{
-		label: 'Current project',
-		value:
-			'Puntledge Tube Report — a river-conditions site for Puntledge River floaters in the Comox Valley, with real-time conditions for deciding whether it’s a good day to float.',
-	},
 ];
 ---
 
@@ -39,18 +34,13 @@ const facts = [
 					</h1>
 					<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty sm:text-xl">
 						I'm happy to talk to reporters, producers, and student journalists — interviews, quotes,
-						background, or a quick fact-check about my projects, including the Puntledge Tube
-						Report. Send your query below and flag your deadline.
+						background, or a quick fact-check. Send your query below and I'll get back to you.
 					</p>
 				</div>
 				<div class="lg:col-span-5">
 					<dl
-						class="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-3"
+						class="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2"
 					>
-						<div class="bg-bg-soft px-4 py-4">
-							<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Reply</dt>
-							<dd class="mt-1 text-sm text-fg">≤ 48 h · faster on deadline</dd>
-						</div>
 						<div class="bg-bg-soft px-4 py-4">
 							<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Format</dt>
 							<dd class="mt-1 text-sm text-fg">Email · phone · video</dd>
@@ -64,6 +54,28 @@ const facts = [
 			</div>
 		</div>
 	</section>
+
+	<!-- What's helpful to include -->
+	<Section
+		eyebrow="Before you send"
+		heading="What's helpful to include."
+		dek="None of this is required — but the more context you share, the faster and more useful the reply."
+	>
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<ul class="divide-y divide-border border-y border-border" role="list">
+				{
+					helpful.map((item, i) => (
+						<li class="flex items-start gap-6 py-5">
+							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase pt-0.5">
+								{String(i + 1).padStart(2, '0')}
+							</span>
+							<span class="text-fg text-pretty">{item}</span>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</Section>
 
 	<!-- Form -->
 	<section class="border-b border-border">
@@ -85,28 +97,6 @@ const facts = [
 			</div>
 		</div>
 	</section>
-
-	<!-- What's helpful to include -->
-	<Section
-		eyebrow="Before you send"
-		heading="What's helpful to include."
-		dek="None of this is required — but the more of it you include, the faster and more useful the reply."
-	>
-		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-			<ul class="divide-y divide-border border-y border-border" role="list">
-				{
-					helpful.map((item, i) => (
-						<li class="flex items-start gap-6 py-5">
-							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase pt-0.5">
-								{String(i + 1).padStart(2, '0')}
-							</span>
-							<span class="text-fg text-pretty">{item}</span>
-						</li>
-					))
-				}
-			</ul>
-		</div>
-	</Section>
 
 	<!-- Quick facts -->
 	<Section
