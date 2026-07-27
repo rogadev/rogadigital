@@ -1,4 +1,4 @@
-# roga.dev — Migration Plan
+# Roga Digital — Migration Plan
 
 **Companion to:** `BRIEF.md`
 **Goal:** ship the redesigned site at parity-or-better with the current one, on a fresh Astro stack, without a flag-day cutover.
