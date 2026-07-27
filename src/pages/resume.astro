@@ -6,6 +6,31 @@ import Base from '../layouts/Base.astro';
 const title = 'Resume · Ryan Roga · Roga Digital';
 const description = `Resume of Ryan Roga — founder of Roga Digital. Full-stack developer, systems architect, and AI consultant based in ${SITE_LOCATION}.`;
 
+/** What a recruiter needs to include for the message to get a reply. */
+const outreachRequirements = [
+	{
+		label: 'Who you are',
+		detail:
+			'Your name, your company, and whether you represent them directly or work as an agency.',
+	},
+	{
+		label: 'Where the work happens',
+		detail: 'Remote, hybrid, or on-site — and which time zone the team works in.',
+	},
+	{
+		label: 'The role itself',
+		detail: 'Title, team, scope, and what I would actually own.',
+	},
+	{
+		label: 'Compensation',
+		detail: 'A real range, in a named currency.',
+	},
+	{
+		label: 'Terms and benefits',
+		detail: 'Employment type, contract length where it applies, and what is included.',
+	},
+];
+
 const skills = [
 	{
 		group: 'Languages',
@@ -325,6 +350,49 @@ const education = {
 				References from VIU instructors, TELUS / TechCentral colleagues, and former MossAway
 				Services partners are available on request.
 			</p>
+		</div>
+	</Section>
+
+	<!-- Recruiter outreach expectations -->
+	<Section
+		eyebrow="For recruiters"
+		heading="Lead with the details."
+		dek="I read every message that includes them. I don't reply to the ones that don't."
+	>
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<div class="max-w-3xl">
+				<p class="text-fg-muted text-pretty">
+					If you think I'm a fit for a role, tell me about the role. Messages that open with
+					&#8220;we may have an opportunity that matches your profile&#8221; — and say nothing else
+					— don't get a reply.
+				</p>
+
+				<p class="mt-8 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+					Include this and you'll hear back
+				</p>
+				<ul class="mt-4 space-y-2.5 text-sm" role="list">
+					{
+						outreachRequirements.map((req) => (
+							<li class="flex gap-2.5">
+								<span
+									class="mt-1.5 inline-block h-1 w-1 flex-shrink-0 rounded-full bg-[var(--color-accent)]"
+									aria-hidden="true"
+								/>
+								<span class="text-pretty text-fg-muted">
+									<strong class="font-medium text-fg">{req.label}</strong> — {req.detail}
+								</span>
+							</li>
+						))
+					}
+				</ul>
+
+				<p class="mt-8 text-fg-muted text-pretty">
+					None of this is a high bar — it's the same information you'd expect from me if I were
+					pitching you. If the role is real and you believe I'd be good at it, describing it costs
+					you a paragraph and tells me you're serious. Leaving it out just means neither of us finds
+					out.
+				</p>
+			</div>
 		</div>
 	</Section>
 
