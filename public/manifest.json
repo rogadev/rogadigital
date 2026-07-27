@@ -1,11 +1,11 @@
 {
-	"name": "Roga Web Development",
-	"short_name": "Roga Dev",
-	"description": "Internal tools & web applications for growing businesses",
+	"name": "Roga Digital · Software Studio",
+	"short_name": "Roga Digital",
+	"description": "Software studio building internal tools, dashboards, integrations, and AI features for businesses.",
 	"start_url": "/",
 	"display": "browser",
-	"background_color": "#ffffff",
-	"theme_color": "#0284c7",
+	"background_color": "#0a0a0b",
+	"theme_color": "#0a0a0b",
 	"icons": [
 		{
 			"src": "/logo/android-chrome-192x192.png",
