@@ -25,7 +25,7 @@ Summit is the replacement: a single credentialing and exam platform serving both
 
 ## The brief
 
-The brief is the follow-on engagement to [TechCentral](/work/telus-techcentral). Where TechCentral solved _"where does the operational information live,"_ Summit solves _"how do we know — and prove — what each technician is qualified to do."_
+The brief is the follow-on engagement to [TechCentral](/work/telus-techcentral/). Where TechCentral solved _"where does the operational information live,"_ Summit solves _"how do we know — and prove — what each technician is qualified to do."_
 
 Five principles shape it:
 
@@ -59,7 +59,7 @@ The design phase was unusually collaborative. The product owner brought AI-gener
 
 Some technical decisions are already locked by the TELUS environment, ahead of the wider stack choice:
 
-- **AI services through FuelIx.** Every AI call — question drafting, variant generation, long-form grading, AI-use detection — routes through TELUS's internal AI gateway. Same pattern as [TC Tools](/work/telus-tc-tools); secrets, audit, and provider strategy stay with the people whose job it is to own them.
+- **AI services through FuelIx.** Every AI call — question drafting, variant generation, long-form grading, AI-use detection — routes through TELUS's internal AI gateway. Same pattern as [TC Tools](/work/telus-tc-tools/); secrets, audit, and provider strategy stay with the people whose job it is to own them.
 - **Outbound APIs through Kong.** Credential and certification data is published through TELUS's Kong API gateway, in line with existing TELUS practice. That's how downstream consumers — work assignment, dispatch, workforce management — will get the data when they're ready to integrate.
 - **Application-level authorization.** General sign-in is solved at the TELUS layer. Summit's internal role hierarchy (learner, author, proctor, grader, administrator) is enforced inside the application, in middleware, against scoped permissions.
 - **Credentials as first-class records.** Attached to the learner's user identifier, structured rather than denormalized, designed so a future shift to Open Badges 3.0 / Verifiable Credentials is a schema extension and not a rewrite.
@@ -67,4 +67,4 @@ Some technical decisions are already locked by the TELUS environment, ahead of t
 
 Application stack and hosting were finalized during the design phase.
 
-If your organization is solving a similar problem — credentialing at scale, exam workflows, or internal tools that legacy systems have outgrown — [book a call](/contact).
+If your organization is solving a similar problem — credentialing at scale, exam workflows, or internal tools that legacy systems have outgrown — [book a call](/contact/).

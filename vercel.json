@@ -4,6 +4,7 @@
 	"buildCommand": "pnpm build",
 	"outputDirectory": "dist",
 	"installCommand": "pnpm install --frozen-lockfile",
+	"trailingSlash": true,
 	"build": {
 		"env": {
 			"ENABLE_EXPERIMENTAL_COREPACK": "1"
@@ -12,22 +13,22 @@
 	"redirects": [
 		{
 			"source": "/work/techcentral-telus",
-			"destination": "/work/telus-techcentral",
+			"destination": "/work/telus-techcentral/",
 			"permanent": true
 		},
 		{
 			"source": "/work/project-summit-telus",
-			"destination": "/work/telus-summit",
+			"destination": "/work/telus-summit/",
 			"permanent": true
 		},
 		{
 			"source": "/work/tc-tools",
-			"destination": "/work/telus-tc-tools",
+			"destination": "/work/telus-tc-tools/",
 			"permanent": true
 		},
 		{
 			"source": "/work/lot-logistics-web-application",
-			"destination": "/work/carevo-logistics",
+			"destination": "/work/carevo-logistics/",
 			"permanent": true
 		}
 	]

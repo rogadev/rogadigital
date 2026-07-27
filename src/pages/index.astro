@@ -11,9 +11,12 @@ import RecentWriting from '../components/home/RecentWriting.astro';
 import SelectedWork from '../components/home/SelectedWork.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import Base from '../layouts/Base.astro';
+import { organizationSchema } from '../lib/schema';
+
+const jsonLd = organizationSchema(Astro.site);
 ---
 
-<Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<Base title={SITE_TITLE} description={SITE_DESCRIPTION} {jsonLd}>
 	<Hero />
 	<section aria-label="Past clients" class="border-t border-b border-border">
 		<div class="mx-auto w-full max-w-page py-6 sm:py-8">

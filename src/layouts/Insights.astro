@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import { blogPostingSchema, breadcrumbSchema } from '../lib/schema';
 import Base from './Base.astro';
 
 interface Props {
@@ -9,6 +10,23 @@ interface Props {
 
 const { entry } = Astro.props;
 const { title, description, pubDate, updatedDate, heroImage, tags, readingTime } = entry.data;
+
+const path = `/insights/${entry.id}/`;
+const jsonLd = [
+	blogPostingSchema({
+		site: Astro.site,
+		path,
+		title,
+		description,
+		pubDate,
+		updatedDate,
+		imageUrl: new URL(`/og/insights/${entry.id}.png`, Astro.site).href,
+	}),
+	breadcrumbSchema(Astro.site, [
+		{ name: 'Insights', path: '/insights/' },
+		{ name: title, path },
+	]),
+];
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
 	year: 'numeric',
@@ -19,13 +37,21 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 const pageTitle = `${title} · Roga Digital`;
 ---
 
-<Base title={pageTitle} {description} noindex={entry.data.draft}>
+<Base
+	title={pageTitle}
+	{description}
+	noindex={entry.data.draft}
+	ogType="article"
+	publishedTime={pubDate}
+	modifiedTime={updatedDate ?? pubDate}
+	{jsonLd}
+>
 	<!-- Header -->
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<div class="pt-16 pb-12 sm:pt-20 sm:pb-16">
 				<a
-					href="/insights"
+					href="/insights/"
 					class="inline-flex items-center gap-2 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase transition-colors hover:text-fg"
 				>
 					<svg
@@ -65,7 +91,7 @@ const pageTitle = `${title} · Roga Digital`;
 										{tags.map((t) => (
 											<li>
 												<a
-													href={`/insights?tag=${encodeURIComponent(t)}`}
+													href={`/insights/?tag=${encodeURIComponent(t)}`}
 													class="rounded-sm border border-border px-1.5 py-0.5 text-fg-muted transition-colors hover:text-fg"
 												>
 													#{t}
@@ -136,13 +162,13 @@ const pageTitle = `${title} · Roga Digital`;
 				</div>
 				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
 					<a
-						href="/insights"
+						href="/insights/"
 						class="inline-flex items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm text-fg transition-colors hover:border-fg-subtle"
 					>
 						All insights
 					</a>
 					<a
-						href="/contact"
+						href="/contact/"
 						class="inline-flex items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Book a call

@@ -45,4 +45,4 @@ A content-heavy marketing site does not need a full application framework. It ne
 
 The value is not in the tools. It is in the discipline of matching the tool to the job. A site that loads in under a second, scores 95+ on Core Web Vitals, and ranks well on Google did not get there by accident. It got there because someone made the stack decision _before_ writing the first line of code, based on what the site needed to do — not on what was trending on Hacker News that week.
 
-If you are planning a web project and want to talk through what the right stack looks like for your specific situation — [let's talk](/contact).
+If you are planning a web project and want to talk through what the right stack looks like for your specific situation — [let's talk](/contact/).

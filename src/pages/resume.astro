@@ -2,6 +2,9 @@
 import Section from '../components/Section.astro';
 import { BOOKING_URL, SITE_LOCATION, SOCIAL } from '../consts';
 import Base from '../layouts/Base.astro';
+import { personSchema } from '../lib/schema';
+
+const jsonLd = personSchema(Astro.site, 'Full-stack developer, systems architect, AI consultant');
 
 const title = 'Resume · Ryan Roga · Roga Digital';
 const description = `Resume of Ryan Roga — founder of Roga Digital. Full-stack developer, systems architect, and AI consultant based in ${SITE_LOCATION}.`;
@@ -139,7 +142,7 @@ const education = {
 };
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} {jsonLd}>
 	<!-- Header -->
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
@@ -409,7 +412,7 @@ const education = {
 				</p>
 				<div class="flex flex-wrap items-center gap-3">
 					<a
-						href="/contact"
+						href="/contact/"
 						class="inline-flex items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Book a call

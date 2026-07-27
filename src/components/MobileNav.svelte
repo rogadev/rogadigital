@@ -106,7 +106,7 @@
 			{/each}
 			<li class="mt-3 border-t border-[var(--color-border)] pt-4">
 				<a
-					href="/contact"
+					href="/contact/"
 					onclick={close}
 					class="flex items-center justify-center rounded-md bg-[var(--color-fg)] px-4 py-3 text-sm font-medium text-[var(--color-bg)] transition-opacity hover:opacity-90"
 				>
