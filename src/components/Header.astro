@@ -3,10 +3,10 @@ import MobileNav from './MobileNav.svelte';
 import ThemeToggle from './ThemeToggle.svelte';
 
 const nav = [
-	{ href: '/work', label: 'Work' },
-	{ href: '/services', label: 'Services' },
-	{ href: '/insights', label: 'Insights' },
-	{ href: '/about', label: 'About' },
+	{ href: '/work/', label: 'Work' },
+	{ href: '/services/', label: 'Services' },
+	{ href: '/insights/', label: 'Insights' },
+	{ href: '/about/', label: 'About' },
 ];
 
 const path = Astro.url.pathname;
@@ -44,7 +44,7 @@ const path = Astro.url.pathname;
 			<span class="mx-1 h-4 w-px bg-border" aria-hidden="true"></span>
 			<ThemeToggle client:idle />
 			<a
-				href="/contact"
+				href="/contact/"
 				class="ml-1 inline-flex rounded-sm bg-fg px-3 py-1.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 			>
 				Book a call

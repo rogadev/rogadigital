@@ -7,7 +7,7 @@ readingTime: '6 min read'
 draft: true
 ---
 
-On 29 May I wrote on [my benchmarks page](/labs/benchmarks) that Opus 4.8 was the most dependable coding model I'd used — that it held focus across long tasks without wandering or looping back through bad patches. Three weeks later I'm watching the same model drop the thread in the middle of a function, reintroduce a bug I'd just had it fix, and reach for the quick patch over the correct one. Same model name, same prompts, same project. It just feels duller.
+On 29 May I wrote on [my benchmarks page](/labs/benchmarks/) that Opus 4.8 was the most dependable coding model I'd used — that it held focus across long tasks without wandering or looping back through bad patches. Three weeks later I'm watching the same model drop the thread in the middle of a function, reintroduce a bug I'd just had it fix, and reach for the quick patch over the correct one. Same model name, same prompts, same project. It just feels duller.
 
 I've started reading that feeling as a signal. When a model I rely on quietly gets worse, a new one is usually a few weeks out — and I don't think the timing is random.
 
@@ -47,7 +47,7 @@ What I'll say without hedging is the part that doesn't need proof. Paying full f
 
 So, a prediction — bounded so it can actually be wrong, which is the only kind worth making.
 
-Anthropic's recent cadence has been roughly one flagship every six to ten weeks: Opus 4.5 in late November, 4.6 in early February, 4.7 in mid-April, 4.8 on 28 May. Fable 5 shipped on 10 June and was [pulled from service three days later](/labs/benchmarks), leaving the top of the lineup vacant. And 4.8 — the current default — is the model now showing the dip.
+Anthropic's recent cadence has been roughly one flagship every six to ten weeks: Opus 4.5 in late November, 4.6 in early February, 4.7 in mid-April, 4.8 on 28 May. Fable 5 shipped on 10 June and was [pulled from service three days later](/labs/benchmarks/), leaving the top of the lineup vacant. And 4.8 — the current default — is the model now showing the dip.
 
 Put those three together and I expect a new Anthropic flagship within about six weeks of writing this: by early August 2026. If it's mid-August and nothing has shipped, I was wrong, and this post stays up saying so.
 

@@ -2,9 +2,37 @@
 import Section from '../components/Section.astro';
 import { BOOKING_URL, SITE_LOCATION, SOCIAL } from '../consts';
 import Base from '../layouts/Base.astro';
+import { personSchema } from '../lib/schema';
+
+const jsonLd = personSchema(Astro.site, 'Full-stack developer, systems architect, AI consultant');
 
 const title = 'Resume · Ryan Roga · Roga Digital';
 const description = `Resume of Ryan Roga — founder of Roga Digital. Full-stack developer, systems architect, and AI consultant based in ${SITE_LOCATION}.`;
+
+/** What a recruiter needs to include for the message to get a reply. */
+const outreachRequirements = [
+	{
+		label: 'Who you are',
+		detail:
+			'Your name, your company, and whether you represent them directly or work as an agency.',
+	},
+	{
+		label: 'Where the work happens',
+		detail: 'Remote, hybrid, or on-site — and which time zone the team works in.',
+	},
+	{
+		label: 'The role itself',
+		detail: 'Title, team, scope, and what I would actually own.',
+	},
+	{
+		label: 'Compensation',
+		detail: 'A real range, in a named currency.',
+	},
+	{
+		label: 'Terms and benefits',
+		detail: 'Employment type, contract length where it applies, and what is included.',
+	},
+];
 
 const skills = [
 	{
@@ -114,7 +142,7 @@ const education = {
 };
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} {jsonLd}>
 	<!-- Header -->
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
@@ -328,6 +356,51 @@ const education = {
 		</div>
 	</Section>
 
+	<!-- Recruiter outreach expectations -->
+	<Section
+		eyebrow="For recruiters"
+		heading="Lead with the details."
+		dek="Tell me about the role up front and you'll get a straight answer quickly."
+	>
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<div class="max-w-3xl">
+				<p class="text-fg-muted text-pretty">
+					If you think I'm a fit for a role, tell me about the role. A lot of what reaches me opens
+					with &#8220;we may have an opportunity that matches your profile&#8221; and stops there.
+					There's nothing in a message like that for me to weigh, so I'm not able to give it a
+					useful answer.
+				</p>
+
+				<p class="mt-8 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+					Include this and you'll hear back
+				</p>
+				<ul class="mt-4 space-y-2.5 text-sm" role="list">
+					{
+						outreachRequirements.map((req) => (
+							<li class="flex gap-2.5">
+								<span
+									class="mt-1.5 inline-block h-1 w-1 flex-shrink-0 rounded-full bg-[var(--color-accent)]"
+									aria-hidden="true"
+								/>
+								<span class="text-pretty text-fg-muted">
+									<strong class="font-medium text-fg">{req.label}</strong> — {req.detail}
+								</span>
+							</li>
+						))
+					}
+				</ul>
+
+				<p class="mt-8 text-fg-muted text-pretty">
+					Most of the recruiters I've enjoyed working with already lead with this. And if part of it
+					is confidential at this stage, say so and share what you can — an honest partial picture
+					is far more useful to me than a vague one. The aim isn't to add friction. It's to make the
+					first exchange substantive enough that we can both tell quickly whether a conversation is
+					worth having.
+				</p>
+			</div>
+		</div>
+	</Section>
+
 	<!-- Footer CTA -->
 	<section class="border-t border-border bg-bg-soft">
 		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
@@ -339,7 +412,7 @@ const education = {
 				</p>
 				<div class="flex flex-wrap items-center gap-3">
 					<a
-						href="/contact"
+						href="/contact/"
 						class="inline-flex items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Book a call

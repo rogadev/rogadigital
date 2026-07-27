@@ -17,8 +17,13 @@ export default defineConfig({
 	site: 'https://rogadigital.com',
 	integrations: [mdx(), sitemap(), svelte()],
 
+	// Canonical URLs carry a trailing slash (the sitemap and <link rel="canonical">
+	// both emit one). Vercel enforces this at the edge via "trailingSlash": true in
+	// vercel.json; this keeps the dev server consistent with production.
+	trailingSlash: 'always',
+
 	redirects: {
-		'/blog': '/insights',
+		'/blog': '/insights/',
 		'/blog/[...slug]': '/insights/[...slug]',
 	},
 

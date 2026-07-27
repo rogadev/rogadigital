@@ -9,15 +9,30 @@ interface Props {
 	/** Override the auto-derived OG path (absolute, e.g. `/og/custom.png`). */
 	ogPath?: string;
 	noindex?: boolean;
+	ogType?: 'website' | 'article';
+	publishedTime?: Date;
+	modifiedTime?: Date;
+	/** schema.org objects — see `src/lib/schema.ts` for builders. */
+	jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const { title, description, ogPath, noindex } = Astro.props;
+const { title, description, ogPath, noindex, ogType, publishedTime, modifiedTime, jsonLd } =
+	Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead {title} {description} {ogPath} {noindex} />
+		<BaseHead
+			{title}
+			{description}
+			{ogPath}
+			{noindex}
+			{ogType}
+			{publishedTime}
+			{modifiedTime}
+			{jsonLd}
+		/>
 		{/* No-FOUC theme bootstrap. Runs before paint. */}
 		<script is:inline>
 			(() => {

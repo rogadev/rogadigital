@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import StatusIndicator from '../components/StatusIndicator.astro';
+import { breadcrumbSchema } from '../lib/schema';
 import Base from './Base.astro';
 
 interface Props {
@@ -19,15 +20,20 @@ const statusLabel = {
 
 const title = `${data.client} · Roga Digital`;
 const description = data.headline;
+
+const jsonLd = breadcrumbSchema(Astro.site, [
+	{ name: 'Work', path: '/work/' },
+	{ name: data.client, path: `/work/${entry.id}/` },
+]);
 ---
 
-<Base {title} {description}>
+<Base {title} {description} {jsonLd}>
 	<!-- Header -->
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<div class="pt-16 pb-12 sm:pt-20 sm:pb-16">
 				<a
-					href="/work"
+					href="/work/"
 					class="inline-flex items-center gap-2 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase transition-colors hover:text-fg"
 				>
 					<svg
@@ -153,7 +159,7 @@ const description = data.headline;
 				</div>
 				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
 					<a
-						href="/contact"
+						href="/contact/"
 						class="inline-flex items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Book a call

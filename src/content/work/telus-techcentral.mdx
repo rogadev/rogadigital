@@ -56,9 +56,9 @@ I led the architecture and delivery from blank repo to production. A few decisio
 - **Headless CMS, custom front end.** Content authoring runs in **dotCMS**, where editors already have the workflow they understand — drafts, versions, scheduled publishing, language variants. The technician-facing experience is a fully custom **Next.js 15 / React 19** application that pulls from dotCMS and shapes the content into role-aware views. Editors get a CMS; technicians get a product.
 - **Bilingual at the data layer.** EN-CA and FR-CA are not toggled in the UI — they're modeled in the content, the routing, and the search index. A French-speaking technician in Quebec gets the same experience as an English-speaking technician in BC, including search results in their language.
 - **Role-aware data, not role-aware apps.** One application; access is enforced server-side against a custom permissions endpoint. Adding a role is a configuration change, not a new deploy target.
-- **Search as a first-class surface.** Built on a typed index with relevance tuned to how technicians actually phrase questions, not how content is filed. Search-rank previewing is a real tool inside the editor experience — see [TC Tools](/work/telus-tc-tools).
+- **Search as a first-class surface.** Built on a typed index with relevance tuned to how technicians actually phrase questions, not how content is filed. Search-rank previewing is a real tool inside the editor experience — see [TC Tools](/work/telus-tc-tools/).
 - **Density without overwhelm.** Field staff use the platform on phones, in vehicles, between jobs. The interface is built for thumbs and dim screens, not for screenshots.
-- **Built to grow.** The architecture made room for the LMS and certification system that became a separate engagement — see [Summit](/work/telus-summit).
+- **Built to grow.** The architecture made room for the LMS and certification system that became a separate engagement — see [Summit](/work/telus-summit/).
 
 <Screenshot
 	src={dashboard}
@@ -92,7 +92,7 @@ What didn't happen is also worth saying. There was no fall-back to the old bookm
 
 TechCentral is the foundation; the work continues.
 
-- **[Summit](/work/telus-summit)** — TELUS's full overhaul of training, mentorship, and credential certification — runs on top of this platform and is in active development for a 2027 launch.
-- **[TC Tools](/work/telus-tc-tools)** — an AI-assisted toolkit for content creators inside TechCentral — is shipping in stages.
+- **[Summit](/work/telus-summit/)** — TELUS's full overhaul of training, mentorship, and credential certification — runs on top of this platform and is in active development for a 2027 launch.
+- **[TC Tools](/work/telus-tc-tools/)** — an AI-assisted toolkit for content creators inside TechCentral — is shipping in stages.
 
-For details on the architecture, the role and permissions model, the bilingual content layer, or what running a production platform of this size actually looks like — [book a call](/contact).
+For details on the architecture, the role and permissions model, the bilingual content layer, or what running a production platform of this size actually looks like — [book a call](/contact/).
