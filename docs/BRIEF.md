@@ -1,4 +1,4 @@
-# roga.dev — Redesign Brief
+# Roga Digital — Redesign Brief
 
 **Author:** Ryan Roga
 **Status:** Draft v1 · 2026-05-01

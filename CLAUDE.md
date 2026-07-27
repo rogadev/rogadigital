@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-Personal portfolio / business website for Ryan Roga (roga.dev). The stack pivoted from SvelteKit to **Astro 7 + Svelte 5 islands** (`package.json` 2.0.0 marks the May 2026 cutover; upgraded from Astro 6 to 7 / Vite 8 in June 2026). The previous SvelteKit build is preserved read-only at `_references/old-svelte-site/` for content lift only — never edit it. The redesign is mid-flight; design principles and the phased migration plan live in `docs/BRIEF.md` and `docs/PLAN.md`. Read both before substantive UI or content changes.
+Personal portfolio / business website for Ryan Roga (rogadigital.com). The stack pivoted from SvelteKit to **Astro 7 + Svelte 5 islands** (`package.json` 2.0.0 marks the May 2026 cutover; upgraded from Astro 6 to 7 / Vite 8 in June 2026). The previous SvelteKit build is preserved read-only at `_references/old-svelte-site/` for content lift only — never edit it. The redesign is mid-flight; design principles and the phased migration plan live in `docs/BRIEF.md` and `docs/PLAN.md`. Read both before substantive UI or content changes.
 
 Static-only output, deployed on Vercel.
 

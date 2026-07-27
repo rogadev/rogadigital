@@ -109,7 +109,7 @@ export function buildEmail(
 	return {
 		subject: `[Support] ${label}: ${data.name}`,
 		text: [
-			`New support request via roga.dev/support`,
+			`New support request via rogadigital.com/support`,
 			``,
 			`Name: ${data.name}`,
 			`Email: ${data.email}`,
@@ -129,7 +129,7 @@ export function buildContactEmail(
 	return {
 		subject: `[Contact] ${data.name}`,
 		text: [
-			`New inquiry via roga.dev/contact`,
+			`New inquiry via rogadigital.com/contact`,
 			``,
 			`Name: ${data.name}`,
 			`Email: ${data.email}`,
@@ -148,7 +148,7 @@ export function buildMediaEmail(
 	return {
 		subject: `[Media] ${data.outlet}: ${data.name}`,
 		text: [
-			`New media inquiry via roga.dev/media`,
+			`New media inquiry via rogadigital.com/media`,
 			``,
 			`Name: ${data.name}`,
 			`Email: ${data.email}`,

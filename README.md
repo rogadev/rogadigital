@@ -1,4 +1,4 @@
-# roga.dev
+# Roga Digital
 
 [![Astro 6](https://img.shields.io/badge/Astro-6-ff5d01.svg)](https://astro.build/)
 [![Svelte 5](https://img.shields.io/badge/Svelte-5-ff3e00.svg)](https://svelte.dev/)
@@ -8,7 +8,7 @@
 
 Portfolio and business website for **Roga Digital** — a software studio building internal tools, dashboards, integrations, and AI features for businesses.
 
-**Live site**: [roga.dev](https://roga.dev)
+**Live site**: [rogadigital.com](https://rogadigital.com)
 
 > **Status**: mid-redesign. Stack pivoted from SvelteKit to Astro + Svelte islands in May 2026 (`package.json` 2.0.0 marks the cutover). The previous SvelteKit build is preserved read-only at `_references/old-svelte-site/` for content lift only. Design principles and the phased migration plan live in [`docs/BRIEF.md`](docs/BRIEF.md) and [`docs/PLAN.md`](docs/PLAN.md).
 
@@ -125,7 +125,7 @@ This project uses **GitHub Issues** for work tracking and **Claude Code Tasks** 
 
 **Ryan Roga** — Roga Digital, Vancouver Island, BC
 
-- Website: [roga.dev](https://roga.dev)
+- Website: [rogadigital.com](https://rogadigital.com)
 - Book a call: [cal.com/ryanroga](https://cal.com/ryanroga)
 - LinkedIn: [linkedin.com/in/ryanroga](https://linkedin.com/in/ryanroga)
 - GitHub: [github.com/rogadev](https://github.com/rogadev)
