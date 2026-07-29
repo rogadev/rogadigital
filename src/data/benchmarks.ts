@@ -100,9 +100,8 @@ export const BENCHMARK_MODELS: ModelScore[] = [
 	{
 		provider: 'anthropic',
 		label: 'Fable 5',
-		score: 105,
+		score: 102,
 		releaseDate: '2026-06-10',
-		suspended: true,
 		notes: [
 			{
 				date: '2026-06-13',
@@ -129,6 +128,13 @@ export const BENCHMARK_MODELS: ModelScore[] = [
 				body: 'Bumping my tentative score to 99. Since release, 4.8 has been the most dependable model I’ve used, and by a clear margin my default. It rarely loses the thread, holds focus across long tasks without wandering or looping back through bad patches, and manages its own context well. I’m still looking for work it can’t finish — features like /goal lean on that reliability and hold up.',
 			},
 		],
+	},
+	{
+		provider: 'anthropic',
+		label: 'Opus 5',
+		score: 93,
+		releaseDate: '2026-07-24',
+		tentative: true,
 	},
 	{ provider: 'openai', label: 'o3-pro', score: 44, releaseDate: '2025-06-10' },
 	{ provider: 'openai', label: 'Gippity 5', score: 40, releaseDate: '2025-08-07' },
