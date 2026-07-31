@@ -132,9 +132,14 @@ export const BENCHMARK_MODELS: ModelScore[] = [
 	{
 		provider: 'anthropic',
 		label: 'Opus 5',
-		score: 93,
+		score: 35,
 		releaseDate: '2026-07-24',
-		tentative: true,
+		notes: [
+			{
+				date: '2026-07-30',
+				body: 'More time with Opus 5 has moved my score well down. It hallucinates constantly, drifts off course for no reason I can trace, and reports problems that are not there, then writes fixes for them that break unrelated parts of the codebase. The closing summaries are the other problem: long recaps of what it did, with real action items buried in the same flat prose instead of flagged as such. The length invites skimming, and even read closely the wording rarely conveys what it costs to move past one. As it stands, this makes Claude Code unusable as a product.',
+			},
+		],
 	},
 	{ provider: 'openai', label: 'o3-pro', score: 44, releaseDate: '2025-06-10' },
 	{ provider: 'openai', label: 'Gippity 5', score: 40, releaseDate: '2025-08-07' },
