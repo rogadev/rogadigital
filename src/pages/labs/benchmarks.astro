@@ -57,7 +57,14 @@ const noted = BENCHMARK_MODELS.filter((m) => m.notes && m.notes.length > 0)
 
 	<!-- Chart island -->
 	<section class="mx-auto w-full max-w-page px-6 py-12 sm:px-8 sm:py-16">
-		<SchmeckleChart client:visible models={chartModels} providers={PROVIDERS} />
+		{
+			/* Deliberately client:load, not client:visible. Astro's visible directive observes
+		    el.children, but this island's connectedCallback runs mid-stream before its ~12KB
+		    of SSR markup is parsed, and it carries no await-children attribute (that is only
+		    set for islands with slotted children). The observer then watches an empty child
+		    list and hydration never fires, leaving the controls dead. */
+		}
+		<SchmeckleChart client:load models={chartModels} providers={PROVIDERS} />
 	</section>
 
 	<!-- Notes -->
