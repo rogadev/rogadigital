@@ -17,7 +17,8 @@ const color = {
 <span
 	class={`status-dot ${status === 'in-development' ? 'status-dot--throb' : ''} ${className}`}
 	style={`background-color: ${color}`}
-	aria-hidden="true"></span>
+	aria-hidden="true"
+></span>
 
 <style>
 	.status-dot {
@@ -25,9 +26,9 @@ const color = {
 		width: 0.375rem;
 		height: 0.375rem;
 		border-radius: 9999px;
-		/* Optical alignment: items-center centers on the line-box, but
-		   all-caps mono text sits visually higher than that. Nudge the
-		   dot up so it reads center-on-center with the text. */
+		/* Optical alignment: items-center centers on the line-box, but */
+		/* all-caps mono text sits visually higher than that. Nudge the */
+		/* dot up so it reads center-on-center with the text. */
 		margin-top: -2px;
 	}
 

@@ -60,19 +60,17 @@ const helpful = [
 								What to expect
 							</h2>
 							<ol class="mt-6 divide-y divide-border border-y border-border" role="list">
-								{
-									expect.map((p) => (
-										<li class="flex items-start gap-5 py-5">
-											<span class="mt-0.5 font-mono text-2xs tracking-[0.18em] text-[var(--color-accent)] uppercase">
-												{p.n}
-											</span>
-											<div>
-												<h3 class="text-base font-medium tracking-tight text-fg">{p.h}</h3>
-												<p class="mt-1 text-sm text-fg-muted text-pretty">{p.b}</p>
-											</div>
-										</li>
-									))
-								}
+								{expect.map((p) => (
+									<li class="flex items-start gap-5 py-5">
+										<span class="mt-0.5 font-mono text-2xs tracking-[0.18em] text-[var(--color-accent)] uppercase">
+											{p.n}
+										</span>
+										<div>
+											<h3 class="text-base font-medium tracking-tight text-fg">{p.h}</h3>
+											<p class="mt-1 text-sm text-fg-muted text-pretty">{p.b}</p>
+										</div>
+									</li>
+								))}
 							</ol>
 						</div>
 					</div>
@@ -101,16 +99,14 @@ const helpful = [
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<ul class="divide-y divide-border border-y border-border" role="list">
-				{
-					helpful.map((item, i) => (
-						<li class="flex items-start gap-6 py-5">
-							<span class="pt-0.5 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
-								{String(i + 1).padStart(2, '0')}
-							</span>
-							<span class="text-fg text-pretty">{item}</span>
-						</li>
-					))
-				}
+				{helpful.map((item, i) => (
+					<li class="flex items-start gap-6 py-5">
+						<span class="pt-0.5 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
+							{String(i + 1).padStart(2, '0')}
+						</span>
+						<span class="text-fg text-pretty">{item}</span>
+					</li>
+				))}
 			</ul>
 		</div>
 	</Section>
@@ -148,16 +144,21 @@ const helpful = [
 							</a>
 						</li>
 						<li class="inline-flex items-center gap-2">
-							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase"
-								>Based</span
-							>
+							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
+								Based
+							</span>
 							<span class="text-fg">{SITE_LOCATION}</span>
 						</li>
 					</ul>
 					<p class="mt-6 max-w-2xl text-fg-muted text-pretty">
 						Not ready to reach out yet? That's fine. The
-						<a href="/work/" class="text-fg underline-offset-4 hover:underline">selected work</a>
-						and <a href="/insights/" class="text-fg underline-offset-4 hover:underline">writing</a>
+						<a href="/work/" class="text-fg underline-offset-4 hover:underline">
+							selected work
+						</a>
+						and{' '}
+						<a href="/insights/" class="text-fg underline-offset-4 hover:underline">
+							writing
+						</a>
 						give the clearest picture of how Roga Digital approaches a project.
 					</p>
 				</div>

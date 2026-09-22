@@ -737,11 +737,14 @@ const noted = BENCHMARK_MODELS.filter((m) => m.note);
 					Agentic coding, scored in schmeckles
 				</h1>
 				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
-					My own hands-on ratings of AI coding models, measured in <abbr
+					My own hands-on ratings of AI coding models, measured in{' '}
+					<abbr
 						title="A unit of value of indeterminate worth."
 						class="cursor-help border-b border-dashed border-border-strong text-fg no-underline"
-						>schmeckles&nbsp;◊</abbr
-					>. The absolute value is unknowable — read them side by side, not against a ceiling.
+					>
+						schmeckles&nbsp;◊
+					</abbr>
+					. The absolute value is unknowable — read them side by side, not against a ceiling.
 				</p>
 			</div>
 		</div>
@@ -758,22 +761,20 @@ const noted = BENCHMARK_MODELS.filter((m) => m.note);
 			<h2 class="text-lg font-medium tracking-tight text-fg">
 				Notes <span class="text-sm font-normal text-fg-subtle">(for those who really care)</span>
 			</h2>
-			{
-				noted.length === 0 ? (
-					<p class="mt-3 max-w-2xl text-sm text-fg-muted text-pretty">
-						Nothing to explain yet. When a score needs context, it lands here.
-					</p>
-				) : (
-					<dl class="mt-4 grid gap-4">
-						{noted.map((m) => (
-							<div class="grid gap-1">
-								<dt class="font-mono text-xs text-fg">{m.label}</dt>
-								<dd class="max-w-2xl text-sm text-fg-muted text-pretty">{m.note}</dd>
-							</div>
-						))}
-					</dl>
-				)
-			}
+			{noted.length === 0 ? (
+				<p class="mt-3 max-w-2xl text-sm text-fg-muted text-pretty">
+					Nothing to explain yet. When a score needs context, it lands here.
+				</p>
+			) : (
+				<dl class="mt-4 grid gap-4">
+					{noted.map((m) => (
+						<div class="grid gap-1">
+							<dt class="font-mono text-xs text-fg">{m.label}</dt>
+							<dd class="max-w-2xl text-sm text-fg-muted text-pretty">{m.note}</dd>
+						</div>
+					))}
+				</dl>
+			)}
 			<p class="mt-8 font-mono text-2xs text-fg-subtle">
 				◊ schmeckles · scores are subjective &amp; reflect my own hands-on use.
 			</p>

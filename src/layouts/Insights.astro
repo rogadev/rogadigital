@@ -71,75 +71,63 @@ const pageTitle = `${title} · Roga Digital`;
 				</a>
 
 				<div class="mt-10 max-w-3xl">
-					<div
-						class="flex flex-wrap items-center gap-3 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase"
-					>
+					<div class="flex flex-wrap items-center gap-3 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
 						<time datetime={pubDate.toISOString()}>{dateFormatter.format(pubDate)}</time>
-						{
-							readingTime && (
-								<>
-									<span class="text-border-strong">·</span>
-									<span>{readingTime}</span>
-								</>
-							)
-						}
-						{
-							tags.length > 0 && (
-								<>
-									<span class="text-border-strong">·</span>
-									<ul class="flex flex-wrap gap-2" role="list">
-										{tags.map((t) => (
-											<li>
-												<a
-													href={`/insights/?tag=${encodeURIComponent(t)}`}
-													class="rounded-sm border border-border px-1.5 py-0.5 text-fg-muted transition-colors hover:text-fg"
-												>
-													#{t}
-												</a>
-											</li>
-										))}
-									</ul>
-								</>
-							)
-						}
+						{readingTime && (
+							<>
+								<span class="text-border-strong">·</span>
+								<span>{readingTime}</span>
+							</>
+						)}
+						{tags.length > 0 && (
+							<>
+								<span class="text-border-strong">·</span>
+								<ul class="flex flex-wrap gap-2" role="list">
+									{tags.map((t) => (
+										<li>
+											<a
+												href={`/insights/?tag=${encodeURIComponent(t)}`}
+												class="rounded-sm border border-border px-1.5 py-0.5 text-fg-muted transition-colors hover:text-fg"
+											>
+												#{t}
+											</a>
+										</li>
+									))}
+								</ul>
+							</>
+						)}
 					</div>
 
-					<h1 class="mt-6 text-4xl font-medium tracking-tight text-balance sm:text-5xl">
-						{title}
-					</h1>
+					<h1 class="mt-6 text-4xl font-medium tracking-tight text-balance sm:text-5xl">{title}</h1>
 					<p class="mt-5 text-lg text-fg-muted text-pretty sm:text-xl">{description}</p>
 
-					{
-						updatedDate && (
-							<p class="mt-6 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
-								Updated · {dateFormatter.format(updatedDate)}
-							</p>
-						)
-					}
+					{updatedDate && (
+						<p class="mt-6 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+							Updated · {dateFormatter.format(updatedDate)}
+						</p>
+					)}
 				</div>
 			</div>
 		</div>
 	</section>
 
 	<!-- Hero image (optional) -->
-	{
-		heroImage && (
-			<div class="border-b border-border">
-				<div class="mx-auto w-full max-w-page px-6 py-8 sm:px-8 sm:py-10">
-					<figure class="overflow-hidden rounded-lg border border-border bg-bg-soft">
-						<Image
-							src={heroImage}
-							alt=""
-							widths={[640, 1024, 1440]}
-							sizes="(max-width: 1024px) 100vw, 1024px"
-							class="aspect-[16/9] w-full object-cover"
-							loading="eager"
-						/>
-					</figure>
-				</div>
+	{heroImage && (
+		<div class="border-b border-border">
+			<div class="mx-auto w-full max-w-page px-6 py-8 sm:px-8 sm:py-10">
+				<figure class="overflow-hidden rounded-lg border border-border bg-bg-soft">
+					<Image
+						src={heroImage}
+						alt=""
+						widths={[640, 1024, 1440]}
+						sizes="(max-width: 1024px) 100vw, 1024px"
+						class="aspect-[16/9] w-full object-cover"
+						loading="eager"
+					/>
+				</figure>
 			</div>
-		)
-	}
+		</div>
+	)}
 
 	<!-- Body -->
 	<article class="border-b border-border">

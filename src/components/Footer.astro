@@ -62,40 +62,36 @@ const cols = [
 				</a>
 			</div>
 
-			{
-				cols.map((col) => (
-					<nav class="sm:col-span-2" aria-label={col.heading}>
-						<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
-							{col.heading}
-						</p>
-						<ul class="mt-4 space-y-2.5 text-sm">
-							{col.links.map((l) => (
-								<li>
-									<a
-										href={l.href}
-										class="text-fg-muted transition-colors hover:text-fg"
-										target={'external' in l && l.external ? '_blank' : undefined}
-										rel={'external' in l && l.external ? 'noopener noreferrer' : undefined}
-									>
-										{l.label}
-									</a>
-								</li>
-							))}
-						</ul>
-					</nav>
-				))
-			}
+			{cols.map((col) => (
+				<nav class="sm:col-span-2" aria-label={col.heading}>
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">{col.heading}</p>
+					<ul class="mt-4 space-y-2.5 text-sm">
+						{col.links.map((l) => (
+							<li>
+								<a
+									href={l.href}
+									class="text-fg-muted transition-colors hover:text-fg"
+									target={'external' in l && l.external ? '_blank' : undefined}
+									rel={'external' in l && l.external ? 'noopener noreferrer' : undefined}
+								>
+									{l.label}
+								</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+			))}
 		</div>
 
-		<div
-			class="mt-16 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 font-mono text-2xs tracking-wide text-fg-subtle uppercase sm:flex-row"
-		>
-			<p>© {today.getFullYear()} Roga Digital · {SITE_LOCATION}</p>
+		<div class="mt-16 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 font-mono text-2xs tracking-wide text-fg-subtle uppercase sm:flex-row">
 			<p>
-				Built with Astro · Hosted on Vercel · <a
-					href="/insights/why-this-stack/"
-					class="transition-colors hover:text-fg">Learn why</a
-				>
+				© {today.getFullYear()} Roga Digital · {SITE_LOCATION}
+			</p>
+			<p>
+				Built with Astro · Hosted on Vercel ·{' '}
+				<a href="/insights/why-this-stack/" class="transition-colors hover:text-fg">
+					Learn why
+				</a>
 			</p>
 		</div>
 	</div>

@@ -45,31 +45,26 @@ const sections = [
 	<!-- Sections -->
 	<section class="mx-auto w-full max-w-page px-6 py-12 sm:px-8 sm:py-16">
 		<ul class="grid gap-4 sm:grid-cols-2">
-			{
-				sections.map((s) => (
-					<li>
-						<a
-							href={s.href}
-							class="group flex h-full min-h-44 flex-col rounded-lg border border-border bg-bg-soft p-6 transition-colors hover:border-border-strong hover:bg-bg-elevated"
-						>
-							<div class="flex items-center justify-between">
-								<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
-									{s.eyebrow}
-								</span>
-								<span
-									class="text-fg-subtle transition-colors group-hover:text-fg"
-									aria-hidden="true"
-								>
-									→
-								</span>
-							</div>
-							<h2 class="mt-4 text-xl font-medium tracking-tight text-fg">{s.title}</h2>
-							<p class="mt-2 text-sm text-fg-muted text-pretty">{s.blurb}</p>
-							<span class="mt-auto pt-4 font-mono text-2xs text-fg-subtle">{s.meta}</span>
-						</a>
-					</li>
-				))
-			}
+			{sections.map((s) => (
+				<li>
+					<a
+						href={s.href}
+						class="group flex h-full min-h-44 flex-col rounded-lg border border-border bg-bg-soft p-6 transition-colors hover:border-border-strong hover:bg-bg-elevated"
+					>
+						<div class="flex items-center justify-between">
+							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
+								{s.eyebrow}
+							</span>
+							<span class="text-fg-subtle transition-colors group-hover:text-fg" aria-hidden="true">
+								→
+							</span>
+						</div>
+						<h2 class="mt-4 text-xl font-medium tracking-tight text-fg">{s.title}</h2>
+						<p class="mt-2 text-sm text-fg-muted text-pretty">{s.blurb}</p>
+						<span class="mt-auto pt-4 font-mono text-2xs text-fg-subtle">{s.meta}</span>
+					</a>
+				</li>
+			))}
 		</ul>
 	</section>
 </Base>

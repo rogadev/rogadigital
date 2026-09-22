@@ -553,10 +553,14 @@ import InquiryForm from '../components/InquiryForm.svelte';
 <p class="mt-2 border-t border-border pt-4 text-sm text-fg-subtle text-pretty">
 	Intro calls are free for prospective clients — people exploring whether to hire Roga Digital. They
 	are not for selling to me. Vendor and sales calls booked through this calendar are billed at USD
-	$120/hour (1-hour minimum) per the <a
+	$120/hour (1-hour minimum) per the{' '}
+	<a
 		href="/terms-of-service#consultation-bookings"
-		class="text-fg-muted underline-offset-4 hover:underline">booking terms</a
-	>.
+		class="text-fg-muted underline-offset-4 hover:underline"
+	>
+		booking terms
+	</a>
+	.
 </p>
 ```
 
@@ -640,8 +644,7 @@ git commit -m "feat(contact): message form panel, qualifying notice, compact soc
 - [ ] **Step 1: Add id support to the section renderer** — the `sections` array entries gain an optional `id`; update the template map:
 
 ```astro
-sections.map((s) => (
-<section class="mt-12" id={'id' in s ? s.id : undefined}></section>
+sections.map((s) => (<section class="mt-12" id={'id' in s ? s.id : undefined}></section>
 ```
 
 (If TypeScript complains about the union, type the array as

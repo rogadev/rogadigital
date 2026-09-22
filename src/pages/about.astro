@@ -98,9 +98,7 @@ const principles = [
 		dek="Roga Digital was founded by someone who ran a business before building software for them. That changes what gets built — and how it holds up."
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-			<div
-				class="grid gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-3"
-			>
+			<div class="grid gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-3">
 				<div class="flex flex-col gap-3 bg-bg p-8">
 					<h3 class="text-lg font-medium tracking-tight text-fg">We've sat at the desk.</h3>
 					<p class="text-sm text-fg-muted text-pretty">
@@ -133,20 +131,16 @@ const principles = [
 		dek="The same principles guide every engagement, regardless of scope."
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-			<ol
-				class="grid gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-2"
-			>
-				{
-					principles.map((p) => (
-						<li class="flex flex-col gap-3 bg-bg p-8">
-							<span class="font-mono text-2xs tracking-[0.18em] text-[var(--color-accent)] uppercase">
-								{p.n}
-							</span>
-							<h3 class="text-xl font-medium tracking-tight text-balance text-fg">{p.h}</h3>
-							<p class="text-sm text-fg-muted text-pretty">{p.b}</p>
-						</li>
-					))
-				}
+			<ol class="grid gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-2">
+				{principles.map((p) => (
+					<li class="flex flex-col gap-3 bg-bg p-8">
+						<span class="font-mono text-2xs tracking-[0.18em] text-[var(--color-accent)] uppercase">
+							{p.n}
+						</span>
+						<h3 class="text-xl font-medium tracking-tight text-balance text-fg">{p.h}</h3>
+						<p class="text-sm text-fg-muted text-pretty">{p.b}</p>
+					</li>
+				))}
 			</ol>
 		</div>
 	</Section>
@@ -159,13 +153,11 @@ const principles = [
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<ul class="flex flex-wrap gap-2 font-mono text-2xs" role="list">
-				{
-					stack.map((s) => (
-						<li class="rounded-full border border-border bg-bg-soft px-3 py-1.5 tracking-[0.12em] text-fg-muted uppercase">
-							{s}
-						</li>
-					))
-				}
+				{stack.map((s) => (
+					<li class="rounded-full border border-border bg-bg-soft px-3 py-1.5 tracking-[0.12em] text-fg-muted uppercase">
+						{s}
+					</li>
+				))}
 			</ul>
 		</div>
 	</Section>
@@ -205,15 +197,17 @@ const principles = [
 						Get in touch
 					</a>
 					<div class="flex gap-4 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
-						<a href={SOCIAL.github} target="_blank" rel="noopener noreferrer" class="hover:text-fg"
-							>GitHub</a
-						>
+						<a href={SOCIAL.github} target="_blank" rel="noopener noreferrer" class="hover:text-fg">
+							GitHub
+						</a>
 						<a
 							href={SOCIAL.linkedin}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="hover:text-fg">LinkedIn</a
+							class="hover:text-fg"
 						>
+							LinkedIn
+						</a>
 					</div>
 				</div>
 			</div>
