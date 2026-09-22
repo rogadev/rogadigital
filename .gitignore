@@ -34,3 +34,6 @@ _references
 *.db
 .beads-credential-key
 .superpowers/
+
+# Vitest 5 artifacts
+.vitest/
