@@ -141,6 +141,19 @@ export const BENCHMARK_MODELS: ModelScore[] = [
 			},
 		],
 	},
+	{
+		provider: 'anthropic',
+		label: 'Opus 5.5',
+		score: 112,
+		releaseDate: '2026-09-22',
+		tentative: true,
+		notes: [
+			{
+				date: '2026-09-22',
+				body: 'Opus 5.5 is my new daily driver. It’s noticeably faster, and the output is tight: summaries, follow-up questions, and review findings make it obvious what happened, what I need to do, and what it’s really asking. It handles well, too — easy to steer and quick to pivot. I ran it across three projects at once, updating specs and docs, and expected it to blur them together. Instead it knew when to spin up subagents and kept each project straight. After Opus 5, which I couldn’t use day to day, it’s a welcome fix.',
+			},
+		],
+	},
 	{ provider: 'openai', label: 'o3-pro', score: 44, releaseDate: '2025-06-10' },
 	{ provider: 'openai', label: 'Gippity 5', score: 40, releaseDate: '2025-08-07' },
 	{ provider: 'openai', label: 'Gippity 5 Codex', score: 38, releaseDate: '2025-09-15' },
