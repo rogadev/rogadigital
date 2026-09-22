@@ -18,29 +18,23 @@ const ANNOUNCED_COPY = 2;
 	trackClass="industries-track"
 	staticAt="768px"
 >
-	{
-		COPIES.flatMap((copy) =>
-			items.map((industry, i) => {
-				const announced = copy === ANNOUNCED_COPY;
-				const isLastAnnounced = announced && i === items.length - 1;
-				return (
-					<li
-						class:list={[
-							'marquee-item',
-							'industries-item',
-							{ 'is-last-announced': isLastAnnounced },
-						]}
-						aria-hidden={announced ? undefined : 'true'}
-					>
-						<span>{industry}</span>
-						<span aria-hidden="true" class="industry-sep">
-							·
-						</span>
-					</li>
-				);
-			}),
-		)
-	}
+	{COPIES.flatMap((copy) =>
+		items.map((industry, i) => {
+			const announced = copy === ANNOUNCED_COPY;
+			const isLastAnnounced = announced && i === items.length - 1;
+			return (
+				<li
+					class:list={['marquee-item', 'industries-item', { 'is-last-announced': isLastAnnounced }]}
+					aria-hidden={announced ? undefined : 'true'}
+				>
+					<span>{industry}</span>
+					<span aria-hidden="true" class="industry-sep">
+						·
+					</span>
+				</li>
+			);
+		}),
+	)}
 </Marquee>
 
 <style is:global>

@@ -13,13 +13,11 @@ const { src, alt, caption } = Astro.props;
 
 <figure class="screenshot my-8 overflow-hidden rounded-lg border border-border bg-bg-soft">
 	<Image {src} {alt} class="block h-auto w-full" />
-	{
-		caption && (
-			<figcaption class="border-t border-border px-4 py-3 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
-				{caption}
-			</figcaption>
-		)
-	}
+	{caption && (
+		<figcaption class="border-t border-border px-4 py-3 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+			{caption}
+		</figcaption>
+	)}
 </figure>
 
 <style is:global>

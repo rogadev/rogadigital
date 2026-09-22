@@ -44,11 +44,14 @@ const noted = BENCHMARK_MODELS.filter((m) => m.notes && m.notes.length > 0)
 					Agentic coding, scored in schmeckles
 				</h1>
 				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
-					My own hands-on ratings of AI coding models, measured in <abbr
+					My own hands-on ratings of AI coding models, measured in{' '}
+					<abbr
 						title="A made-up unit of value, scored on vibes."
 						class="cursor-help border-b border-dashed border-border-strong text-fg no-underline"
-						>schmeckles<span aria-hidden="true">&nbsp;◊</span></abbr
-					>. The schmeckle is a made-up unit — each score is my gut feel from daily use — so read
+					>
+						schmeckles<span aria-hidden="true">&nbsp;◊</span>
+					</abbr>
+					. The schmeckle is a made-up unit — each score is my gut feel from daily use — so read
 					them side by side, not against a ceiling.
 				</p>
 			</div>
@@ -57,13 +60,11 @@ const noted = BENCHMARK_MODELS.filter((m) => m.notes && m.notes.length > 0)
 
 	<!-- Chart island -->
 	<section class="mx-auto w-full max-w-page px-6 py-12 sm:px-8 sm:py-16">
-		{
-			/* Deliberately client:load, not client:visible. Astro's visible directive observes
+		{/* Deliberately client:load, not client:visible. Astro's visible directive observes
 		    el.children, but this island's connectedCallback runs mid-stream before its ~12KB
 		    of SSR markup is parsed, and it carries no await-children attribute (that is only
 		    set for islands with slotted children). The observer then watches an empty child
-		    list and hydration never fires, leaving the controls dead. */
-		}
+		    list and hydration never fires, leaving the controls dead. */}
 		<SchmeckleChart client:load models={chartModels} providers={PROVIDERS} />
 	</section>
 
@@ -71,34 +72,29 @@ const noted = BENCHMARK_MODELS.filter((m) => m.notes && m.notes.length > 0)
 	<section class="border-t border-border">
 		<div class="mx-auto w-full max-w-page px-6 py-12 sm:px-8 sm:py-16">
 			<h2 class="text-lg font-medium tracking-tight text-fg">Notes</h2>
-			{
-				noted.length === 0 ? (
-					<p class="mt-3 max-w-2xl text-sm text-fg-muted text-pretty">
-						Nothing to explain yet. When a score needs context, it lands here.
-					</p>
-				) : (
-					<dl class="mt-4 grid gap-8">
-						{noted.map((m) => (
-							<div class="grid gap-3">
-								<dt class="font-mono text-xs text-fg">{m.label}</dt>
-								<dd class="grid gap-3">
-									{m.notes.map((n) => (
-										<div class="grid gap-1 sm:grid-cols-[6rem_1fr] sm:gap-4">
-											<time
-												datetime={n.date}
-												class="font-mono text-2xs text-fg-subtle tabular-nums"
-											>
-												{n.date}
-											</time>
-											<p class="max-w-2xl text-sm text-fg-muted text-pretty">{n.body}</p>
-										</div>
-									))}
-								</dd>
-							</div>
-						))}
-					</dl>
-				)
-			}
+			{noted.length === 0 ? (
+				<p class="mt-3 max-w-2xl text-sm text-fg-muted text-pretty">
+					Nothing to explain yet. When a score needs context, it lands here.
+				</p>
+			) : (
+				<dl class="mt-4 grid gap-8">
+					{noted.map((m) => (
+						<div class="grid gap-3">
+							<dt class="font-mono text-xs text-fg">{m.label}</dt>
+							<dd class="grid gap-3">
+								{m.notes.map((n) => (
+									<div class="grid gap-1 sm:grid-cols-[6rem_1fr] sm:gap-4">
+										<time datetime={n.date} class="font-mono text-2xs text-fg-subtle tabular-nums">
+											{n.date}
+										</time>
+										<p class="max-w-2xl text-sm text-fg-muted text-pretty">{n.body}</p>
+									</div>
+								))}
+							</dd>
+						</div>
+					))}
+				</dl>
+			)}
 			<p class="mt-8 font-mono text-2xs text-fg-subtle">
 				◊ schmeckles · scores are subjective &amp; reflect my own hands-on use.
 			</p>

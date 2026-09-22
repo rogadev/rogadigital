@@ -38,9 +38,7 @@ const facts = [
 					</p>
 				</div>
 				<div class="lg:col-span-5">
-					<dl
-						class="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2"
-					>
+					<dl class="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2">
 						<div class="bg-bg-soft px-4 py-4">
 							<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Format</dt>
 							<dd class="mt-1 text-sm text-fg">Email · phone · video</dd>
@@ -63,16 +61,14 @@ const facts = [
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<ul class="divide-y divide-border border-y border-border" role="list">
-				{
-					helpful.map((item, i) => (
-						<li class="flex items-start gap-6 py-5">
-							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase pt-0.5">
-								{String(i + 1).padStart(2, '0')}
-							</span>
-							<span class="text-fg text-pretty">{item}</span>
-						</li>
-					))
-				}
+				{helpful.map((item, i) => (
+					<li class="flex items-start gap-6 py-5">
+						<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase pt-0.5">
+							{String(i + 1).padStart(2, '0')}
+						</span>
+						<span class="text-fg text-pretty">{item}</span>
+					</li>
+				))}
 			</ul>
 		</div>
 	</Section>
@@ -89,10 +85,11 @@ const facts = [
 				/>
 				<p class="mt-6 text-sm text-fg-subtle text-pretty">
 					This form is protected by Cloudflare Turnstile. Your details are used only to reply to
-					your message — see the <a
-						href="/privacy/"
-						class="text-fg-muted underline-offset-4 hover:underline">privacy policy</a
-					>.
+					your message — see the{' '}
+					<a href="/privacy/" class="text-fg-muted underline-offset-4 hover:underline">
+						privacy policy
+					</a>
+					.
 				</p>
 			</div>
 		</div>
@@ -106,16 +103,14 @@ const facts = [
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<dl class="divide-y divide-border border-y border-border">
-				{
-					facts.map((f) => (
-						<div class="grid gap-2 py-5 sm:grid-cols-12 sm:gap-6">
-							<dt class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase sm:col-span-3 sm:pt-0.5">
-								{f.label}
-							</dt>
-							<dd class="text-fg text-pretty sm:col-span-9">{f.value}</dd>
-						</div>
-					))
-				}
+				{facts.map((f) => (
+					<div class="grid gap-2 py-5 sm:grid-cols-12 sm:gap-6">
+						<dt class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase sm:col-span-3 sm:pt-0.5">
+							{f.label}
+						</dt>
+						<dd class="text-fg text-pretty sm:col-span-9">{f.value}</dd>
+					</div>
+				))}
 			</dl>
 		</div>
 	</Section>

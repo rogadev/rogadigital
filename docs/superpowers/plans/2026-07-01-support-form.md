@@ -639,8 +639,9 @@ const description =
 					This form is protected by Cloudflare Turnstile. Your details are used only to reply to
 					your message — see the
 					<a href="/privacy" class="underline-offset-4 hover:underline text-fg-muted">
-						privacy policy</a
-					>.
+						privacy policy
+					</a>
+					.
 				</p>
 			</div>
 		</div>
@@ -758,16 +759,14 @@ const sections = [
 					Effective July 1, 2026
 				</p>
 
-				{
-					sections.map((s) => (
-						<section class="mt-12">
-							<h2 class="text-xl font-medium tracking-tight text-fg">{s.h}</h2>
-							{s.body.map((p) => (
-								<p class="mt-3 text-fg-muted text-pretty">{p}</p>
-							))}
-						</section>
-					))
-				}
+				{sections.map((s) => (
+					<section class="mt-12">
+						<h2 class="text-xl font-medium tracking-tight text-fg">{s.h}</h2>
+						{s.body.map((p) => (
+							<p class="mt-3 text-fg-muted text-pretty">{p}</p>
+						))}
+					</section>
+				))}
 			</div>
 		</div>
 	</section>
@@ -865,16 +864,14 @@ const sections = [
 					Effective July 1, 2026
 				</p>
 
-				{
-					sections.map((s) => (
-						<section class="mt-12">
-							<h2 class="text-xl font-medium tracking-tight text-fg">{s.h}</h2>
-							{s.body.map((p) => (
-								<p class="mt-3 text-fg-muted text-pretty">{p}</p>
-							))}
-						</section>
-					))
-				}
+				{sections.map((s) => (
+					<section class="mt-12">
+						<h2 class="text-xl font-medium tracking-tight text-fg">{s.h}</h2>
+						{s.body.map((p) => (
+							<p class="mt-3 text-fg-muted text-pretty">{p}</p>
+						))}
+					</section>
+				))}
 			</div>
 		</div>
 	</section>

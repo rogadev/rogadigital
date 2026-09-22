@@ -27,20 +27,16 @@ const principles = [
 	dek="Great software comes down to three things: building what your business actually needs, keeping you in the loop the whole way, and standing behind it long after launch. That's how we work — start to finish, and well past it."
 >
 	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-		<ol
-			class="grid gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-3"
-		>
-			{
-				principles.map((p) => (
-					<li class="flex flex-col gap-4 bg-bg p-8">
-						<span class="font-mono text-2xs tracking-[0.18em] text-[var(--color-accent)] uppercase">
-							{p.num}
-						</span>
-						<h3 class="text-xl font-medium tracking-tight text-balance text-fg">{p.heading}</h3>
-						<p class="text-sm text-fg-muted text-pretty">{p.body}</p>
-					</li>
-				))
-			}
+		<ol class="grid gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-3">
+			{principles.map((p) => (
+				<li class="flex flex-col gap-4 bg-bg p-8">
+					<span class="font-mono text-2xs tracking-[0.18em] text-[var(--color-accent)] uppercase">
+						{p.num}
+					</span>
+					<h3 class="text-xl font-medium tracking-tight text-balance text-fg">{p.heading}</h3>
+					<p class="text-sm text-fg-muted text-pretty">{p.body}</p>
+				</li>
+			))}
 		</ol>
 	</div>
 </Section>

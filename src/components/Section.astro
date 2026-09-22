@@ -33,23 +33,21 @@ const {
 		className,
 	]}
 >
-	{
-		(eyebrow || heading || dek) && (
-			<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-				<header class="mb-12 max-w-3xl sm:mb-16">
-					{eyebrow && (
-						<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">{eyebrow}</p>
-					)}
-					{heading && (
-						<h2 class="mt-4 text-3xl font-medium tracking-tight text-balance sm:text-4xl">
-							{heading}
-						</h2>
-					)}
-					{dek && <p class="mt-4 max-w-2xl text-lg text-fg-muted text-pretty">{dek}</p>}
-				</header>
-			</div>
-		)
-	}
+	{(eyebrow || heading || dek) && (
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<header class="mb-12 max-w-3xl sm:mb-16">
+				{eyebrow && (
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">{eyebrow}</p>
+				)}
+				{heading && (
+					<h2 class="mt-4 text-3xl font-medium tracking-tight text-balance sm:text-4xl">
+						{heading}
+					</h2>
+				)}
+				{dek && <p class="mt-4 max-w-2xl text-lg text-fg-muted text-pretty">{dek}</p>}
+			</header>
+		</div>
+	)}
 
 	<slot />
 </section>

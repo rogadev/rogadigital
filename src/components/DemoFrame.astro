@@ -58,24 +58,22 @@ const chromeLabel = label ?? new URL(src).hostname;
 				: 'rounded-[1.625rem] border border-border-strong p-1.5',
 		]}
 	>
-		{
-			kind === 'desktop' && (
-				<div class="relative flex items-center gap-1.5 border-b border-border px-3 py-2">
-					<span class="h-2 w-2 rounded-full bg-border-strong" aria-hidden="true" />
-					<span class="h-2 w-2 rounded-full bg-border-strong" aria-hidden="true" />
-					<span class="h-2 w-2 rounded-full bg-border-strong" aria-hidden="true" />
-					<span
-						class="pointer-events-none absolute inset-x-0 mx-auto w-fit max-w-[60%] truncate rounded-sm border border-border bg-bg px-2.5 py-0.5 font-mono text-2xs text-fg-subtle"
-						aria-hidden="true"
-					>
-						{chromeLabel}
-					</span>
-					<span class="snapshot-badge ml-auto font-mono text-2xs tracking-[0.16em] text-warning uppercase">
-						Cached copy
-					</span>
-				</div>
-			)
-		}
+		{kind === 'desktop' && (
+			<div class="relative flex items-center gap-1.5 border-b border-border px-3 py-2">
+				<span class="h-2 w-2 rounded-full bg-border-strong" aria-hidden="true" />
+				<span class="h-2 w-2 rounded-full bg-border-strong" aria-hidden="true" />
+				<span class="h-2 w-2 rounded-full bg-border-strong" aria-hidden="true" />
+				<span
+					class="pointer-events-none absolute inset-x-0 mx-auto w-fit max-w-[60%] truncate rounded-sm border border-border bg-bg px-2.5 py-0.5 font-mono text-2xs text-fg-subtle"
+					aria-hidden="true"
+				>
+					{chromeLabel}
+				</span>
+				<span class="snapshot-badge ml-auto font-mono text-2xs tracking-[0.16em] text-warning uppercase">
+					Cached copy
+				</span>
+			</div>
+		)}
 		<div
 			class:list={['demo-viewport relative', kind === 'phone' && 'rounded-[1.125rem]']}
 			style={`aspect-ratio: ${native.w} / ${native.h}; --demo-native-w: ${native.w}px; --demo-native-h: ${native.h}px;`}
@@ -88,25 +86,22 @@ const chromeLabel = label ?? new URL(src).hostname;
 				data-snapshot-src={snapshot}
 				width={native.w}
 				height={native.h}
-				class:list={[!href && 'demo-interactive']}></iframe>
-			{
-				href && (
-					<a
-						href={href}
-						class="demo-overlay"
-						aria-label={hrefLabel ?? title}
-						target={external ? '_blank' : undefined}
-						rel={external ? 'noopener noreferrer' : undefined}
-					/>
-				)
-			}
-			{
-				kind === 'phone' && (
-					<span class="snapshot-badge absolute top-2 left-1/2 -translate-x-1/2 rounded-sm border border-border bg-bg px-2 py-0.5 font-mono text-2xs tracking-[0.16em] text-warning uppercase">
-						Cached copy
-					</span>
-				)
-			}
+				class:list={[!href && 'demo-interactive']}
+			></iframe>
+			{href && (
+				<a
+					href={href}
+					class="demo-overlay"
+					aria-label={hrefLabel ?? title}
+					target={external ? '_blank' : undefined}
+					rel={external ? 'noopener noreferrer' : undefined}
+				/>
+			)}
+			{kind === 'phone' && (
+				<span class="snapshot-badge absolute top-2 left-1/2 -translate-x-1/2 rounded-sm border border-border bg-bg px-2 py-0.5 font-mono text-2xs tracking-[0.16em] text-warning uppercase">
+					Cached copy
+				</span>
+			)}
 		</div>
 	</div>
 </figure>
@@ -126,9 +121,9 @@ const chromeLabel = label ?? new URL(src).hostname;
 		height: var(--demo-native-h);
 		border: 0;
 		transform-origin: 0 0;
-		/* Scale = container width / native width. tan(atan2(a, b)) divides two
-		   lengths into a unitless ratio; --demo-scale is only set by the JS
-		   fallback for browsers without CSS trig support. */
+		/* Scale = container width / native width. tan(atan2(a, b)) divides two */
+		/* lengths into a unitless ratio; --demo-scale is only set by the JS */
+		/* fallback for browsers without CSS trig support. */
 		transform: scale(var(--demo-scale, tan(atan2(100cqw, var(--demo-native-w)))));
 		pointer-events: none;
 	}

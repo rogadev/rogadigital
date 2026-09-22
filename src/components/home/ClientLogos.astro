@@ -46,31 +46,29 @@ const ANNOUNCED_COPY = 2;
 	class="client-logos"
 	trackClass="client-logos-track"
 >
-	{
-		COPIES.flatMap((copy) =>
-			logos.map((logo) => {
-				const announced = copy === ANNOUNCED_COPY;
-				return (
-					<div class="marquee-item" aria-hidden={announced ? undefined : 'true'}>
-						{logo.type === 'telus' ? (
-							<TelusLogo
-								class={`client-logo ${logo.class}`}
-								aria-label={announced ? logo.alt : undefined}
-								role={announced ? 'img' : 'presentation'}
-							/>
-						) : (
-							<Image
-								src={logo.src}
-								alt={announced ? logo.alt : ''}
-								loading="eager"
-								class={`client-logo ${logo.class}`}
-							/>
-						)}
-					</div>
-				);
-			}),
-		)
-	}
+	{COPIES.flatMap((copy) =>
+		logos.map((logo) => {
+			const announced = copy === ANNOUNCED_COPY;
+			return (
+				<div class="marquee-item" aria-hidden={announced ? undefined : 'true'}>
+					{logo.type === 'telus' ? (
+						<TelusLogo
+							class={`client-logo ${logo.class}`}
+							aria-label={announced ? logo.alt : undefined}
+							role={announced ? 'img' : 'presentation'}
+						/>
+					) : (
+						<Image
+							src={logo.src}
+							alt={announced ? logo.alt : ''}
+							loading="eager"
+							class={`client-logo ${logo.class}`}
+						/>
+					)}
+				</div>
+			);
+		}),
+	)}
 </Marquee>
 
 <style is:global>
