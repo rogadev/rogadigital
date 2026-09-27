@@ -1,9 +1,9 @@
 ---
 id: LL-005
-client: Carevo · Logistics
+client: CarEvo · Logistics
 industry: Automotive · Used-vehicle ops
 headline: Multi-lot vehicle ops, vendor coordination, and QR-coded key tracking for an Eastern Canadian used-vehicle dealership.
-outcome: One mobile-first system for vehicles, services, vendors, lots, and deliveries — running across multiple Carevo lots since 2023, with vendors updating their own work and a QR scan on the key fob being the entry point.
+outcome: One mobile-first system for vehicles, services, vendors, lots, and deliveries — running across multiple CarEvo lots since 2023, with vendors updating their own work and a QR scan on the key fob being the entry point.
 tags:
   - Nuxt 4
   - Supabase
@@ -29,11 +29,11 @@ import deliveries from '../../assets/work/carevo-logistics/05-deliveries.png';
 
 Used-vehicle dealership operations are a coordination problem dressed up as a paperwork problem. A car arrives. It needs a service. It needs a detail. It needs a motor-vehicle inspection. It moves between lots. It eventually sells, then needs to be delivered. Each step involves a different vendor, a different person, and a different way of finding out whether the previous step is actually done.
 
-Carevo runs that operation across multiple lots in Eastern Canada. The brief was to put the whole flow — vehicles, services, vendors, lots, deliveries, and the audit trail behind all of it — behind a single mobile-first web app, with a QR scan on the key fob as the way in.
+CarEvo runs that operation across multiple lots in Eastern Canada. The brief was to put the whole flow — vehicles, services, vendors, lots, deliveries, and the audit trail behind all of it — behind a single mobile-first web app, with a QR scan on the key fob as the way in.
 
 ## The brief
 
-- **One system, every lot.** Carevo runs vehicles across multiple lots; the app needs to be the single ledger for all of them.
+- **One system, every lot.** CarEvo runs vehicles across multiple lots; the app needs to be the single ledger for all of them.
 - **Vendors are first-class users, not bolt-ons.** Service shops, detailers, MVI vendors — they update their own work in the system rather than emailing status to a logistics coordinator.
 - **The phone is the primary device.** Lot staff and vendors are walking around vehicles, not sitting at a desk. The interface has to work with one thumb on a hot afternoon.
 - **The key is the entry point.** A QR tag on the key fob lets anyone with permission scan, see the vehicle's current state, and update it. No "what's the stock number?" hunt.
@@ -45,7 +45,7 @@ The app is a focused operations console — not a CRM, not a sales tool, not an 
 
 <Screenshot
 	src={dashboard}
-	alt="Carevo Logistics dashboard with a left sidebar listing Dashboard, Vehicles, Services, Tasks, Vendors, Lots, Deliveries, and Audit. The main view shows an Action Items section (currently clear) and an In Progress section grouped by vendor (NAB, CarRevive) with a vehicle service request beneath each."
+	alt="CarEvo Logistics dashboard with a left sidebar listing Dashboard, Vehicles, Services, Tasks, Vendors, Lots, Deliveries, and Audit. The main view shows an Action Items section (currently clear) and an In Progress section grouped by vendor (NAB, CarRevive) with a vehicle service request beneath each."
 	caption="Dashboard — outstanding action items and in-progress work, grouped by the vendor responsible."
 />
 
@@ -92,7 +92,7 @@ The vendor portal is the same application, scoped down. A vendor signs in and se
 
 ### Deliveries
 
-When a vehicle sells, it gets delivered — and Carevo wanted both the operational view (which cars are queued for delivery) and the management view (how the lot's actually performing month over month).
+When a vehicle sells, it gets delivered — and CarEvo wanted both the operational view (which cars are queued for delivery) and the management view (how the lot's actually performing month over month).
 
 <Screenshot
 	src={deliveries}
@@ -108,14 +108,14 @@ The auto-cleanup line at the top is doing real work: ops data ages out automatic
 - **State** — Pinia for client-side state, scoped narrowly because the source of truth lives server-side.
 - **Backend** — Supabase for auth, real-time, and Postgres hosting. Prisma sits on top of the same Postgres for schema-first model definitions and typed queries from server routes.
 - **QR layer** — `vue-qrcode-reader` for in-browser camera scanning (no native app install for vendors), `qrcode` for tag generation, and the per-vehicle Tag tab to regenerate or reissue if a key fob's tag is lost.
-- **Multi-vendor access** — vendors are first-class users with a permission model that scopes them to their own assigned work. The same application code serves Carevo staff and vendors; access is what differs.
+- **Multi-vendor access** — vendors are first-class users with a permission model that scopes them to their own assigned work. The same application code serves CarEvo staff and vendors; access is what differs.
 - **Observability** — Sentry for errors and performance; an Audit surface in-app for the operational version of the same question ("what changed, by whom, when").
 - **Quality gates** — Vitest with happy-dom for unit and component, ESLint and Prettier on every commit, a `pnpm ready` script that runs lint, format, schema validate, typecheck, tests with coverage, and a build before anything ships.
-- **Hosting** — small footprint; cheap to run at the per-lot scale Carevo needed.
+- **Hosting** — small footprint; cheap to run at the per-lot scale CarEvo needed.
 
 ## Outcome
 
-The app has been the daily operations system for Carevo's lots since 2023. What it changes:
+The app has been the daily operations system for CarEvo's lots since 2023. What it changes:
 
 - **Vendors update their own work.** Logistics doesn't field "what's the status?" calls because the status is in the system, updated by the person doing the work.
 - **The QR-on-the-key flow eliminates the lookup tax.** Scan the key, see the vehicle, take the action. No stock-number hunt, no spreadsheet open in another tab.
@@ -126,7 +126,7 @@ The screenshots in this case study are pulled from the live application — the 
 
 ## A note on the build
 
-Carevo is the longest-running project in the studio's portfolio, and the one with the most context worth knowing.
+CarEvo is the longest-running project in the studio's portfolio, and the one with the most context worth knowing.
 
 It went from blank repo to MVP in **four months**, with a couple more months of focused tweaking after that, and has been continuously maintained since. The first release was in 2023 — _before_ the AI-coding revolution. There was no Claude Code, no Cursor, no agentic dev loop. It was built one line at a time, by hand, the way real-product software was always built.
 
@@ -136,4 +136,4 @@ The same product today would be faster to build. It would not, on its own, be be
 
 ## What's next
 
-Active maintenance and incremental capability work, driven by what Carevo's lot operations actually need next. For specifics on the QR flow, the vendor permission model, the multi-lot schema, or how a stack like this scales without ballooning costs — [get in touch](/contact/).
+Active maintenance and incremental capability work, driven by what CarEvo's lot operations actually need next. For specifics on the QR flow, the vendor permission model, the multi-lot schema, or how a stack like this scales without ballooning costs — [get in touch](/contact/).
