@@ -1,0 +1,169 @@
+---
+/**
+ * EmbeddedPage — a standalone, same-origin HTML page (from public/embeds/)
+ * shown inline as part of the surrounding page.
+ *
+ * Unlike DemoFrame, nothing is scaled: the iframe fills the column width and a
+ * script grows its height to fit the embedded content, so it reads as a
+ * section of the page rather than a scrolling window. The script also mirrors
+ * the site theme (the `light` class on <html>) into the embed's `data-theme`
+ * attribute and injects a stylesheet that clears the embed's page background
+ * and restyles it with the site's fonts and palette. Without JavaScript the
+ * iframe keeps `initialHeight`, scrolls internally, and keeps its own styling.
+ */
+interface Props {
+	/** Same-origin path to the page, for example `/embeds/tool/page.html`. */
+	src: string;
+	/** Accessible iframe title. */
+	title: string;
+	/** Height in px before the content is measured, and the no-JS height. */
+	initialHeight?: number;
+	class?: string;
+}
+
+const { src, title, initialHeight = 1400, class: className = '' } = Astro.props;
+---
+
+<div class:list={['overflow-hidden rounded-lg border border-border bg-bg-soft', className]}>
+	<iframe
+		src={src}
+		title={title}
+		loading="lazy"
+		class="block w-full border-0"
+		style={`height: ${initialHeight}px;`}
+		data-embedded-page
+	></iframe>
+</div>
+
+<script>
+	// The frame always grows to fit, so the embed never needs its own scrollbar;
+	// hiding it stops sub-pixel rounding from showing one. The rest adapts the
+	// orc-pack embed (its tokens and markup) to the site: Geist type, the site's
+	// neutrals and accent (hex values from src/styles/global.css), no duplicate of
+	// the hero the page already renders, and a stage tall enough that changing
+	// scenes does not push the page around. Category hues and status colours keep
+	// their hue but not always their value: every one is small text or sits under
+	// small text, so each must reach 4.5:1. --ink-3 sits midway between fg-muted
+	// and fg-subtle, and the light accent uses accent-hover, because fg-subtle and
+	// #5b67ff fall below 4.5:1 on the embed's surfaces and under its white block
+	// labels. For the same reason the light theme darkens --be, --sec and --arch
+	// (fills under white labels) and --good and --warn (chip text on --surface-2).
+	// Soft and compacted blocks fade their hue toward the surface, so --on-blk
+	// labels fall to about 2.5:1 on them; they take --ink labels on a tint faded
+	// far enough for that to clear 5:1 in both themes. The stage heights are measured:
+	// from 761px they fit the tallest (orchestrator) scene; below that its cards
+	// wrap to two rows and it roughly doubles, so they fit only scenes 1 to 3
+	// rather than leave a large gap under those.
+	const EMBED_CSS = `
+html, body { overflow: hidden; }
+body { background: transparent; }
+:root {
+	--display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+	--body: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+	--mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+:root[data-theme='light'] {
+	--bg: #fafafa; --surface: #ffffff; --surface-2: #f4f4f5;
+	--ink: #0a0a0b; --ink-2: #52525b; --ink-3: #62626a; --line: #e5e5e8;
+	--accent: #4751f0; --core: #4751f0; --core2: #515cf8; --on-blk: #ffffff;
+	--be: #0b8274; --sec: #c54e0e; --arch: #946e00; --good: #1c7e45; --warn: #966319;
+}
+:root[data-theme='dark'] {
+	--bg: #101012; --surface: #0a0a0b; --surface-2: #161618;
+	--ink: #f5f5f6; --ink-2: #a1a1a8; --ink-3: #86868e; --line: #1f1f23;
+	--accent: #5b67ff; --core: #5b67ff; --core2: #7d88ff; --on-blk: #0a0a0b;
+}
+h1, h2 { font-weight: 600; }
+.blk.soft { background: color-mix(in srgb, var(--c) 50%, var(--surface)); color: var(--ink); }
+.blk.compacted { opacity: 1; background: color-mix(in srgb, var(--c) 35%, var(--surface)); color: var(--ink); }
+.hero { padding-block: 20px 16px; }
+.hero > div:first-child { display: none; }
+.stage { min-height: 1040px; }
+@media (min-width: 400px) { .stage { min-height: 920px; } }
+@media (min-width: 480px) { .stage { min-height: 840px; } }
+@media (min-width: 641px) { .stage { min-height: 640px; } }
+@media (min-width: 761px) { .stage { min-height: 840px; } }
+@media (min-width: 900px) { .stage { min-height: 770px; } }
+`;
+
+	/** Rewrites relative `url()` references so they still resolve from the embed's path. */
+	const absoluteUrls = (css: string, base: string) =>
+		css.replace(/url\((['"]?)(.*?)\1\)/g, (_, _quote, url: string) => {
+			return `url("${new URL(url, base).href}")`;
+		});
+
+	/** Collects the page's `@font-face` rules so the embed can use the site's self-hosted fonts. */
+	const fontFaces = () => {
+		const faces: string[] = [];
+		const collect = (rules: CSSRuleList, base: string) => {
+			for (const rule of rules) {
+				if (rule instanceof CSSFontFaceRule) faces.push(absoluteUrls(rule.cssText, base));
+				else if (rule instanceof CSSGroupingRule) collect(rule.cssRules, base);
+			}
+		};
+		for (const sheet of document.styleSheets) {
+			let rules: CSSRuleList;
+			// Reading a cross-origin sheet's rules throws; it holds none of the site's fonts.
+			try {
+				rules = sheet.cssRules;
+			} catch {
+				continue;
+			}
+			collect(rules, sheet.href ?? document.baseURI);
+		}
+		return faces.join('\n');
+	};
+
+	const syncTheme = (doc: Document) => {
+		const light = document.documentElement.classList.contains('light');
+		doc.documentElement.dataset.theme = light ? 'light' : 'dark';
+	};
+
+	const attach = (iframe: HTMLIFrameElement) => {
+		const doc = iframe.contentDocument;
+		// A lazy iframe that has not started loading still exposes an about:blank document.
+		if (!doc?.body || doc.URL === 'about:blank' || iframe.dataset.attached) return;
+		iframe.dataset.attached = 'true';
+
+		const style = doc.createElement('style');
+		style.textContent = `${fontFaces()}\n${EMBED_CSS}`;
+		// The embed keeps its own stylesheet in <body>; appending after it lets
+		// these rules win at equal specificity.
+		doc.body.append(style);
+		syncTheme(doc);
+		new MutationObserver(() => syncTheme(doc)).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+
+		const fit = () => {
+			iframe.style.height = `${Math.ceil(doc.documentElement.getBoundingClientRect().height)}px`;
+		};
+		// Resize notifications can be skipped while the frame's rendering is
+		// throttled, so content changes (a new scene, a reflowed layout) also
+		// trigger a re-measure.
+		let pending = false;
+		const scheduleFit = () => {
+			if (pending) return;
+			pending = true;
+			window.setTimeout(() => {
+				pending = false;
+				fit();
+			}, 50);
+		};
+		new ResizeObserver(scheduleFit).observe(doc.body);
+		new MutationObserver(scheduleFit).observe(doc.body, {
+			childList: true,
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['class', 'style'],
+		});
+		fit();
+	};
+
+	for (const iframe of document.querySelectorAll<HTMLIFrameElement>('iframe[data-embedded-page]')) {
+		iframe.addEventListener('load', () => attach(iframe));
+		// A cached embed can finish loading before this script runs.
+		if (iframe.contentDocument?.readyState === 'complete') attach(iframe);
+	}
+</script>

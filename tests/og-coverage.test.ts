@@ -59,6 +59,7 @@ describe('OG title lengths land on the intended titleSize step', () => {
 		insights: 76,
 		media: 76,
 		support: 76,
+		tools: 76,
 	};
 
 	it(`home / fallback card ("${DEFAULT_OG.title}") renders at ${expectedSize.default}px`, () => {

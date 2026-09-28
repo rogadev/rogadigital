@@ -11,3 +11,4 @@ _references/
 tmp/
 pnpm-lock.yaml
 public/demos/
+public/embeds/

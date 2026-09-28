@@ -12,6 +12,15 @@
 	},
 	"headers": [
 		{
+			"source": "/embeds/(.*)",
+			"headers": [
+				{
+					"key": "X-Robots-Tag",
+					"value": "noindex"
+				}
+			]
+		},
+		{
 			"source": "/og/(.*)",
 			"headers": [
 				{

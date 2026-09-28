@@ -4,10 +4,10 @@ import { SITE_LOCATION, SOCIAL } from '../consts';
 import Base from '../layouts/Base.astro';
 import { personSchema } from '../lib/schema';
 
-const jsonLd = personSchema(Astro.site, 'Full-stack developer, systems architect, AI consultant');
+const jsonLd = personSchema(Astro.site, 'Lead Full-Stack Product Developer');
 
 const title = 'Resume · Ryan Roga · Roga Digital';
-const description = `Resume of Ryan Roga — founder of Roga Digital. Full-stack developer, systems architect, and AI consultant based in ${SITE_LOCATION}.`;
+const description = `Resume of Ryan Roga — Lead Full-Stack Product Developer. Founder of Roga Digital and Public Data Works Society, based in ${SITE_LOCATION}.`;
 
 /** What a recruiter needs to include for the message to get a reply. */
 const outreachRequirements = [
@@ -66,16 +66,29 @@ const skills = [
 
 const experience = [
 	{
-		role: 'Founder · Software Studio',
+		role: 'Founder & Executive Director · Lead Full-Stack Product Developer',
+		org: 'Public Data Works Society',
+		location: SITE_LOCATION,
+		period: '2026 — Present',
+		body: 'A society that builds free, public-facing apps on public data. I founded it, run it, and lead product development across its apps.',
+		bullets: [
+			'E&EO (eaeo.ca) — a free, bilingual platform linking Canadian credentials to the careers and labour-market outlooks that follow them. BC is live, with a national rollout through late 2026.',
+			'Puntledge Tube Report (puntledge.ca) — a crowdsourced river-conditions site for Comox Valley tubers, live since summer 2026.',
+			'GoFloat (gofloat.ca) — a companion app in the same river-float recreation space.',
+		],
+	},
+	{
+		role: 'Founder · Lead Full-Stack Product Developer',
 		org: 'Roga Digital',
 		location: SITE_LOCATION,
 		period: '2021 — Present',
-		body: 'End-to-end software for businesses: product strategy, systems architecture, full-stack web development, AI integration, and ongoing maintenance. Selected clients include TELUS, E&EO, CopyCleanse, Lot Logistics, and EzTripr. Engagement formats range from short scoped builds to multi-year fractional partnerships.',
+		body: 'Lead full-stack product development for businesses: product strategy, full-stack web development, AI integration, and ongoing maintenance. Clients include TELUS and CarEvo. Engagement formats range from short scoped builds to multi-year fractional partnerships.',
 		bullets: [
-			'Lead architect on TELUS TechCentral — multi-tenant operations platform launched April 2026, now with 2,500+ active users and hundreds of daily actives.',
+			'Lead product developer on TELUS TechCentral — bilingual operations platform launched April 2026, now with 2,500+ active users and hundreds of daily actives.',
+			'Lead developer on TC Tools — an AI-assisted pre-publish and content-ops toolkit for the editors behind TechCentral.',
 			"Awarded the follow-on contract for Summit — overhauling TELUS's training, mentorship, and credential-certification system from the ground up. Launching 2027.",
-			'Designed and shipped LLM-backed features in production (retrieval, structured output, evaluation pipelines) for client tools, including TC Tools — an AI-assisted content toolkit inside TechCentral.',
-			'Maintain and operate live software for clients across telecom, education, logistics, and home services.',
+			'Forward-deployed lead product developer for CarEvo since 2023 — built and maintain the multi-lot used-vehicle operations platform that runs their vehicles, vendors, lots, and deliveries.',
+			'Designed and shipped LLM-backed features in production (retrieval, structured output, evaluation pipelines) for client tools.',
 		],
 	},
 	{
@@ -87,7 +100,7 @@ const experience = [
 		bullets: [
 			'Led architecture and delivery from blank repo to production deploy on Vercel.',
 			'Built a Node/Express scraping backend and a Nuxt proof-of-concept before settling on SvelteKit for the production UI.',
-			'Tool remains in active use by VIU students.',
+			'The idea later became E&EO, a free, bilingual national platform now run by Public Data Works Society.',
 		],
 	},
 	{
@@ -108,18 +121,40 @@ const projects = [
 	{
 		name: 'TechCentral · TELUS',
 		summary:
-			'Operations & training platform for 2,200+ field technicians. Multi-tenant, RBAC, audit logs, LMS in development.',
-		tech: ['SvelteKit', 'Postgres', 'TypeScript', 'RBAC', 'Audit logs'],
+			'Bilingual operations and reference platform for 2,500+ TELUS field technicians and contractors. Launched April 2026.',
+		tech: ['Next.js', 'dotCMS', 'Postgres', 'Bilingual EN/FR', 'Operations'],
+		links: [{ label: 'Case study', url: '/work/telus-techcentral/' }],
 	},
 	{
-		name: 'VIU Career Outlooks',
+		name: 'TC Tools · TELUS',
 		summary:
-			'Full-stack web app for prospective students to explore career paths. Built during VIU co-op, still in production.',
-		tech: ['SvelteKit', 'Node · Express', 'Puppeteer', 'Vercel KV', 'Tailwind'],
+			'Pre-publish toolkit and content-ops console for TechCentral editors — search-rank previews, AI rubric feedback, image and link utilities.',
+		tech: ['SvelteKit', 'dotCMS', 'FuelIx (AI)', 'GKE', 'Internal tooling'],
+		links: [{ label: 'Case study', url: '/work/telus-tc-tools/' }],
+	},
+	{
+		name: 'Summit · TELUS',
+		summary:
+			'Credentialing and exam platform for TELUS technicians and partner contractors, replacing two legacy systems. In development, launching 2027.',
+		tech: ['Certification', 'Exam platform', 'FuelIx (AI)', 'Kong', 'Workforce learning'],
+		links: [{ label: 'Case study', url: '/work/telus-summit/' }],
+	},
+	{
+		name: 'E&EO',
+		summary:
+			'Free, bilingual platform connecting Canadian credentials to careers and labour-market outlooks. BC live, national rollout through late 2026.',
+		tech: ['SvelteKit', 'Postgres', 'Job Bank · NOC', 'Bilingual EN/FR', 'Public site'],
 		links: [
-			{ label: 'Live', url: 'https://career-outlooks.viu.ca' },
-			{ label: 'Repo', url: 'https://github.com/rogadev/viu-career-outlooks' },
+			{ label: 'Case study', url: '/work/eaeo/' },
+			{ label: 'Live', url: 'https://eaeo.ca' },
 		],
+	},
+	{
+		name: 'CarEvo · Logistics',
+		summary:
+			'Mobile-first operations platform for a multi-lot used-vehicle dealership — vehicles, vendors, lots, deliveries, and QR-coded key tracking. Running since 2023.',
+		tech: ['Nuxt 4', 'Supabase', 'Prisma', 'QR codes', 'Multi-vendor'],
+		links: [{ label: 'Case study', url: '/work/carevo-logistics/' }],
 	},
 	{
 		name: 'EzTripr',
@@ -152,12 +187,13 @@ const education = {
 						Resume · Ryan Roga
 					</p>
 					<h1 class="mt-4 text-4xl font-medium tracking-tight text-balance sm:text-5xl">
-						Full-stack developer, systems architect, AI consultant.
+						Lead Full&#8209;Stack Product Developer.
 					</h1>
 					<p class="mt-4 max-w-2xl text-lg text-fg-muted text-pretty">
-						Founder of Roga Digital. I design, ship, and maintain business software end-to-end — web
-						applications, internal tools, integrations, and AI features. Available for new
-						engagements: project work, fractional partnerships, or short technical advisory.
+						Founder of Roga Digital and Public Data Works Society. I design, ship, and maintain
+						business software end-to-end — web applications, internal tools, integrations, and AI
+						features. Available for new engagements: project work, fractional partnerships, or short
+						technical advisory.
 					</p>
 				</div>
 				<aside class="lg:col-span-4 lg:text-right">
@@ -191,7 +227,7 @@ const education = {
 									target="_blank"
 									rel="noopener noreferrer"
 								>
-									GitHub
+									GitHub<span class="sr-only"> (opens in a new tab)</span>
 								</a>
 								<a
 									class="text-fg hover:underline"
@@ -199,7 +235,7 @@ const education = {
 									target="_blank"
 									rel="noopener noreferrer"
 								>
-									LinkedIn
+									LinkedIn<span class="sr-only"> (opens in a new tab)</span>
 								</a>
 							</dd>
 						</div>
@@ -282,11 +318,12 @@ const education = {
 									<li>
 										<a
 											href={l.url}
-											target="_blank"
-											rel="noopener noreferrer"
+											target={l.url.startsWith('/') ? undefined : '_blank'}
+											rel={l.url.startsWith('/') ? undefined : 'noopener noreferrer'}
 											class="text-fg-muted underline-offset-4 hover:text-fg hover:underline"
 										>
 											{l.label} →
+											{!l.url.startsWith('/') && <span class="sr-only"> (opens in a new tab)</span>}
 										</a>
 									</li>
 								))}

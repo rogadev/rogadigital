@@ -25,7 +25,7 @@ export const SUPPORT_PRODUCTS = [
 	{ slug: 'copycleanse', label: 'CopyCleanse' },
 	{ slug: 'ezeval', label: 'EzEval' },
 	{ slug: 'outlooks', label: 'Employment and Education Outlooks' },
-	{ slug: 'carevo', label: 'Carevo Lot Logistics' },
+	{ slug: 'carevo', label: 'CarEvo Lot Logistics' },
 	{ slug: 'dispatch', label: 'Roga Dispatch' },
 	{ slug: 'puntledge', label: 'Puntledge Tube Report' },
 	{ slug: 'other', label: 'Other / general' },

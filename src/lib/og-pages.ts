@@ -44,7 +44,7 @@ export const OG_PAGES: Record<string, OgPageConfig> = {
 	},
 	resume: {
 		eyebrow: 'Resume',
-		title: 'Ryan Roga — full-stack developer, systems architect, AI consultant.',
+		title: 'Ryan Roga — Lead Full-Stack Product Developer · Roga Digital.',
 		footnote: 'Founder · Roga Digital',
 	},
 	work: {
@@ -66,6 +66,11 @@ export const OG_PAGES: Record<string, OgPageConfig> = {
 		eyebrow: 'Support',
 		title: 'Need a hand with a product?',
 		footnote: 'Reply within two business days',
+	},
+	tools: {
+		eyebrow: 'Tools',
+		title: 'Built for my own work, shared for yours.',
+		footnote: 'Open source · Developer tooling',
 	},
 };
 

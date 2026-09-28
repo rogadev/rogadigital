@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { isNavItemActive } from '../lib/nav-active';
 
 	interface NavItem {
 		href: string;
@@ -85,7 +86,7 @@
 	>
 		<ul class="mx-auto flex max-w-page flex-col px-6 py-4 sm:px-8" role="list">
 			{#each items as item (item.href)}
-				{@const active = currentPath === item.href || currentPath.startsWith(item.href + '/')}
+				{@const active = isNavItemActive(currentPath, item.href)}
 				<li>
 					<a
 						href={item.href}
