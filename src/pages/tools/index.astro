@@ -4,7 +4,7 @@ import { TOOLS } from '../../data/tools';
 
 const title = 'Tools · Roga Digital';
 const description =
-	'Developer tools Ryan Roga built for his own work and shared because they are useful to others too, starting with orc-pack, an autonomous orchestrator for Claude Code.';
+	'Developer tools Ryan Roga built for his own work and open sourced because they turned out useful to others too.';
 ---
 
 <Base {title} {description}>
@@ -12,7 +12,7 @@ const description =
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<div class="pt-20 pb-16 sm:pt-28 sm:pb-20">
-				<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Tools</p>
+				<p class="font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase">Tools</p>
 				<h1 class="mt-6 max-w-3xl text-4xl font-medium tracking-tight text-balance sm:text-5xl">
 					Built for my own work, shared for yours
 				</h1>
@@ -35,7 +35,7 @@ const description =
 						class="group flex h-full min-h-48 flex-col rounded-lg border border-border bg-bg-soft p-6 transition-colors hover:border-border-strong hover:bg-bg-elevated"
 					>
 						<div class="flex items-center justify-between gap-4">
-							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
+							<span class="font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase">
 								{tool.tag}
 							</span>
 							<span class="text-fg-subtle transition-colors group-hover:text-fg" aria-hidden="true">
@@ -44,7 +44,7 @@ const description =
 						</div>
 						<h2 class="mt-4 font-mono text-xl font-medium tracking-tight text-fg">{tool.name}</h2>
 						<p class="mt-2 text-sm text-fg-muted text-pretty">{tool.description}</p>
-						<span class="mt-auto truncate pt-4 font-mono text-2xs text-fg-subtle group-hover:text-fg-muted">
+						<span class="mt-auto truncate pt-4 font-mono text-2xs text-fg-muted">
 							{tool.repo.replace(/^https:\/\//, '')}
 						</span>
 					</a>

@@ -6,9 +6,10 @@
  * Unlike DemoFrame, nothing is scaled: the iframe fills the column width and a
  * script grows its height to fit the embedded content, so it reads as a
  * section of the page rather than a scrolling window. The script also mirrors
- * the site theme (the `light` class on <html>) into the embed's
- * `data-theme` attribute and clears the embed's own page background. Without
- * JavaScript the iframe keeps `initialHeight` and scrolls internally.
+ * the site theme (the `light` class on <html>) into the embed's `data-theme`
+ * attribute and injects a stylesheet that clears the embed's page background
+ * and restyles it with the site's fonts and palette. Without JavaScript the
+ * iframe keeps `initialHeight`, scrolls internally, and keeps its own styling.
  */
 interface Props {
 	/** Same-origin path to the page, for example `/embeds/tool/page.html`. */
@@ -35,6 +36,75 @@ const { src, title, initialHeight = 1400, class: className = '' } = Astro.props;
 </div>
 
 <script>
+	// The frame always grows to fit, so the embed never needs its own scrollbar;
+	// hiding it stops sub-pixel rounding from showing one. The rest adapts the
+	// orc-pack embed (its tokens and markup) to the site: Geist type, the site's
+	// neutrals and accent (hex values from src/styles/global.css), no duplicate of
+	// the hero the page already renders, and a stage tall enough that changing
+	// scenes does not push the page around. Category hues and status colours stay.
+	// --ink-3 sits midway between fg-muted and fg-subtle, and the light accent uses
+	// accent-hover, because fg-subtle and #5b67ff fall below 4.5:1 on the embed's
+	// surfaces and under its white block labels. The stage heights are measured:
+	// from 761px they fit the tallest (orchestrator) scene; below that its cards
+	// wrap to two rows and it roughly doubles, so they fit only scenes 1 to 3
+	// rather than leave a large gap under those.
+	const EMBED_CSS = `
+html, body { overflow: hidden; }
+body { background: transparent; }
+:root {
+	--display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+	--body: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+	--mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+:root[data-theme='light'] {
+	--bg: #fafafa; --surface: #ffffff; --surface-2: #f4f4f5;
+	--ink: #0a0a0b; --ink-2: #52525b; --ink-3: #62626a; --line: #e5e5e8;
+	--accent: #4751f0; --core: #4751f0; --core2: #515cf8; --on-blk: #ffffff;
+}
+:root[data-theme='dark'] {
+	--bg: #101012; --surface: #0a0a0b; --surface-2: #161618;
+	--ink: #f5f5f6; --ink-2: #a1a1a8; --ink-3: #86868e; --line: #1f1f23;
+	--accent: #5b67ff; --core: #5b67ff; --core2: #7d88ff; --on-blk: #0a0a0b;
+}
+h1, h2 { font-weight: 600; }
+.hero { padding-block: 20px 16px; }
+.hero > div:first-child { display: none; }
+.stage { min-height: 1040px; }
+@media (min-width: 400px) { .stage { min-height: 920px; } }
+@media (min-width: 480px) { .stage { min-height: 840px; } }
+@media (min-width: 641px) { .stage { min-height: 640px; } }
+@media (min-width: 761px) { .stage { min-height: 840px; } }
+@media (min-width: 900px) { .stage { min-height: 770px; } }
+`;
+
+	/** Rewrites relative `url()` references so they still resolve from the embed's path. */
+	const absoluteUrls = (css: string, base: string) =>
+		css.replace(/url\((['"]?)(.*?)\1\)/g, (_, _quote, url: string) => {
+			return `url("${new URL(url, base).href}")`;
+		});
+
+	/** Collects the page's `@font-face` rules so the embed can use the site's self-hosted fonts. */
+	const fontFaces = () => {
+		const faces: string[] = [];
+		const collect = (rules: CSSRuleList, base: string) => {
+			for (const rule of rules) {
+				if (rule instanceof CSSFontFaceRule) faces.push(absoluteUrls(rule.cssText, base));
+				else if (rule instanceof CSSGroupingRule) collect(rule.cssRules, base);
+			}
+		};
+		for (const sheet of document.styleSheets) {
+			let rules: CSSRuleList;
+			// Reading a cross-origin sheet's rules throws; it holds none of the site's fonts.
+			try {
+				rules = sheet.cssRules;
+			} catch {
+				continue;
+			}
+			collect(rules, sheet.href ?? document.baseURI);
+		}
+		return faces.join('\n');
+	};
+
 	const syncTheme = (doc: Document) => {
 		const light = document.documentElement.classList.contains('light');
 		doc.documentElement.dataset.theme = light ? 'light' : 'dark';
@@ -47,10 +117,10 @@ const { src, title, initialHeight = 1400, class: className = '' } = Astro.props;
 		iframe.dataset.attached = 'true';
 
 		const style = doc.createElement('style');
-		// The frame always grows to fit, so the embed never needs its own
-		// scrollbar; hiding it stops sub-pixel rounding from showing one.
-		style.textContent = 'html, body { overflow: hidden; } body { background: transparent; }';
-		doc.head.append(style);
+		style.textContent = `${fontFaces()}\n${EMBED_CSS}`;
+		// The embed keeps its own stylesheet in <body>; appending after it lets
+		// these rules win at equal specificity.
+		doc.body.append(style);
 		syncTheme(doc);
 		new MutationObserver(() => syncTheme(doc)).observe(document.documentElement, {
 			attributes: true,

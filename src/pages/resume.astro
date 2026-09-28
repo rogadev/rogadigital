@@ -187,7 +187,7 @@ const education = {
 						Resume · Ryan Roga
 					</p>
 					<h1 class="mt-4 text-4xl font-medium tracking-tight text-balance sm:text-5xl">
-						Lead Full-Stack Product Developer.
+						Lead Full&#8209;Stack Product Developer.
 					</h1>
 					<p class="mt-4 max-w-2xl text-lg text-fg-muted text-pretty">
 						Founder of Roga Digital and Public Data Works Society. I design, ship, and maintain
@@ -227,7 +227,7 @@ const education = {
 									target="_blank"
 									rel="noopener noreferrer"
 								>
-									GitHub
+									GitHub<span class="sr-only"> (opens in a new tab)</span>
 								</a>
 								<a
 									class="text-fg hover:underline"
@@ -235,7 +235,7 @@ const education = {
 									target="_blank"
 									rel="noopener noreferrer"
 								>
-									LinkedIn
+									LinkedIn<span class="sr-only"> (opens in a new tab)</span>
 								</a>
 							</dd>
 						</div>
@@ -323,6 +323,7 @@ const education = {
 											class="text-fg-muted underline-offset-4 hover:text-fg hover:underline"
 										>
 											{l.label} →
+											{!l.url.startsWith('/') && <span class="sr-only"> (opens in a new tab)</span>}
 										</a>
 									</li>
 								))}
