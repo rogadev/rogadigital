@@ -1,0 +1,496 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>One Agent vs. a Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#ECEFF3; --surface:#FFFFFF; --surface-2:#F4F6F9; --ink:#141D27; --ink-2:#4B5968; --ink-3:#7A8794; --line:#D5DCE3;
+  --accent:#1F4FD8; --core:#1F4FD8; --core2:#4B74E6; --ui:#7A5AF8; --be:#0C8F80; --sec:#D2530F; --arch:#A67C00; --slate:#5E6E7E;
+  --good:#1F8A4C; --warn:#B7791F; --bad:#C92A2A; --on-blk:#FFFFFF;
+  --display:'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D1217; --surface:#151C23; --surface-2:#1B242D; --ink:#E3E9EF; --ink-2:#9DAAB7; --ink-3:#6F7C89; --line:#2A3540;
+    --accent:#7D9BFF; --core:#6F8FFF; --core2:#93AAFF; --ui:#A08BFF; --be:#2BC2AD; --sec:#FF8150; --arch:#E2BA3F; --slate:#8698AA;
+    --good:#46C47E; --warn:#E5A93C; --bad:#FF6B6B; --on-blk:#0D1217;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1217; --surface:#151C23; --surface-2:#1B242D; --ink:#E3E9EF; --ink-2:#9DAAB7; --ink-3:#6F7C89; --line:#2A3540;
+  --accent:#7D9BFF; --core:#6F8FFF; --core2:#93AAFF; --ui:#A08BFF; --be:#2BC2AD; --sec:#FF8150; --arch:#E2BA3F; --slate:#8698AA;
+  --good:#46C47E; --warn:#E5A93C; --bad:#FF6B6B; --on-blk:#0D1217;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font:15px/1.55 var(--body); padding-inline:16px; padding-block:0 48px}
+.wrap{max-width:1080px; margin:0 auto}
+.mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
+button, input{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* hero */
+.hero{padding-block:40px 24px; display:flex; flex-wrap:wrap; gap:20px 40px; align-items:flex-end; justify-content:space-between}
+.eyebrow{font:500 11.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+h1{font:750 clamp(30px,5vw,50px)/1.02 var(--display); letter-spacing:-.025em; margin:12px 0 14px; max-width:17ch; text-wrap:balance}
+.lede{color:var(--ink-2); max-width:58ch; margin:0; font-size:16px}
+.mode{display:flex; flex-direction:column; gap:8px}
+.seg{display:inline-flex; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:3px}
+.seg button{border:0; background:none; padding:7px 16px; border-radius:999px; cursor:pointer; font-weight:500; color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--bg)}
+
+/* scene tabs */
+.tabs{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
+.tab{position:relative; overflow:hidden; display:flex; gap:10px; align-items:baseline; border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:9px 14px; cursor:pointer; text-align:left}
+.tab .n{font:500 12px var(--mono); color:var(--ink-3)}
+.tab b{font-weight:600}
+.tab::after{content:""; position:absolute; left:0; bottom:0; height:3px; width:var(--p,0%); background:var(--accent); transition:width .4s}
+.tab[aria-pressed="true"]{border-color:var(--ink)}
+.tab[aria-pressed="true"] .n{color:var(--accent)}
+
+/* stage */
+.stage{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px; min-height:540px; position:relative}
+.job{display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; padding-bottom:16px; margin-bottom:18px; border-bottom:1px solid var(--line)}
+.job p{margin:0; font:600 17px/1.35 var(--body); text-wrap:balance}
+.role{display:flex; align-items:center; gap:8px; font-weight:600; margin-bottom:10px; flex-wrap:wrap}
+.role small{font-weight:400; color:var(--ink-3); font-size:12.5px}
+.dot{width:10px; height:10px; border-radius:3px; background:var(--c,var(--core)); flex:none}
+.single-grid{display:grid; grid-template-columns:minmax(220px,300px) 1fr; gap:32px}
+.side{display:flex; flex-direction:column; gap:14px; min-width:0}
+.log-head{font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin-top:6px}
+
+/* tank = context window */
+.tank-head{display:flex; justify-content:space-between; gap:8px; font-size:12px; color:var(--ink-2); margin-bottom:6px}
+.tank-head .tcount{color:var(--ink)}
+.tank-body{position:relative; height:340px; border:1.5px solid var(--line); border-radius:8px; overflow:hidden;
+  background-image:linear-gradient(to top, color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px); background-size:100% 10%; background-position:bottom;
+  transition:border-color .4s, box-shadow .4s}
+.zone{position:absolute; left:0; right:0; top:0; height:25%; background:color-mix(in srgb, var(--bad) 7%, transparent)}
+.limit{position:absolute; left:0; right:0; bottom:75%; border-top:2px dashed var(--bad); z-index:3}
+.limit span{position:absolute; right:6px; bottom:3px; font:500 10.5px/1.3 var(--mono); color:var(--bad); background:var(--surface); padding:1px 5px; border-radius:3px; white-space:nowrap}
+.stack{position:absolute; inset:0; display:flex; flex-direction:column-reverse}
+.blk{flex:none; height:0; background:var(--c); border-top:2px solid var(--surface); color:var(--on-blk); font-size:12px; font-weight:500; display:flex; align-items:center; padding:0 9px; overflow:hidden; transition:height .8s cubic-bezier(.2,.8,.2,1), opacity .6s}
+.blk span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.blk.tiny span{display:none}
+.blk.soft{background:color-mix(in srgb, var(--c) 72%, var(--surface))}
+.blk.cut{background:repeating-linear-gradient(135deg, var(--c) 0 5px, color-mix(in srgb, var(--c) 35%, var(--surface)) 5px 10px); color:var(--ink)}
+.blk.cut span{background:var(--surface); padding:0 4px; border-radius:3px}
+.blk.compacted{opacity:.5}
+.tank.over .tank-body{border-color:var(--bad); box-shadow:0 0 0 3px color-mix(in srgb, var(--bad) 18%, transparent)}
+
+/* meter */
+.meter-head{display:flex; justify-content:space-between; align-items:baseline; font-size:13px; color:var(--ink-2); margin-bottom:6px}
+.meter-head b{font:500 22px var(--mono); color:var(--ink)}
+.meter-track{height:8px; border-radius:4px; background:var(--surface-2); border:1px solid var(--line); overflow:hidden}
+.meter-track i{display:block; height:100%; width:0; background:var(--ink-3); transition:width .8s, background-color .4s}
+.meter[data-level="good"] i{background:var(--good)} .meter[data-level="warn"] i{background:var(--warn)} .meter[data-level="bad"] i{background:var(--bad)}
+.meter.compact .meter-head{font-size:11.5px} .meter.compact .meter-head b{font-size:15px}
+
+/* log */
+.log{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; font-size:14px}
+.log li{display:flex; gap:10px; align-items:baseline; animation:rise .45s ease-out}
+.log li::before{content:"›"; font-family:var(--mono); color:var(--ink-3); flex:none}
+.log li em{font:500 10px/1.6 var(--mono); letter-spacing:.06em; text-transform:uppercase; font-style:normal; padding:0 6px; border-radius:4px; flex:none; border:1px solid currentColor}
+.log li.cut em{color:var(--bad)} .log li.ok em{color:var(--good)} .log li.warn em{color:var(--warn)}
+.log li.cut::before, .log li.ok::before, .log li.warn::before{content:none}
+@keyframes rise{from{opacity:.2; transform:translateY(4px)} to{opacity:1; transform:none}}
+
+/* team layout */
+.team{position:relative}
+.wires{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:visible}
+.wires path{fill:none; stroke:var(--ink-3); stroke-width:1.5; stroke-dasharray:4 5; opacity:0; transition:opacity .6s}
+.wires.on path{opacity:.8}
+.card{position:relative; z-index:1; background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:14px}
+.orch{max-width:640px; margin:0 auto 56px}
+.orch .dot{background:var(--accent)}
+.orch-grid{display:grid; grid-template-columns:170px 1fr; gap:22px}
+.orch .tank-body{height:170px}
+.subs{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px}
+.sub{opacity:.4; transition:opacity .6s, border-color .6s}
+.sub.active{opacity:1; border-color:color-mix(in srgb, var(--c) 55%, var(--line))}
+.sub .role{font-size:13.5px; margin-bottom:4px}
+.brief{margin:0 0 10px; font-size:12.5px; color:var(--ink-2); min-height:3.1em; line-height:1.3}
+.sub .tank-body{height:150px}
+.sub .tank-head{font-size:11px}
+.sub .limit span{font-size:9.5px}
+.sub .meter{margin-top:10px}
+.chip{display:inline-block; font:500 10px/1.6 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--good); border:1px solid currentColor; border-radius:4px; padding:0 6px; margin-left:auto; opacity:0; transition:opacity .5s}
+.chip.on{opacity:1}
+
+/* caption + controls */
+.under{display:flex; flex-wrap:wrap; gap:14px 24px; align-items:flex-start; justify-content:space-between; margin-top:14px}
+.caption{margin:0; font:500 18px/1.45 var(--body); max-width:60ch; min-height:3em; text-wrap:pretty}
+.controls{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.btn{border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:8px 14px; cursor:pointer; font-weight:500}
+.btn.primary{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.auto{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--ink-2); cursor:pointer; padding-inline:4px}
+
+/* compare */
+section.block{margin-top:56px}
+h2{font:750 26px/1.15 var(--display); letter-spacing:-.015em; margin:0 0 6px}
+.sub-lede{color:var(--ink-2); margin:0 0 20px; max-width:62ch}
+.cmp{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:6px 20px}
+.cmp-row{display:grid; grid-template-columns:200px 1fr 150px; gap:20px; align-items:center; padding-block:14px; border-bottom:1px solid var(--line)}
+.cmp-row:last-child{border-bottom:0}
+.cmp-row.head{font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); padding-block:12px 10px}
+.cmp-name b{display:block; font-weight:600} .cmp-name small{color:var(--ink-3); font-size:12.5px}
+.bar{position:relative; height:22px; background:var(--surface-2); border:1px solid var(--line); border-radius:5px}
+.bar i{position:absolute; left:0; top:0; bottom:0; border-radius:4px 0 0 4px; background:var(--c)}
+.bar .mk{position:absolute; top:-4px; bottom:-4px; left:75%; border-left:2px dashed var(--bad)}
+.bar span{position:absolute; left:8px; top:50%; transform:translateY(-50%); font:500 12px var(--mono); color:var(--on-blk)}
+.q{display:flex; align-items:center; gap:10px}
+.q b{font:500 18px var(--mono); min-width:2.2ch}
+.q .meter-track{flex:1}
+
+.notes{display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:28px}
+.notes h3{font:600 17px/1.3 var(--display); margin:0 0 6px; display:flex; align-items:center; gap:8px}
+.notes p{margin:0; color:var(--ink-2); max-width:60ch}
+.foot{margin-top:40px; font-size:12.5px; color:var(--ink-3); max-width:70ch}
+
+@media (max-width:760px){
+  .subs{grid-template-columns:repeat(2, minmax(0,1fr))}
+  .cmp-row{grid-template-columns:1fr; gap:8px}
+  .cmp-row.head{display:none}
+}
+@media (max-width:640px){
+  .single-grid{grid-template-columns:1fr; gap:22px}
+  .tank-body{height:260px}
+  .orch-grid{grid-template-columns:130px 1fr; gap:14px}
+  .stage{padding:14px}
+  .caption{font-size:16px}
+}
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{transition:none !important; animation:none !important}
+}
+</style>
+
+<header class="wrap hero">
+  <div>
+    <div class="eyebrow">AI coding assistants · large tasks</div>
+    <h1>Why big coding jobs go better with a team lead</h1>
+    <p class="lede">Watch one AI assistant take on a small task, a bigger one, and one that keeps growing. Then watch an orchestrator split the same job across specialists, each with room to think.</p>
+  </div>
+  <div class="mode">
+    <span class="eyebrow">Explain it</span>
+    <div class="seg" role="group" aria-label="Explanation style">
+      <button id="m-plain" aria-pressed="true">Plainly</button>
+      <button id="m-tech" aria-pressed="false">Technically</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab" data-i="0"><span class="n">1</span><b>One tight task</b></button>
+    <button class="tab" data-i="1"><span class="n">2</span><b>A bigger job</b></button>
+    <button class="tab" data-i="2"><span class="n">3</span><b>The rabbit hole</b></button>
+    <button class="tab" data-i="3"><span class="n">4</span><b>With an orchestrator</b></button>
+  </div>
+  <div class="stage" id="stage"></div>
+  <div class="under">
+    <p class="caption" id="caption" aria-live="polite"></p>
+    <div class="controls">
+      <button class="btn" id="pause">Pause</button>
+      <button class="btn" id="replay">Replay</button>
+      <button class="btn primary" id="next">Next scene</button>
+      <label class="auto"><input type="checkbox" id="auto" checked> Auto-advance</label>
+    </div>
+  </div>
+
+  <section class="block">
+    <h2>The four runs side by side</h2>
+    <p class="sub-lede">How full the busiest workbench got, and how careful the result was. The dashed line is where work starts to suffer, around 70–80% of the window.</p>
+    <div class="cmp" id="cmp">
+      <div class="cmp-row head"><span>Scenario</span><span>Busiest context window</span><span>Quality</span></div>
+    </div>
+  </section>
+
+  <section class="block notes">
+    <div>
+      <h3><span class="dot" style="--c:var(--core)"></span>The workbench</h3>
+      <p>An AI coding assistant can only hold so much at once: the request, the code it has read, its own reasoning, the tests. That space is its context window. Opus 5.5 has 1M tokens, but work stays sharp only up to roughly 70–80% of it.</p>
+    </div>
+    <div>
+      <h3><span class="dot" style="--c:var(--bad)"></span>The squeeze</h3>
+      <p>When a job sprawls, the assistant can tell it is running out of room. It starts rationing: skimming files, assuming how code works, putting tests off. Each shortcut looks small. Together they are why big tasks come back needing an expert's review.</p>
+    </div>
+    <div>
+      <h3><span class="dot" style="--c:var(--good)"></span>The team</h3>
+      <p>An orchestrator plans at the top and gives each specialist one scoped brief. Every specialist starts with a fresh, mostly empty window, and only a short report comes back. The big job gets the same care a small one does.</p>
+    </div>
+  </section>
+
+  <p class="foot">Token counts and quality scores are illustrative. They show the shape of the effect, not benchmark results.</p>
+</main>
+
+<script>
+const $ = (s, r=document) => r.querySelector(s);
+const NS = 'http://www.w3.org/2000/svg';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const S = { mode:'plain', scene:0, gen:0, paused:false, cap:null };
+let tanks = [];
+
+const TERMS = {
+  plain:{ window:'Workbench space', limit:'comfortable limit', quality:'Care & accuracy', agent:'One assistant', sub:'Specialist', orch:'Team lead' },
+  tech: { window:'Context window', limit:'effective limit ≈75%', quality:'Output quality', agent:'Single agent', sub:'Subagent', orch:'Orchestrator' }
+};
+const term = k => TERMS[S.mode][k];
+function applyTerms(){
+  document.querySelectorAll('[data-term]').forEach(el => el.textContent = term(el.dataset.term));
+  tanks.forEach(t => t.refresh());
+  if (S.cap) setCaption(S.cap);
+}
+
+/* ---------- components ---------- */
+function Tank(el, cap=1000){
+  el.classList.add('tank');
+  el.innerHTML = `<div class="tank-head"><span data-term="window"></span><span class="tcount mono"></span></div>
+    <div class="tank-body"><div class="zone"></div><div class="limit"><span data-term="limit"></span></div><div class="stack"></div></div>`;
+  const stack = $('.stack', el), count = $('.tcount', el);
+  const t = {
+    used:0,
+    add(label, k, color, opts={}){
+      const b = document.createElement('div');
+      b.className = 'blk' + (opts.cut ? ' cut' : '') + (opts.soft ? ' soft' : '');
+      b.style.setProperty('--c', `var(--${color})`);
+      b.innerHTML = `<span>${label}</span>`;
+      b.dataset.k = k; b.title = `${label} · ${k}k tokens`;
+      stack.appendChild(b);
+      requestAnimationFrame(() => requestAnimationFrame(() => { b.style.height = (k/cap*100) + '%'; }));
+      b.classList.toggle('tiny', k/cap < 0.05);
+      t.used += k; t.refresh(); return b;
+    },
+    squeeze(b, k){
+      t.used -= (+b.dataset.k - k); b.dataset.k = k;
+      b.style.height = (k/cap*100) + '%'; b.classList.add('compacted');
+      b.classList.toggle('tiny', k/cap < 0.05); t.refresh();
+    },
+    refresh(){
+      const pct = Math.round(t.used/cap*100);
+      count.textContent = S.mode === 'plain' ? `${pct}% full` : `${t.used}k / 1M tokens`;
+      el.classList.toggle('over', pct > 75);
+      el.querySelectorAll('[data-term]').forEach(x => x.textContent = term(x.dataset.term));
+    }
+  };
+  t.refresh(); tanks.push(t); return t;
+}
+function Meter(el, compact){
+  el.className = 'meter' + (compact ? ' compact' : '');
+  el.innerHTML = `<div class="meter-head"><span data-term="quality">${term('quality')}</span><b class="mono">–</b></div><div class="meter-track"><i></i></div>`;
+  return { set(v){ $('b', el).textContent = v; $('i', el).style.width = v + '%'; el.dataset.level = v >= 88 ? 'good' : v >= 70 ? 'warn' : 'bad'; } };
+}
+function Log(el){
+  el.className = 'log';
+  const chips = { cut:'shortcut', ok:'done', warn:'risk' };
+  return { add(text, kind){ const li = document.createElement('li'); if (kind) li.className = kind;
+    li.innerHTML = (kind ? `<em>${chips[kind]}</em>` : '') + `<span>${text}</span>`; el.appendChild(li); } };
+}
+
+/* ---------- layouts ---------- */
+const stage = $('#stage');
+function buildSingle(task){
+  stage.innerHTML = `<div class="job"><span class="eyebrow">The job</span><p>${task}</p></div>
+    <div class="single-grid">
+      <div><div class="role"><span class="dot"></span><span data-term="agent">${term('agent')}</span><small>one window for the whole job</small></div><div id="tk"></div></div>
+      <div class="side"><div id="qm"></div><div class="log-head">What it did</div><ul id="lg"></ul></div>
+    </div>`;
+  tanks = [];
+  return { tank:Tank($('#tk')), meter:Meter($('#qm')), log:Log($('#lg')) };
+}
+
+const SUBS = [
+  { name:'UI',           c:'ui',   brief:'Team settings screens and invite flow',            work:180, tests:60, q:95 },
+  { name:'Backend',      c:'be',   brief:'Teams API, billing refactor, invoice backfill',     work:250, tests:75, q:93 },
+  { name:'Security',     c:'sec',  brief:'Team roles in login, permission checks, audit log', work:200, tests:65, q:96 },
+  { name:'Arch',         c:'arch', brief:'Per-team rate limits, query plans, expected load',  work:160, tests:45, q:94 },
+];
+let wirePaths = [];
+function buildTeam(){
+  stage.innerHTML = `<div class="job"><span class="eyebrow">The job</span><p>Add team accounts, rabbit holes included: shared billing, roles, invoices, rate limits, audit log.</p></div>
+    <div class="team"><svg class="wires" aria-hidden="true"></svg>
+      <div class="orch card">
+        <div class="role"><span class="dot"></span><span data-term="orch">${term('orch')}</span><small>plans, delegates, integrates</small></div>
+        <div class="orch-grid"><div id="otk"></div><div class="side"><div id="oqm"></div><ul id="olg"></ul></div></div>
+      </div>
+      <div class="subs">${SUBS.map((s,i) => `
+        <div class="sub card" data-i="${i}" style="--c:var(--${s.c})">
+          <div class="role"><span class="dot"></span><span data-term="sub">${term('sub')}</span><span>· ${s.name}</span><span class="chip">done</span></div>
+          <p class="brief">${s.brief}</p><div class="stk"></div><div class="sq"></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  tanks = [];
+  const o = { tank:Tank($('#otk')), meter:Meter($('#oqm')), log:Log($('#olg')) };
+  const subs = [...stage.querySelectorAll('.sub')].map((el,i) => ({ el, s:SUBS[i], tank:Tank($('.stk', el)), meter:Meter($('.sq', el), true) }));
+  drawWires();
+  return { o, subs };
+}
+function drawWires(){
+  const team = $('.team', stage); if (!team) return;
+  const svg = $('.wires', team), R = team.getBoundingClientRect();
+  svg.setAttribute('viewBox', `0 0 ${R.width} ${R.height}`);
+  const o = $('.orch', team).getBoundingClientRect();
+  const x1 = o.left + o.width/2 - R.left, y1 = o.bottom - R.top;
+  wirePaths = [...team.querySelectorAll('.sub')].map((s,i) => {
+    const r = s.getBoundingClientRect();
+    const x2 = r.left + r.width/2 - R.left, y2 = r.top - R.top, my = (y1 + y2)/2;
+    let p = svg.querySelector(`path[data-i="${i}"]`);
+    if (!p){ p = document.createElementNS(NS, 'path'); p.dataset.i = i; svg.prepend(p); }
+    p.setAttribute('d', `M${x1} ${y1} C${x1} ${my} ${x2} ${my} ${x2} ${y2}`);
+    return p;
+  });
+}
+function packet(i, color, back){
+  const path = wirePaths[i]; if (reduce || !path) return;
+  const svg = path.ownerSVGElement, c = document.createElementNS(NS, 'circle');
+  c.setAttribute('r', back ? 4 : 6); c.style.fill = `var(--${color})`; svg.appendChild(c);
+  const L = path.getTotalLength(), t0 = performance.now(), dur = 1100;
+  (function f(t){
+    const p = Math.min(1, (t - t0)/dur), e = p < .5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2;
+    const pt = path.getPointAtLength((back ? 1 - e : e) * L);
+    c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y);
+    if (p < 1) requestAnimationFrame(f); else c.remove();
+  })(t0);
+}
+new ResizeObserver(() => drawWires()).observe(stage);
+
+/* ---------- scenes ---------- */
+const SCENES = [
+  () => {
+    const { tank, meter, log } = buildSingle('Fix the date picker so it shows times in the user’s own timezone.');
+    return [
+      { cap:['A small, specific job. The assistant has a whole workbench for one thing.',
+             'Tightly scoped task. The full context window is available for a single concern.'],
+        do(){ tank.add('Task brief', 20, 'core'); } },
+      { cap:['It reads the code around the problem, not just the one file.',
+             'Relevant code is loaded into context: the component plus its dependencies.'],
+        do(){ tank.add('Reading code', 60, 'core', {soft:true}); log.add('Read DatePicker.tsx and 3 related files'); meter.set(92); } },
+      { cap:['There is room to think through odd cases, like daylight saving time.',
+             'Headroom goes to reasoning about edge cases and existing conventions.'],
+        do(){ tank.add('Edge cases & reasoning', 90, 'core2'); log.add('Checked daylight-saving and midnight edge cases'); log.add('Followed the app’s existing date-format pattern'); meter.set(95); } },
+      { cap:['It finishes with tests, using only a fifth of the space. This is where AI is at its best.',
+             'Done with tests at ~20% usage. Narrow scope plus deep context is the LLM sweet spot.'],
+        do(){ tank.add('Tests', 30, 'core', {soft:true}); log.add('Wrote 6 tests, all passing', 'ok'); meter.set(96); }, d:4200 },
+    ];
+  },
+  () => {
+    const { tank, meter, log } = buildSingle('Add team accounts: shared billing, roles, and a team settings page.');
+    return [
+      { cap:['A bigger job touches several parts of the app at once, starting with the screens.',
+             'Multi-concern task. UI work loads its components and styles into the window.'],
+        do(){ tank.add('UI', 140, 'ui'); log.add('Built the team settings screens'); meter.set(90); } },
+      { cap:['Each part needs its own reading and thinking, and it all shares one workbench.',
+             'Backend concern loads models, routes and migrations into the same context.'],
+        do(){ tank.add('Backend', 170, 'be'); log.add('Added the teams API and database changes'); meter.set(88); } },
+      { cap:['Security needs attention too: who is allowed to see and change billing?',
+             'Security review competes for the same token budget.'],
+        do(){ tank.add('Security', 110, 'sec'); log.add('Checked who can view and change billing'); meter.set(86); } },
+      { cap:['Still good work, but every part gets a thinner slice of attention.',
+             'Architecture joins in. ~51% used: solid result, shallower depth per concern.'],
+        do(){ tank.add('Architecture', 90, 'arch'); log.add('Billing webhooks only lightly tested', 'warn'); meter.set(84); }, d:4200 },
+    ];
+  },
+  () => {
+    const { tank, meter, log } = buildSingle('Add team accounts: shared billing, roles, and a team settings page.');
+    const ui = tank.add('UI', 140, 'ui'), be = tank.add('Backend', 170, 'be');
+    tank.add('Security', 110, 'sec'); tank.add('Architecture', 90, 'arch');
+    meter.set(84); log.add('Picked up the bigger job at about half full');
+    return [
+      { cap:['Same job. Then the assistant opens the billing code and finds it only works for single users.',
+             'Mid-task discovery: billing is keyed to user_id. Scope expands to a billing refactor.'],
+        do(){ tank.add('Billing refactor', 120, 'be'); log.add('Found billing tied to single users; needs a refactor'); meter.set(80); } },
+      { cap:['Then it turns out login knows nothing about teams.',
+             'Auth tokens carry no team role. Security scope expands again.'],
+        do(){ tank.add('Team roles in login', 90, 'sec'); log.add('Login tokens have no team role; needs changes'); meter.set(76); } },
+      { cap:['The workbench is nearly full. To keep going, the assistant starts cutting corners.',
+             'Crossing the effective limit. The agent begins rationing context to finish.'],
+        do(){ tank.add('Invoice migration · skimmed', 60, 'be', {cut:true}); log.add('Wrote the invoice backfill without batching', 'cut'); meter.set(68); } },
+      { cap:['It skims instead of reading, and assumes instead of checking.',
+             'Files are skimmed, interfaces assumed, shared logic duplicated.'],
+        do(){ tank.add('Rate limits · skimmed', 40, 'arch', {cut:true}); tank.add('Audit log', 30, 'sec', {cut:true});
+              log.add('Assumed how the auth middleware works without reading it', 'cut'); log.add('Copied the role check instead of sharing it', 'cut'); meter.set(61); } },
+      { cap:['To make space, it summarises its own earlier notes, and detail gets lost.',
+             'Context compaction: earlier work is summarised and fine-grained detail is dropped.'],
+        do(){ tank.squeeze(ui, 80); tank.squeeze(be, 100); log.add('Earlier notes condensed to free up room', 'warn'); log.add('Tests left for later', 'cut'); meter.set(55); } },
+      { cap:['It reports success. The gaps are real, and now an expert has to go find them.',
+             'Task reported complete. Defects are latent and need expert review to surface.'],
+        do(){ log.add('Reported: all done', 'warn'); }, d:4600 },
+    ];
+  },
+  () => {
+    const { o, subs } = buildTeam();
+    return [
+      { cap:['The same sprawling job goes to a team lead first. It reads and plans before any code is written.',
+             'The orchestrator reads the request and maps the codebase before touching code.'],
+        do(){ o.tank.add('Request & code map', 40, 'core'); o.log.add('Read the request and mapped the codebase'); } },
+      { cap:['The lead splits the work into four clear briefs, one per specialty.',
+             'Work is decomposed into scoped briefs with explicit interfaces between them.'],
+        do(){ o.tank.add('Plan', 20, 'slate'); o.log.add('Wrote 4 briefs with agreed hand-off points'); } },
+      { cap:['Each specialist starts with an empty workbench and only their piece of the job.',
+             'Each subagent gets a fresh 1M-token window holding only its brief.'],
+        do(){ $('.wires', stage).classList.add('on');
+              subs.forEach((x,i) => { setTimeout(() => { x.el.classList.add('active'); x.tank.add('Brief', 15, 'slate'); }, i*160); packet(i, x.s.c); });
+              o.log.add('Handed out UI, Backend, Security and Arch'); } },
+      { cap:['With room to think, each one checks every corner, just like the small task at the start.',
+             'Every window stays well under the effective limit, so no rationing and no shortcuts.'],
+        do(){ subs.forEach((x,i) => setTimeout(() => { x.tank.add('Code & reasoning', x.s.work, x.s.c); x.tank.add('Tests', x.s.tests, x.s.c, {soft:true}); x.meter.set(x.s.q); }, i*260)); }, d:3600 },
+      { cap:['Specialists hand back short reports, not their whole workbench.',
+             'Only compact summaries return, so the orchestrator’s own context stays small.'],
+        do(){ subs.forEach((x,i) => { packet(i, x.s.c, true); $('.chip', x.el).classList.add('on');
+              setTimeout(() => o.tank.add(x.s.name + ' report', 12, x.s.c), 900 + i*120); });
+              o.log.add('Received 4 short reports'); } },
+      { cap:['The lead checks that the pieces fit together. Big job, small-task accuracy.',
+             'Orchestrator verifies integration points. Large scope, focused-task quality.'],
+        do(){ o.log.add('Checked the pieces fit together', 'ok'); o.meter.set(94); }, d:5000 },
+    ];
+  },
+];
+
+/* ---------- player ---------- */
+const capEl = $('#caption'), tabs = [...document.querySelectorAll('.tab')];
+function setCaption(c){ S.cap = c; capEl.textContent = c[S.mode === 'plain' ? 0 : 1]; }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function wait(ms, my){ let t = 0; while (t < ms){ await sleep(100); if (my !== S.gen) return; if (!S.paused) t += 100; } }
+function markTabs(p){ tabs.forEach((t,i) => { t.setAttribute('aria-pressed', i === S.scene); t.style.setProperty('--p', i === S.scene ? p + '%' : (i < S.scene ? '100%' : '0%')); }); }
+async function play(i){
+  const my = ++S.gen; S.scene = i; setPaused(false);
+  $('#next').textContent = i === 3 ? 'Start over' : 'Next scene';
+  const steps = SCENES[i](); applyTerms(); markTabs(0);
+  for (let k = 0; k < steps.length; k++){
+    if (my !== S.gen) return;
+    const st = steps[k]; setCaption(st.cap); st.do(); markTabs((k+1)/steps.length*100);
+    await wait(st.d || 3000, my);
+  }
+  if (my === S.gen && $('#auto').checked && i < 3) play(i + 1);
+}
+function setPaused(v){ S.paused = v; $('#pause').textContent = v ? 'Resume' : 'Pause'; }
+tabs.forEach(t => t.addEventListener('click', () => play(+t.dataset.i)));
+$('#replay').addEventListener('click', () => play(S.scene));
+$('#next').addEventListener('click', () => play((S.scene + 1) % 4));
+$('#pause').addEventListener('click', () => setPaused(!S.paused));
+function setMode(m){ S.mode = m; $('#m-plain').setAttribute('aria-pressed', m === 'plain'); $('#m-tech').setAttribute('aria-pressed', m === 'tech'); applyTerms(); }
+$('#m-plain').addEventListener('click', () => setMode('plain'));
+$('#m-tech').addEventListener('click', () => setMode('tech'));
+
+/* ---------- comparison ---------- */
+const CMP = [
+  { n:'One tight task', s:'one concern, one window', w:20, q:96, c:'core' },
+  { n:'A bigger job', s:'four concerns, one window', w:51, q:84, c:'ui' },
+  { n:'The rabbit hole', s:'scope keeps growing', w:85, q:55, c:'bad' },
+  { n:'With an orchestrator', s:'busiest of 5 windows', w:34, q:94, c:'good' },
+];
+$('#cmp').insertAdjacentHTML('beforeend', CMP.map(r => `
+  <div class="cmp-row">
+    <div class="cmp-name"><b>${r.n}</b><small>${r.s}</small></div>
+    <div class="bar" style="--c:var(--${r.c})"><i style="width:${r.w}%"></i><div class="mk"></div><span>${r.w}%</span></div>
+    <div class="q meter" data-level="${r.q>=88?'good':r.q>=70?'warn':'bad'}"><b>${r.q}</b><div class="meter-track"><i style="width:${r.q}%"></i></div></div>
+  </div>`).join(''));
+
+play(0);
+</script>
+
+</body></html>

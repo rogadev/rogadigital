@@ -1,0 +1,70 @@
+---
+/**
+ * EmbeddedPage — a standalone, same-origin HTML page (from public/embeds/)
+ * shown inline as part of the surrounding page.
+ *
+ * Unlike DemoFrame, nothing is scaled: the iframe fills the column width and a
+ * script grows its height to fit the embedded content, so it reads as a
+ * section of the page rather than a scrolling window. The script also mirrors
+ * the site theme (the `light` class on <html>) into the embed's
+ * `data-theme` attribute and clears the embed's own page background. Without
+ * JavaScript the iframe keeps `initialHeight` and scrolls internally.
+ */
+interface Props {
+	/** Same-origin path to the page, for example `/embeds/tool/page.html`. */
+	src: string;
+	/** Accessible iframe title. */
+	title: string;
+	/** Height in px before the content is measured, and the no-JS height. */
+	initialHeight?: number;
+	class?: string;
+}
+
+const { src, title, initialHeight = 1400, class: className = '' } = Astro.props;
+---
+
+<div class:list={['overflow-hidden rounded-lg border border-border bg-bg-soft', className]}>
+	<iframe
+		src={src}
+		title={title}
+		loading="lazy"
+		class="block w-full border-0"
+		style={`height: ${initialHeight}px;`}
+		data-embedded-page
+	></iframe>
+</div>
+
+<script>
+	const syncTheme = (doc: Document) => {
+		const light = document.documentElement.classList.contains('light');
+		doc.documentElement.dataset.theme = light ? 'light' : 'dark';
+	};
+
+	const attach = (iframe: HTMLIFrameElement) => {
+		const doc = iframe.contentDocument;
+		// A lazy iframe that has not started loading still exposes an about:blank document.
+		if (!doc?.body || doc.URL === 'about:blank' || iframe.dataset.attached) return;
+		iframe.dataset.attached = 'true';
+
+		const style = doc.createElement('style');
+		style.textContent = 'body { background: transparent; }';
+		doc.head.append(style);
+		syncTheme(doc);
+		new MutationObserver(() => syncTheme(doc)).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+
+		const fit = () => {
+			iframe.style.height = `${doc.documentElement.offsetHeight}px`;
+		};
+		new ResizeObserver(fit).observe(doc.body);
+		fit();
+	};
+
+	for (const iframe of document.querySelectorAll<HTMLIFrameElement>('iframe[data-embedded-page]')) {
+		iframe.addEventListener('load', () => attach(iframe));
+		// A cached embed can finish loading before this script runs.
+		if (iframe.contentDocument?.readyState === 'complete') attach(iframe);
+	}
+</script>

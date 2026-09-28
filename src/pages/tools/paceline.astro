@@ -1,0 +1,174 @@
+---
+import PacelineDemo from '../../components/tools/PacelineDemo.astro';
+import Base from '../../layouts/Base.astro';
+import { TOOLS } from '../../data/tools';
+
+const tool = TOOLS.find((t) => t.name === 'paceline')!;
+
+const title = 'paceline · Tools · Roga Digital';
+const description =
+	'paceline is a Claude Code status line that paces your weekly usage limit into a daily budget and shows, at a glance, where every session stands.';
+
+const segments = [
+	{
+		name: 'Model',
+		example: 'Opus 5.5',
+		body: 'The model, plus effort and fast mode when they are on.',
+	},
+	{
+		name: 'Project',
+		example: 'acme-portal (dev)',
+		body: 'The folder in a color unique to that project, and its git branch. Easy to tell three sessions apart.',
+	},
+	{
+		name: 'Session',
+		example: '18% session (resets 3:40pm)',
+		body: 'Five-hour limit left. The reset time appears once it drops below 30%.',
+	},
+	{ name: 'Week', example: '96% week', body: 'Weekly limit left.' },
+	{
+		name: 'Today',
+		example: "▲ 54% left of today's 28% budget",
+		body: 'Your share of the week for today, counting down. Flips to "used" once you go over.',
+	},
+	{
+		name: 'Warnings',
+		example: 'ctx 72% · cache cold: 82k @ ~2x',
+		body: 'Only when they matter: the context window filling up, or the prompt cache going cold.',
+	},
+];
+
+const safety = [
+	'No dependencies. It uses only the Go standard library.',
+	'It never starts processes or touches the network, and the build fails if that changes.',
+	'It strips control characters from folder and branch names, so a hostile repo name cannot hijack your terminal.',
+	'The installer backs up your settings and never overwrites a file it cannot parse.',
+];
+---
+
+<Base {title} {description} ogPath="/og/tools.png">
+	<!-- Hero -->
+	<section class="border-b border-border">
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<div class="pt-20 pb-16 sm:pt-28 sm:pb-20">
+				<a
+					href="/tools/"
+					class="inline-flex min-h-11 items-center gap-1.5 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase transition-colors hover:text-fg"
+				>
+					<span aria-hidden="true">←</span> Tools
+				</a>
+				<h1 class="mt-4 max-w-3xl font-mono text-4xl font-medium tracking-tight sm:text-5xl">
+					{tool.name}
+				</h1>
+				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
+					Claude Code tells you how much of your weekly limit is left, but not whether that is a lot
+					or a little for the days remaining. paceline divides what is left by the days until the
+					reset, gives you today&rsquo;s budget, and counts it down as you work.
+				</p>
+				<div class="mt-8 flex flex-wrap items-center gap-3">
+					<a
+						href={tool.repo}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex min-h-11 items-center gap-2 rounded-sm bg-fg px-4 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+					>
+						View on GitHub <span aria-hidden="true">↗</span>
+						<span class="sr-only">(opens in a new tab)</span>
+					</a>
+					<a
+						href="#install"
+						class="inline-flex min-h-11 items-center rounded-sm border border-border px-4 text-sm font-medium text-fg transition-colors hover:border-border-strong hover:bg-bg-elevated"
+					>
+						Install it
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Demo -->
+	<section class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="demo">
+		<h2 id="demo" class="max-w-3xl text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+			One line, every session
+		</h2>
+		<p class="mt-4 mb-10 max-w-2xl text-fg-muted text-pretty">
+			The status line sits under the prompt and updates as you work. Here is how it reads across a
+			typical week.
+		</p>
+		<PacelineDemo />
+	</section>
+
+	<!-- Segments -->
+	<section class="border-t border-border" aria-labelledby="segments">
+		<div class="mx-auto grid w-full max-w-page gap-10 px-6 py-16 sm:px-8 sm:py-20 lg:grid-cols-[2fr_3fr]">
+			<div>
+				<h2 id="segments" class="text-2xl font-medium tracking-tight sm:text-3xl">
+					What each part means
+				</h2>
+				<p class="mt-4 text-fg-muted text-pretty">
+					The arrow is pace advice. It compares today&rsquo;s budget to an even share of the week:
+					&#9650; means you have room to push, &#9660; means ease off, and &#9679; means about even.
+					A light Monday leaves bigger budgets for the rest of the week.
+				</p>
+			</div>
+			<dl class="divide-y divide-border border-y border-border">
+				{segments.map((s) => (
+					<div class="grid gap-1 py-4 sm:grid-cols-[7rem_1fr] sm:gap-6">
+						<dt class="font-medium">{s.name}</dt>
+						<dd class="min-w-0">
+							<code class="font-mono text-xs break-words text-fg">{s.example}</code>
+							<p class="mt-1 text-sm text-fg-muted text-pretty">{s.body}</p>
+						</dd>
+					</div>
+				))}
+			</dl>
+		</div>
+	</section>
+
+	<!-- Built to do very little -->
+	<section class="border-t border-border" aria-labelledby="safety">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="safety" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				Built to do very little
+			</h2>
+			<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+				A status line runs on every refresh, in every repo you open. So paceline is a single binary
+				that reads what Claude Code hands it and prints one line.
+			</p>
+			<ul class="mt-8 grid gap-4 sm:grid-cols-2">
+				{safety.map((item) => (
+					<li class="rounded-lg border border-border bg-bg-soft p-5 text-sm text-fg-muted text-pretty">
+						{item}
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<!-- Install -->
+	<section id="install" class="border-t border-border" aria-labelledby="install-heading">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="install-heading" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				Install it
+			</h2>
+			<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+				Download the binary for macOS, Linux, or Windows from the
+				<a
+					href={`${tool.repo}/releases/latest`}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-fg underline underline-offset-4 hover:no-underline"
+				>
+					latest release<span class="sr-only"> (opens in a new tab)</span>
+				</a>
+				, or build it with Go. Then point Claude Code at it:
+			</p>
+			<pre class="mt-6 max-w-2xl overflow-x-auto rounded-sm border border-border bg-bg-soft p-4 font-mono text-xs leading-relaxed"><code>go install github.com/rogadev/paceline/cmd/paceline@latest
+paceline install</code></pre>
+			<p class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
+				<code class="font-mono text-fg">paceline uninstall</code> puts back whatever status line you
+				had before.
+			</p>
+		</div>
+	</section>
+</Base>

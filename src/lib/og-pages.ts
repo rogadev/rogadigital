@@ -67,6 +67,11 @@ export const OG_PAGES: Record<string, OgPageConfig> = {
 		title: 'Need a hand with a product?',
 		footnote: 'Reply within two business days',
 	},
+	tools: {
+		eyebrow: 'Tools',
+		title: 'Built for my own work, shared for yours.',
+		footnote: 'Open source · Developer tooling',
+	},
 };
 
 /**

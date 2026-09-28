@@ -1,0 +1,411 @@
+---
+/**
+ * PacelineDemo — a mock Claude Code terminal whose status line cycles through
+ * the situations paceline reports: a fresh day, a light week, a session
+ * running dry, going over today's budget, a cold prompt cache, and the last
+ * day before the weekly reset.
+ *
+ * Output formats, glyphs, and color thresholds mirror paceline's renderer
+ * (green at 30% or more left, yellow at 15%, red below). Project names are
+ * placeholders. Colors are nudged from the Windows Terminal defaults where
+ * needed to reach 4.5:1 contrast on the terminal background.
+ *
+ * Every scenario is rendered as HTML, so without JavaScript the first one
+ * shows. The script cycles them and wires the scenario buttons and pause.
+ */
+type Tone = 'cyan' | 'green' | 'yellow' | 'red' | 'dim';
+
+interface Segment {
+	text: string;
+	tone?: Tone;
+	/** Project segment: OKLCH hue for the folder name, plus the git branch. */
+	hue?: number;
+	branch?: string;
+}
+
+interface Scenario {
+	label: string;
+	caption: string;
+	/** Last line of the assistant's reply, shown above the spinner. */
+	reply: string;
+	/** Text typed into the prompt box. */
+	prompt: string;
+	verb: string;
+	activity: string;
+	segments: Segment[];
+}
+
+const scenarios: Scenario[] = [
+	{
+		label: 'Fresh day',
+		caption:
+			"Morning. The session is full, and today's budget is exactly an even share of what is left in the week. The dot says you are on pace.",
+		reply: 'Found it. The date picker formats in UTC. Switching it to the user timezone now.',
+		prompt: 'also check the invoice dates while you are in there',
+		verb: 'Crafting…',
+		activity: '28s · ↓ 1.2k tokens · thinking',
+		segments: [
+			{ text: 'Opus 5.5', tone: 'cyan' },
+			{ text: 'acme-portal', hue: 190, branch: 'dev' },
+			{ text: '98% session', tone: 'green' },
+			{ text: '52% week', tone: 'green' },
+			{ text: "● 100% left of today's 17% budget", tone: 'green' },
+			{ text: '2m', tone: 'dim' },
+		],
+	},
+	{
+		label: 'Light week',
+		caption:
+			"A quiet start to the week left plenty unspent, so today's budget is bigger than an even share. The up arrow says you have room to push.",
+		reply: 'Offline sync is in. Moving the queue logic into its own module next.',
+		prompt: 'go ahead and do the conflict handling too',
+		verb: 'Refactoring…',
+		activity: '1m 04s · ↓ 6.8k tokens',
+		segments: [
+			{ text: 'Sonnet 5', tone: 'cyan' },
+			{ text: 'field-app', hue: 40, branch: 'feat/offline' },
+			{ text: '71% session', tone: 'green' },
+			{ text: '88% week', tone: 'green' },
+			{ text: "▲ 64% left of today's 29% budget", tone: 'green' },
+			{ text: '1h 12m', tone: 'dim' },
+		],
+	},
+	{
+		label: 'Session running dry',
+		caption:
+			'The five-hour session is nearly spent, so the reset time appears. The context window is filling too, and the warning only shows up once it matters.',
+		reply: 'The flaky test is a race in the session refresh. Tracing where the token gets swapped.',
+		prompt: 'write up what you found before the session runs out',
+		verb: 'Investigating…',
+		activity: '3m 41s · ↓ 18.4k tokens · thinking',
+		segments: [
+			{ text: 'Opus 5.5', tone: 'cyan' },
+			{ text: 'acme-portal', hue: 190, branch: 'dev' },
+			{ text: '6% session (resets 3:40pm)', tone: 'red' },
+			{ text: '44% week', tone: 'green' },
+			{ text: "▼ 22% left of today's 11% budget", tone: 'yellow' },
+			{ text: 'ctx 78%', tone: 'yellow' },
+			{ text: '3h 5m', tone: 'dim' },
+		],
+	},
+	{
+		label: 'Over budget',
+		caption:
+			"Today's budget is gone. The segment flips from left to used so you can see how far over you are, and the arrow says ease off.",
+		reply: 'Webhook retries now back off properly. Adding a test for the duplicate event case.',
+		prompt: 'ok, last thing today, promise',
+		verb: 'Debugging…',
+		activity: '52s · ↓ 3.1k tokens',
+		segments: [
+			{ text: 'Opus 5.5', tone: 'cyan' },
+			{ text: 'billing-api', hue: 310, branch: 'fix/webhooks' },
+			{ text: '41% session', tone: 'green' },
+			{ text: '23% week', tone: 'yellow' },
+			{ text: "▼ 118% used of today's 9% budget", tone: 'red' },
+			{ text: '2h 40m', tone: 'dim' },
+		],
+	},
+	{
+		label: 'Cache went cold',
+		caption:
+			'You stepped away and the prompt cache expired. The next message re-reads the whole conversation at about twice the price, so you know before you send it.',
+		reply: 'The docs build is green. Let me know what to tackle next.',
+		prompt: 'back from lunch. where were we?',
+		verb: 'Reading…',
+		activity: '9s · ↓ 402 tokens',
+		segments: [
+			{ text: 'Opus 5.5', tone: 'cyan' },
+			{ text: 'docs-site', hue: 130, branch: 'main' },
+			{ text: '63% session', tone: 'green' },
+			{ text: '57% week', tone: 'green' },
+			{ text: "● 48% left of today's 14% budget", tone: 'green' },
+			{ text: 'cache cold: 82k @ ~2x', tone: 'red' },
+			{ text: '47m', tone: 'dim' },
+		],
+	},
+	{
+		label: 'Last day',
+		caption:
+			'The weekly limit resets tonight. There is no point pacing a single day, so the budget gives way to the reset time.',
+		reply: 'Copy tweaks are done across all six screens.',
+		prompt: 'resets at 9, use whatever is left on the backlog',
+		verb: 'Polishing…',
+		activity: '17s · ↓ 880 tokens',
+		segments: [
+			{ text: 'Haiku 4.5', tone: 'cyan' },
+			{ text: 'field-app', hue: 40, branch: 'main' },
+			{ text: '90% session', tone: 'green' },
+			{ text: '12% week', tone: 'red' },
+			{ text: '⏳ last day, resets 9pm', tone: 'cyan' },
+			{ text: '25m', tone: 'dim' },
+		],
+	},
+];
+---
+
+<figure class="paceline-demo not-prose" data-paceline-demo>
+	<div class="overflow-hidden rounded-lg border border-border">
+		<div class="terminal font-mono text-xs leading-relaxed sm:text-sm">
+			{scenarios.map((s, i) => (
+				<div class="scene" data-scene={i} hidden={i !== 0}>
+					<p class="reply" aria-hidden="true">
+						<span class="bullet">●</span>
+						<span>{s.reply}</span>
+					</p>
+					<p class="activity" aria-hidden="true">
+						<span class="spinner">✻</span> <span class="verb">{s.verb}</span>{' '}
+						<span class="t-dim">({s.activity})</span>
+					</p>
+					<div class="prompt" aria-hidden="true">
+						<span class="t-dim">&gt;</span> <span data-typed={s.prompt}>{s.prompt}</span>
+						<span class="cursor" />
+					</div>
+					<p class="status">
+						<span class="sr-only">Status line: </span>
+						{s.segments.map((seg, k) => (
+							<>
+								{k > 0 && <span class="t-dim sep"> · </span>}
+								{seg.hue !== undefined ? (
+									<span class="seg">
+										<span style={`color: oklch(0.78 0.12 ${seg.hue})`}>{seg.text}</span>
+										{seg.branch && (
+											<>
+												{' '}
+												<span class="t-dim">(</span>
+												{seg.branch}
+												<span class="t-dim">)</span>
+											</>
+										)}
+									</span>
+								) : (
+									<span class:list={['seg', seg.tone && `t-${seg.tone}`]}>{seg.text}</span>
+								)}
+							</>
+						))}
+					</p>
+					<p class="mode" aria-hidden="true">
+						<span class="t-mode">⏵⏵ bypass permissions on</span>{' '}
+						<span class="t-dim">(shift+tab to cycle) · ← 4 agents</span>
+					</p>
+				</div>
+			))}
+		</div>
+	</div>
+
+	<div class="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label="Paceline scenarios">
+		{scenarios.map((s, i) => (
+			<button
+				type="button"
+				data-pick={i}
+				aria-pressed={i === 0 ? 'true' : 'false'}
+				class="pick min-h-11 rounded-sm border border-border px-3 text-sm text-fg-muted transition-colors hover:border-border-strong hover:text-fg"
+			>
+				{s.label}
+			</button>
+		))}
+		<button
+			type="button"
+			data-toggle
+			class="ml-auto hidden min-h-11 rounded-sm border border-border px-3 text-sm font-medium text-fg transition-colors hover:border-border-strong hover:bg-bg-elevated"
+		>
+			Pause
+		</button>
+	</div>
+
+	<figcaption class="mt-4 min-h-[4.5em] max-w-2xl text-fg-muted text-pretty" aria-live="polite">
+		{scenarios.map((s, i) => (
+			<span data-caption={i} hidden={i !== 0}>
+				{s.caption}
+			</span>
+		))}
+	</figcaption>
+</figure>
+
+<style>
+	/* A terminal is dark in both site themes, like the real thing. */
+	.terminal {
+		--term-bg: #0c0c0c;
+		--term-fg: #cccccc;
+		--term-dim: #8a8a8a;
+		--term-rule: #2aa4bf;
+		background: var(--term-bg);
+		color: var(--term-fg);
+		padding: 1.25rem 1rem 1rem;
+		min-height: 13rem;
+	}
+
+	.reply,
+	.activity,
+	.status,
+	.mode {
+		margin: 0;
+	}
+
+	.reply {
+		display: flex;
+		gap: 0.75ch;
+		margin-bottom: 1.25rem;
+	}
+
+	.bullet {
+		flex: none;
+	}
+
+	.verb {
+		color: #e8a27c;
+	}
+
+	.spinner {
+		color: #3a96dd;
+		display: inline-block;
+		animation: pulse 1.6s ease-in-out infinite;
+	}
+
+	.prompt {
+		margin: 1.25rem 0 0.75rem;
+		padding: 0.5rem 0;
+		border-block: 1px solid var(--term-rule);
+	}
+
+	.cursor {
+		display: inline-block;
+		width: 1px;
+		height: 1.1em;
+		vertical-align: text-bottom;
+		background: var(--term-fg);
+		animation: blink 1.1s steps(1) infinite;
+	}
+
+	.status,
+	.mode {
+		padding-left: 1rem;
+	}
+
+	/* Segments wrap as whole units on narrow screens instead of mid-phrase. */
+	.seg {
+		white-space: nowrap;
+	}
+
+	.scene:not([hidden]) .seg {
+		animation: rise 0.45s ease-out both;
+	}
+
+	.t-cyan {
+		color: #3a96dd;
+	}
+	.t-green {
+		color: #16c60c;
+	}
+	.t-yellow {
+		color: #c19c00;
+	}
+	.t-red {
+		color: #e0494a;
+	}
+	.t-dim {
+		color: var(--term-dim);
+	}
+	.t-mode {
+		color: #f26d7d;
+	}
+
+	.pick[aria-pressed='true'] {
+		border-color: var(--color-fg);
+		color: var(--color-fg);
+	}
+
+	@keyframes rise {
+		from {
+			opacity: 0.15;
+			transform: translateY(3px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@keyframes pulse {
+		50% {
+			opacity: 0.35;
+		}
+	}
+
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.spinner,
+		.cursor,
+		.scene:not([hidden]) .seg {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	const INTERVAL_MS = 6000;
+	const TYPE_MS = 45;
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-paceline-demo]')) {
+		const scenes = [...root.querySelectorAll<HTMLElement>('[data-scene]')];
+		const captions = [...root.querySelectorAll<HTMLElement>('[data-caption]')];
+		const picks = [...root.querySelectorAll<HTMLButtonElement>('[data-pick]')];
+		const toggle = root.querySelector<HTMLButtonElement>('[data-toggle]');
+		if (!toggle) continue;
+
+		let current = 0;
+		let timer: number | undefined;
+		let typing: number | undefined;
+
+		// Types the scene's prompt one character at a time, as if someone is
+		// writing their next message while the assistant works.
+		const typePrompt = (scene: HTMLElement) => {
+			const target = scene.querySelector<HTMLElement>('[data-typed]');
+			const text = target?.dataset.typed;
+			if (!target || !text) return;
+			window.clearInterval(typing);
+			let length = 0;
+			target.textContent = '';
+			typing = window.setInterval(() => {
+				length += 1;
+				target.textContent = text.slice(0, length);
+				if (length >= text.length) window.clearInterval(typing);
+			}, TYPE_MS);
+		};
+
+		const show = (index: number) => {
+			current = index;
+			scenes.forEach((el, i) => (el.hidden = i !== index));
+			if (!reduceMotion) typePrompt(scenes[index]);
+			captions.forEach((el, i) => (el.hidden = i !== index));
+			picks.forEach((el, i) => el.setAttribute('aria-pressed', String(i === index)));
+		};
+
+		const setPlaying = (playing: boolean) => {
+			window.clearInterval(timer);
+			timer = playing
+				? window.setInterval(() => show((current + 1) % scenes.length), INTERVAL_MS)
+				: undefined;
+			toggle.textContent = playing ? 'Pause' : 'Play';
+		};
+
+		picks.forEach((el, i) =>
+			el.addEventListener('click', () => {
+				show(i);
+				setPlaying(false);
+			}),
+		);
+		toggle.addEventListener('click', () => setPlaying(timer === undefined));
+		toggle.classList.remove('hidden');
+
+		// Reduced motion starts paused with prompts fully written; the scenario
+		// buttons still work.
+		setPlaying(!reduceMotion);
+		if (!reduceMotion) typePrompt(scenes[0]);
+	}
+</script>
