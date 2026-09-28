@@ -236,10 +236,10 @@ const TERMS = {
   tech: { window:'Context window', limit:'effective limit ≈75%', quality:'Output quality', agent:'Single agent', sub:'Subagent', orch:'Orchestrator' }
 };
 const term = k => TERMS[S.mode][k];
-function applyTerms(){
+function applyTerms(announce){
   document.querySelectorAll('[data-term]').forEach(el => el.textContent = term(el.dataset.term));
   tanks.forEach(t => t.refresh());
-  if (S.cap) setCaption(S.cap);
+  if (S.cap) setCaption(S.cap, announce);
 }
 
 /* ---------- components ---------- */
@@ -449,27 +449,31 @@ const SCENES = [
 
 /* ---------- player ---------- */
 const capEl = $('#caption'), tabs = [...document.querySelectorAll('.tab')];
-function setCaption(c){ S.cap = c; capEl.textContent = c[S.mode === 'plain' ? 0 : 1]; }
+// The caption is a live region only for changes the user asked for. Timed steps
+// would otherwise announce every few seconds, so they update it with it off.
+function setCaption(c, announce){ S.cap = c; capEl.setAttribute('aria-live', announce ? 'polite' : 'off'); capEl.textContent = c[S.mode === 'plain' ? 0 : 1]; }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function wait(ms, my){ let t = 0; while (t < ms){ await sleep(100); if (my !== S.gen) return; if (!S.paused) t += 100; } }
 function markTabs(p){ tabs.forEach((t,i) => { t.setAttribute('aria-pressed', i === S.scene); t.style.setProperty('--p', i === S.scene ? p + '%' : (i < S.scene ? '100%' : '0%')); }); }
-async function play(i){
-  const my = ++S.gen; S.scene = i; setPaused(false);
+// A reduced-motion visitor who picks a scene sees its first step, then steps on
+// with Resume. Auto-advance only runs once they have switched it on and resumed.
+async function play(i, user){
+  const my = ++S.gen; S.scene = i; setPaused(!!user && reduce);
   $('#next').textContent = i === 3 ? 'Start over' : 'Next scene';
   const steps = SCENES[i](); applyTerms(); markTabs(0);
   for (let k = 0; k < steps.length; k++){
     if (my !== S.gen) return;
-    const st = steps[k]; setCaption(st.cap); st.do(); markTabs((k+1)/steps.length*100);
+    const st = steps[k]; setCaption(st.cap, user && k === 0); st.do(); markTabs((k+1)/steps.length*100);
     await wait(st.d || 3000, my);
   }
   if (my === S.gen && $('#auto').checked && i < 3) play(i + 1);
 }
 function setPaused(v){ S.paused = v; $('#pause').textContent = v ? 'Resume' : 'Pause'; }
-tabs.forEach(t => t.addEventListener('click', () => play(+t.dataset.i)));
-$('#replay').addEventListener('click', () => play(S.scene));
-$('#next').addEventListener('click', () => play((S.scene + 1) % 4));
+tabs.forEach(t => t.addEventListener('click', () => play(+t.dataset.i, true)));
+$('#replay').addEventListener('click', () => play(S.scene, true));
+$('#next').addEventListener('click', () => play((S.scene + 1) % 4, true));
 $('#pause').addEventListener('click', () => setPaused(!S.paused));
-function setMode(m){ S.mode = m; $('#m-plain').setAttribute('aria-pressed', m === 'plain'); $('#m-tech').setAttribute('aria-pressed', m === 'tech'); applyTerms(); }
+function setMode(m){ S.mode = m; $('#m-plain').setAttribute('aria-pressed', m === 'plain'); $('#m-tech').setAttribute('aria-pressed', m === 'tech'); applyTerms(true); }
 $('#m-plain').addEventListener('click', () => setMode('plain'));
 $('#m-tech').addEventListener('click', () => setMode('tech'));
 

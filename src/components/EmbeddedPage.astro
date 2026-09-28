@@ -41,10 +41,16 @@ const { src, title, initialHeight = 1400, class: className = '' } = Astro.props;
 	// orc-pack embed (its tokens and markup) to the site: Geist type, the site's
 	// neutrals and accent (hex values from src/styles/global.css), no duplicate of
 	// the hero the page already renders, and a stage tall enough that changing
-	// scenes does not push the page around. Category hues and status colours stay.
-	// --ink-3 sits midway between fg-muted and fg-subtle, and the light accent uses
-	// accent-hover, because fg-subtle and #5b67ff fall below 4.5:1 on the embed's
-	// surfaces and under its white block labels. The stage heights are measured:
+	// scenes does not push the page around. Category hues and status colours keep
+	// their hue but not always their value: every one is small text or sits under
+	// small text, so each must reach 4.5:1. --ink-3 sits midway between fg-muted
+	// and fg-subtle, and the light accent uses accent-hover, because fg-subtle and
+	// #5b67ff fall below 4.5:1 on the embed's surfaces and under its white block
+	// labels. For the same reason the light theme darkens --be, --sec and --arch
+	// (fills under white labels) and --good and --warn (chip text on --surface-2).
+	// Soft and compacted blocks fade their hue toward the surface, so --on-blk
+	// labels fall to about 2.5:1 on them; they take --ink labels on a tint faded
+	// far enough for that to clear 5:1 in both themes. The stage heights are measured:
 	// from 761px they fit the tallest (orchestrator) scene; below that its cards
 	// wrap to two rows and it roughly doubles, so they fit only scenes 1 to 3
 	// rather than leave a large gap under those.
@@ -60,6 +66,7 @@ body { background: transparent; }
 	--bg: #fafafa; --surface: #ffffff; --surface-2: #f4f4f5;
 	--ink: #0a0a0b; --ink-2: #52525b; --ink-3: #62626a; --line: #e5e5e8;
 	--accent: #4751f0; --core: #4751f0; --core2: #515cf8; --on-blk: #ffffff;
+	--be: #0b8274; --sec: #c54e0e; --arch: #946e00; --good: #1c7e45; --warn: #966319;
 }
 :root[data-theme='dark'] {
 	--bg: #101012; --surface: #0a0a0b; --surface-2: #161618;
@@ -67,6 +74,8 @@ body { background: transparent; }
 	--accent: #5b67ff; --core: #5b67ff; --core2: #7d88ff; --on-blk: #0a0a0b;
 }
 h1, h2 { font-weight: 600; }
+.blk.soft { background: color-mix(in srgb, var(--c) 50%, var(--surface)); color: var(--ink); }
+.blk.compacted { opacity: 1; background: color-mix(in srgb, var(--c) 35%, var(--surface)); color: var(--ink); }
 .hero { padding-block: 20px 16px; }
 .hero > div:first-child { display: none; }
 .stage { min-height: 1040px; }

@@ -1,6 +1,7 @@
 ---
 import MobileNav from './MobileNav.svelte';
 import ThemeToggle from './ThemeToggle.svelte';
+import { isNavItemActive } from '../lib/nav-active';
 
 const nav = [
 	{ href: '/work/', label: 'Work' },
@@ -22,7 +23,7 @@ const path = Astro.url.pathname;
 		<!-- Desktop nav -->
 		<nav aria-label="Primary" class="hidden items-center gap-1 md:flex">
 			{nav.map((item) => {
-				const active = path === item.href || path.startsWith(item.href + '/');
+				const active = isNavItemActive(path, item.href);
 				return (
 					<a
 						href={item.href}
