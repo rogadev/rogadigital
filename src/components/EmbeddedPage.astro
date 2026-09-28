@@ -47,7 +47,9 @@ const { src, title, initialHeight = 1400, class: className = '' } = Astro.props;
 		iframe.dataset.attached = 'true';
 
 		const style = doc.createElement('style');
-		style.textContent = 'body { background: transparent; }';
+		// The frame always grows to fit, so the embed never needs its own
+		// scrollbar; hiding it stops sub-pixel rounding from showing one.
+		style.textContent = 'html, body { overflow: hidden; } body { background: transparent; }';
 		doc.head.append(style);
 		syncTheme(doc);
 		new MutationObserver(() => syncTheme(doc)).observe(document.documentElement, {
@@ -56,9 +58,27 @@ const { src, title, initialHeight = 1400, class: className = '' } = Astro.props;
 		});
 
 		const fit = () => {
-			iframe.style.height = `${doc.documentElement.offsetHeight}px`;
+			iframe.style.height = `${Math.ceil(doc.documentElement.getBoundingClientRect().height)}px`;
 		};
-		new ResizeObserver(fit).observe(doc.body);
+		// Resize notifications can be skipped while the frame's rendering is
+		// throttled, so content changes (a new scene, a reflowed layout) also
+		// trigger a re-measure.
+		let pending = false;
+		const scheduleFit = () => {
+			if (pending) return;
+			pending = true;
+			window.setTimeout(() => {
+				pending = false;
+				fit();
+			}, 50);
+		};
+		new ResizeObserver(scheduleFit).observe(doc.body);
+		new MutationObserver(scheduleFit).observe(doc.body, {
+			childList: true,
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['class', 'style'],
+		});
 		fit();
 	};
 
