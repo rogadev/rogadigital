@@ -35,7 +35,7 @@
 		"@shikijs/transformers": "^4.4.3",
 		"@tailwindcss/vite": "^4.3.3",
 		"astro": "^7.3.3",
-		"satori": "^0.33.4",
+		"satori": "^0.33.5",
 		"sharp": "^0.35.4",
 		"svelte": "^5.57.1",
 		"tailwindcss": "^4.3.3",
