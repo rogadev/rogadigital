@@ -203,13 +203,18 @@ const scenarios: Scenario[] = [
 				{s.label}
 			</button>
 		))}
-		<button
-			type="button"
-			data-toggle
-			class="ml-auto hidden min-h-11 rounded-sm border border-border px-3 text-sm font-medium text-fg transition-colors hover:border-border-strong hover:bg-bg-elevated"
-		>
-			Pause
-		</button>
+		<div class="ml-auto hidden items-center gap-3" data-controls>
+			<span class="countdown" aria-hidden="true">
+				<span class="countdown-fill" data-countdown></span>
+			</span>
+			<button
+				type="button"
+				data-toggle
+				class="min-h-11 min-w-[4.5rem] rounded-sm border border-border px-3 text-sm font-medium text-fg transition-colors hover:border-border-strong hover:bg-bg-elevated"
+			>
+				Pause
+			</button>
+		</div>
 	</div>
 
 	<figcaption class="mt-4 min-h-[4.5em] max-w-2xl text-fg-muted text-pretty" aria-live="polite">
@@ -309,6 +314,32 @@ const scenarios: Scenario[] = [
 		color: #f26d7d;
 	}
 
+	.countdown {
+		display: block;
+		width: 4rem;
+		height: 3px;
+		overflow: hidden;
+		border-radius: 9999px;
+		background: var(--color-border);
+	}
+
+	.countdown-fill {
+		display: block;
+		height: 100%;
+		width: 0;
+		background: var(--color-fg-muted);
+	}
+
+	.countdown-fill.run {
+		animation: countdown linear forwards;
+	}
+
+	@keyframes countdown {
+		to {
+			width: 100%;
+		}
+	}
+
 	.pick[aria-pressed='true'] {
 		border-color: var(--color-fg);
 		color: var(--color-fg);
@@ -347,7 +378,7 @@ const scenarios: Scenario[] = [
 </style>
 
 <script>
-	const INTERVAL_MS = 6000;
+	const SCENE_MS = 8000;
 	const TYPE_MS = 45;
 	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -355,11 +386,13 @@ const scenarios: Scenario[] = [
 		const scenes = [...root.querySelectorAll<HTMLElement>('[data-scene]')];
 		const captions = [...root.querySelectorAll<HTMLElement>('[data-caption]')];
 		const picks = [...root.querySelectorAll<HTMLButtonElement>('[data-pick]')];
+		const controls = root.querySelector<HTMLElement>('[data-controls]');
 		const toggle = root.querySelector<HTMLButtonElement>('[data-toggle]');
-		if (!toggle) continue;
+		const countdown = root.querySelector<HTMLElement>('[data-countdown]');
+		if (!controls || !toggle || !countdown) continue;
 
 		let current = 0;
-		let timer: number | undefined;
+		let playing = false;
 		let typing: number | undefined;
 
 		// Types the scene's prompt one character at a time, as if someone is
@@ -386,26 +419,41 @@ const scenarios: Scenario[] = [
 			picks.forEach((el, i) => el.setAttribute('aria-pressed', String(i === index)));
 		};
 
-		const setPlaying = (playing: boolean) => {
-			window.clearInterval(timer);
-			timer = playing
-				? window.setInterval(() => show((current + 1) % scenes.length), INTERVAL_MS)
-				: undefined;
+		// The countdown bar is the timer: each scene advances when its fill
+		// animation ends, so pausing the animation pauses the cycle mid-scene.
+		countdown.style.animationDuration = `${SCENE_MS}ms`;
+
+		const restartCountdown = () => {
+			countdown.classList.remove('run');
+			void countdown.offsetWidth; // Reflow so the animation starts over.
+			countdown.classList.add('run');
+		};
+
+		const setPlaying = (next: boolean) => {
+			playing = next;
+			countdown.style.animationPlayState = playing ? 'running' : 'paused';
 			toggle.textContent = playing ? 'Pause' : 'Play';
 		};
+
+		countdown.addEventListener('animationend', () => {
+			show((current + 1) % scenes.length);
+			restartCountdown();
+		});
 
 		picks.forEach((el, i) =>
 			el.addEventListener('click', () => {
 				show(i);
 				setPlaying(false);
+				restartCountdown();
 			}),
 		);
-		toggle.addEventListener('click', () => setPlaying(timer === undefined));
-		toggle.classList.remove('hidden');
+		toggle.addEventListener('click', () => setPlaying(!playing));
+		controls.classList.replace('hidden', 'flex');
 
 		// Reduced motion starts paused with prompts fully written; the scenario
 		// buttons still work.
 		setPlaying(!reduceMotion);
+		restartCountdown();
 		if (!reduceMotion) typePrompt(scenes[0]);
 	}
 </script>
