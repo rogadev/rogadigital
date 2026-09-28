@@ -75,7 +75,7 @@ const scenarios: Scenario[] = [
 		caption:
 			'The five-hour session is nearly spent, so the reset time appears. The context window is filling too, and the warning only shows up once it matters.',
 		reply: 'The flaky test is a race in the session refresh. Tracing where the token gets swapped.',
-		prompt: 'write up what you found before the session runs out',
+		prompt: 'add a regression test for the token refresh once it is fixed',
 		verb: 'Investigating…',
 		activity: '3m 41s · ↓ 18.4k tokens · thinking',
 		segments: [
@@ -93,7 +93,7 @@ const scenarios: Scenario[] = [
 		caption:
 			"Today's budget is gone. The segment flips from left to used so you can see how far over you are, and the arrow says ease off.",
 		reply: 'Webhook retries now back off properly. Adding a test for the duplicate event case.',
-		prompt: 'ok, last thing today, promise',
+		prompt: 'log the event id when a duplicate is skipped',
 		verb: 'Debugging…',
 		activity: '52s · ↓ 3.1k tokens',
 		segments: [
@@ -110,7 +110,7 @@ const scenarios: Scenario[] = [
 		caption:
 			'You stepped away and the prompt cache expired. The next message re-reads the whole conversation at about twice the price, so you know before you send it.',
 		reply: 'The docs build is green. Let me know what to tackle next.',
-		prompt: 'back from lunch. where were we?',
+		prompt: 'add a search box to the docs sidebar',
 		verb: 'Reading…',
 		activity: '9s · ↓ 402 tokens',
 		segments: [
@@ -128,7 +128,7 @@ const scenarios: Scenario[] = [
 		caption:
 			'The weekly limit resets tonight. There is no point pacing a single day, so the budget gives way to the reset time.',
 		reply: 'Copy tweaks are done across all six screens.',
-		prompt: 'resets at 9, use whatever is left on the backlog',
+		prompt: 'make the empty states match the new illustrations',
 		verb: 'Polishing…',
 		activity: '17s · ↓ 880 tokens',
 		segments: [
