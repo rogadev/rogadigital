@@ -82,6 +82,8 @@ h1{font:750 clamp(30px,5vw,50px)/1.02 var(--display); letter-spacing:-.025em; ma
 /* meter */
 .meter-head{display:flex; justify-content:space-between; align-items:baseline; font-size:13px; color:var(--ink-2); margin-bottom:6px}
 .meter-head b{font:500 22px var(--mono); color:var(--ink)}
+.meter:not(.compact) .meter-head b::after{content:' / 100'; font:400 12px var(--mono); color:var(--ink-3)}
+.meter-hint{margin:0 0 8px; font-size:12.5px; color:var(--ink-3)}
 .meter-track{height:8px; border-radius:4px; background:var(--surface-2); border:1px solid var(--line); overflow:hidden}
 .meter-track i{display:block; height:100%; width:0; background:var(--ink-3); transition:width .8s, background-color .4s}
 .meter[data-level="good"] i{background:var(--good)} .meter[data-level="warn"] i{background:var(--warn)} .meter[data-level="bad"] i{background:var(--bad)}
@@ -202,7 +204,7 @@ h2{font:750 26px/1.15 var(--display); letter-spacing:-.015em; margin:0 0 6px}
     <h2>The four runs side by side</h2>
     <p class="sub-lede">How full the busiest workbench got, and how careful the result was. The dashed line is where work starts to suffer, around 70–80% of the window.</p>
     <div class="cmp" id="cmp">
-      <div class="cmp-row head"><span>Scenario</span><span>Busiest context window</span><span>Quality</span></div>
+      <div class="cmp-row head"><span>Scenario</span><span>Busiest context window</span><span data-term="quality">Quality &amp; accuracy</span></div>
     </div>
   </section>
 
@@ -232,8 +234,8 @@ const S = { mode:'plain', scene:0, gen:0, paused:false, cap:null };
 let tanks = [];
 
 const TERMS = {
-  plain:{ window:'Workbench space', limit:'comfortable limit', quality:'Care & accuracy', agent:'One assistant', sub:'Specialist', orch:'Team lead' },
-  tech: { window:'Context window', limit:'effective limit ≈75%', quality:'Output quality', agent:'Single agent', sub:'Subagent', orch:'Orchestrator' }
+  plain:{ window:'Workbench space', limit:'comfortable limit', quality:'Quality & accuracy', hint:'How thorough and correct the result is. It drops when the assistant starts rushing.', agent:'One assistant', sub:'Specialist', orch:'Team lead' },
+  tech: { window:'Context window', limit:'effective limit ≈75%', quality:'Quality & accuracy', hint:'How thorough and correct the output is. It degrades as the context window fills.', agent:'Single agent', sub:'Subagent', orch:'Orchestrator' }
 };
 const term = k => TERMS[S.mode][k];
 function applyTerms(announce){
@@ -277,7 +279,7 @@ function Tank(el, cap=1000){
 }
 function Meter(el, compact){
   el.className = 'meter' + (compact ? ' compact' : '');
-  el.innerHTML = `<div class="meter-head"><span data-term="quality">${term('quality')}</span><b class="mono">–</b></div><div class="meter-track"><i></i></div>`;
+  el.innerHTML = `<div class="meter-head"><span data-term="quality">${term('quality')}</span><b class="mono">–</b></div>${compact ? '' : `<p class="meter-hint" data-term="hint">${term('hint')}</p>`}<div class="meter-track"><i></i></div>`;
   return { set(v){ $('b', el).textContent = v; $('i', el).style.width = v + '%'; el.dataset.level = v >= 88 ? 'good' : v >= 70 ? 'warn' : 'bad'; } };
 }
 function Log(el){
@@ -363,8 +365,8 @@ const SCENES = [
       { cap:['A small, specific job. The assistant has a whole workbench for one thing.',
              'Tightly scoped task. The full context window is available for a single concern.'],
         do(){ tank.add('Task brief', 20, 'core'); } },
-      { cap:['It reads the code around the problem, not just the one file.',
-             'Relevant code is loaded into context: the component plus its dependencies.'],
+      { cap:['It reads the code around the problem, not just the one file. The quality and accuracy score tracks how thorough and correct the work is.',
+             'Relevant code is loaded into context: the component plus its dependencies. Quality and accuracy are scored on thoroughness and correctness.'],
         do(){ tank.add('Reading code', 60, 'core', {soft:true}); log.add('Read DatePicker.tsx and 3 related files'); meter.set(92); } },
       { cap:['There is room to think through odd cases, like daylight saving time.',
              'Headroom goes to reasoning about edge cases and existing conventions.'],
@@ -403,8 +405,8 @@ const SCENES = [
       { cap:['Then it turns out login knows nothing about teams.',
              'Auth tokens carry no team role. Security scope expands again.'],
         do(){ tank.add('Team roles in login', 90, 'sec'); log.add('Login tokens have no team role; needs changes'); meter.set(76); } },
-      { cap:['The workbench is nearly full. To keep going, the assistant starts cutting corners.',
-             'Crossing the effective limit. The agent begins rationing context to finish.'],
+      { cap:['The workbench is nearly full. To keep going, the assistant starts cutting corners. Quality and accuracy drop with it.',
+             'Crossing the effective limit. The agent begins rationing context to finish, and quality and accuracy degrade.'],
         do(){ tank.add('Invoice migration · skimmed', 60, 'be', {cut:true}); log.add('Wrote the invoice backfill without batching', 'cut'); meter.set(68); } },
       { cap:['It skims instead of reading, and assumes instead of checking.',
              'Files are skimmed, interfaces assumed, shared logic duplicated.'],
