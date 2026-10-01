@@ -111,7 +111,7 @@ const lines: Part[][] = [
 	],
 ];
 
-const legend: { kind: Kind; label: string; example: string }[] = [
+const legend: { kind: Kind; label: string; example: string; optional?: boolean }[] = [
 	{ kind: 'quote', label: 'Curly quotes', example: '“ ” ’' },
 	{ kind: 'dash', label: 'Em and en dashes', example: '— – ‑' },
 	{ kind: 'ellipsis', label: 'Ellipsis', example: '…' },
@@ -120,7 +120,7 @@ const legend: { kind: Kind; label: string; example: string }[] = [
 	{ kind: 'lookalike', label: 'Lookalike letters', example: '\u{1D5E6} е ％' },
 	{ kind: 'citation', label: 'Citation leftovers', example: '::contentReference' },
 	{ kind: 'tracking', label: 'Tracking links', example: '?utm_source=chatgpt.com' },
-	{ kind: 'markdown', label: 'Markdown marks', example: '## **' },
+	{ kind: 'markdown', label: 'Markdown marks', example: '## **', optional: true },
 ];
 
 const hits = lines.flat().filter((p): p is Hit => typeof p !== 'string');
@@ -150,6 +150,15 @@ const total = hits.length;
 				After cleaning
 			</button>
 		</div>
+		<button
+			type="button"
+			data-md-toggle
+			aria-pressed="false"
+			class="md-toggle flex min-h-11 items-center gap-2 rounded-sm border border-border px-3 text-sm text-fg-muted transition-colors hover:border-border-strong hover:text-fg"
+		>
+			<span class="md-box" aria-hidden="true"></span>
+			Keep Markdown formatting
+		</button>
 	</div>
 
 	<div class="overflow-hidden rounded-lg border border-border bg-bg-soft">
@@ -180,14 +189,28 @@ const total = hits.length;
 
 		<div class="text font-mono text-xs leading-loose sm:text-sm" data-pane="clean" hidden>
 			{lines.map((line) => (
-				<p>{line.map((part) => (typeof part === 'string' ? part : part.clean))}</p>
+				<p>
+					{line.map((part) =>
+						typeof part === 'string' ? (
+							part
+						) : part.kind === 'markdown' ? (
+							<span data-md data-found={part.found}>
+								{part.clean}
+							</span>
+						) : (
+							part.clean
+						),
+					)}
+				</p>
 			))}
 		</div>
 	</div>
 
 	<div class="mt-4">
 		<p class="text-sm text-fg-muted">
-			{total} characters across {legend.length} categories.
+			{total} characters across {legend.length} categories. Markdown marks are the one optional
+			category: they are stripped by default, and the "Keep Markdown formatting" switch above leaves
+			them in.
 			<span class="hidden" data-filter-hint>
 				{' '}
 				Pick a category to isolate it.
@@ -300,6 +323,24 @@ const total = hits.length;
 		color: var(--color-fg);
 	}
 
+	.md-box {
+		display: inline-block;
+		width: 1rem;
+		height: 1rem;
+		border: 1px solid var(--color-border-strong);
+		border-radius: 2px;
+	}
+
+	.md-toggle[aria-pressed='true'] {
+		border-color: var(--color-fg);
+		color: var(--color-fg);
+	}
+
+	.md-toggle[aria-pressed='true'] .md-box {
+		background: var(--color-fg);
+		box-shadow: inset 0 0 0 2px var(--color-bg);
+	}
+
 	.filter:disabled {
 		cursor: default;
 	}
@@ -330,6 +371,8 @@ const total = hits.length;
 		const panes = [...root.querySelectorAll<HTMLElement>('[data-pane]')];
 		const views = [...root.querySelectorAll<HTMLButtonElement>('[data-view]')];
 		const filters = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+		const mdToggle = root.querySelector<HTMLButtonElement>('[data-md-toggle]');
+		const mdSpans = [...root.querySelectorAll<HTMLElement>('[data-pane="clean"] [data-md]')];
 		const marks = [...root.querySelectorAll<HTMLElement>('[data-pane="found"] .mark')];
 		if (!viewControls || !paneLabel || !paneCount) continue;
 
@@ -351,6 +394,14 @@ const total = hits.length;
 				el.setAttribute('aria-pressed', String(kind !== null && el.dataset.filter === kind)),
 			);
 		};
+
+		mdToggle?.addEventListener('click', () => {
+			const keep = mdToggle.getAttribute('aria-pressed') !== 'true';
+			mdToggle.setAttribute('aria-pressed', String(keep));
+			mdSpans.forEach((el) => (el.textContent = keep ? (el.dataset.found ?? '') : ''));
+			applyFilter(null);
+			showView('clean');
+		});
 
 		views.forEach((el) =>
 			el.addEventListener('click', () => {
