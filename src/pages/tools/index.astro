@@ -45,7 +45,7 @@ const description =
 						<h2 class="mt-4 font-mono text-xl font-medium tracking-tight text-fg">{tool.name}</h2>
 						<p class="mt-2 text-sm text-fg-muted text-pretty">{tool.description}</p>
 						<span class="mt-auto truncate pt-4 font-mono text-2xs text-fg-muted">
-							{tool.repo.replace(/^https:\/\//, '')}
+							{(tool.liveUrl ?? tool.repo).replace(/^https:\/\//, '')}
 						</span>
 					</a>
 				</li>

@@ -11,6 +11,8 @@ export interface Tool {
 	href: string;
 	/** Public source repository. */
 	repo: string;
+	/** Live site, for tools that run as a hosted service. The card shows it instead of the repo. */
+	liveUrl?: string;
 	/** One plain-language line on what it does. */
 	description: string;
 	/** Short category label, for example "Claude Code". */
@@ -42,8 +44,9 @@ export const TOOLS: Tool[] = [
 		name: 'copy-cleanse',
 		href: '/tools/copy-cleanse/',
 		repo: 'https://github.com/rogadev/copy-cleanse',
+		liveUrl: 'https://copycleanse.com',
 		description:
-			'Cleans your AI-written copy. It strips the em dashes, curly quotes, invisible characters, and tracking links that give machine-written copy away, all in your browser.',
+			'Cleans your AI-written copy. It strips the em dashes, curly quotes, invisible characters, and tracking links that give machine-written copy away.',
 		tag: 'Writing',
 	},
 ];
