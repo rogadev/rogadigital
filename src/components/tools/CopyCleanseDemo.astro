@@ -1,0 +1,373 @@
+---
+/**
+ * CopyCleanseDemo - one dirty paragraph set, shown twice: with every character
+ * copy-cleanse catches highlighted, and as the cleaned result. A legend counts
+ * each category, and picking one isolates it in the highlighted text.
+ *
+ * The sample is tokenized at build time, so the page needs no JavaScript to
+ * show the highlighted text. The script only adds the Found / Cleaned toggle
+ * and the legend filter. Every special character is written as a \u escape
+ * (fixture data, smart-quotes-ok), and the ones with no glyph are drawn as
+ * small tags so they can be seen. The replacements mirror copy-cleanse's own
+ * rules (for example an em dash becomes " - " with one space each side).
+ */
+type Kind =
+	| 'quote'
+	| 'dash'
+	| 'ellipsis'
+	| 'invisible'
+	| 'space'
+	| 'lookalike'
+	| 'citation'
+	| 'tracking'
+	| 'markdown';
+
+interface Hit {
+	kind: Kind;
+	/** The characters in the original text. */
+	found: string;
+	/** What copy-cleanse puts there instead. */
+	clean: string;
+	/** Plain-language name, shown as a tooltip. */
+	name: string;
+	/** Label for characters that have no glyph, drawn as a tag. */
+	tag?: string;
+}
+
+type Part = string | Hit;
+
+const hit = (kind: Kind, found: string, clean: string, name: string, tag?: string): Hit => ({
+	kind,
+	found,
+	clean,
+	name,
+	tag,
+});
+
+const lines: Part[][] = [
+	[hit('markdown', '## ', '', 'Markdown heading marker'), 'Q3 recap'],
+	[
+		'Here',
+		hit('quote', '’', "'", 'Curly apostrophe'),
+		's the truth',
+		hit('dash', ' — ', ' - ', 'Em dash'),
+		'our Q3 results weren',
+		hit('quote', '’', "'", 'Curly apostrophe'),
+		't just ',
+		hit('quote', '“', '"', 'Curly quote'),
+		'good',
+		hit('quote', '”', '"', 'Curly quote'),
+		hit('ellipsis', '…', '...', 'Ellipsis character'),
+		' they were ',
+		hit('markdown', '**', '', 'Markdown bold marker'),
+		'remarkable',
+		hit('markdown', '**', '', 'Markdown bold marker'),
+		'.',
+	],
+	[
+		'The team',
+		hit('invisible', '​', '', 'Zero-width space', 'ZWSP'),
+		' delivered a break',
+		hit('invisible', '­', '', 'Soft hyphen', 'SHY'),
+		'through. Efficiency rose 40',
+		hit('lookalike', '％', '%', 'Fullwidth percent sign'),
+		' between 2019',
+		hit('dash', '–', '-', 'En dash'),
+		'2024.',
+	],
+	[
+		'Independent auditors confirmed the numbers',
+		hit('citation', '::contentReference[oaicite:0]{index=0}', '', 'Leaked citation marker'),
+		' in their annual',
+		hit('space', '　', ' ', 'Ideographic space', 'IDEO'),
+		'review. Full report at https://example.com/q3-report',
+		hit('tracking', '?utm_source=chatgpt.com', '', 'AI tracking parameter'),
+	],
+	[
+		'Every',
+		hit('invisible', '⁠', '', 'Word joiner', 'WJ'),
+		' stakeholder',
+		hit('invisible', '‌', '', 'Zero-width non-joiner', 'ZWNJ'),
+		' agreed: a defining',
+		hit('space', ' ', ' ', 'Thin space', 'THIN'),
+		'moment for the company',
+		hit('dash', '‑', '-', 'Non-breaking hyphen'),
+		'wide strategy ',
+		hit('citation', '【4:0†source】', '', 'Leaked citation marker'),
+		'.',
+	],
+	[
+		hit(
+			'lookalike',
+			'\u{1D5E6}\u{1D5FC}\u{1D5F9}\u{1D5F6}\u{1D5F1}',
+			'Solid',
+			'Styled "fancy" letters',
+		),
+		' growth across every s',
+		hit('lookalike', 'е', 'e', 'Cyrillic lookalike for "e"'),
+		'gment',
+		hit('space', '⠀', ' ', 'Braille blank used as a space', 'BLANK'),
+		'and region.',
+	],
+];
+
+const legend: { kind: Kind; label: string; example: string }[] = [
+	{ kind: 'quote', label: 'Curly quotes', example: '“ ” ’' },
+	{ kind: 'dash', label: 'Em and en dashes', example: '— – ‑' },
+	{ kind: 'ellipsis', label: 'Ellipsis', example: '…' },
+	{ kind: 'invisible', label: 'Invisible characters', example: 'ZWSP SHY WJ' },
+	{ kind: 'space', label: 'Odd spaces', example: 'IDEO THIN' },
+	{ kind: 'lookalike', label: 'Lookalike letters', example: '\u{1D5E6} е ％' },
+	{ kind: 'citation', label: 'Citation leftovers', example: '::contentReference' },
+	{ kind: 'tracking', label: 'Tracking links', example: '?utm_source=chatgpt.com' },
+	{ kind: 'markdown', label: 'Markdown marks', example: '## **' },
+];
+
+const hits = lines.flat().filter((p): p is Hit => typeof p !== 'string');
+const counts = Object.fromEntries(
+	legend.map((l) => [l.kind, hits.filter((h) => h.kind === l.kind).length]),
+) as Record<Kind, number>;
+const total = hits.length;
+---
+
+<figure class="cc-demo not-prose" data-cc-demo>
+	<div class="mb-4 hidden flex-wrap items-center gap-2" data-view-controls>
+		<div class="flex flex-wrap items-center gap-2" role="group" aria-label="Which version to show">
+			<button
+				type="button"
+				data-view="found"
+				aria-pressed="true"
+				class="view min-h-11 rounded-sm border border-border px-3 text-sm text-fg-muted transition-colors hover:border-border-strong hover:text-fg"
+			>
+				What it finds
+			</button>
+			<button
+				type="button"
+				data-view="clean"
+				aria-pressed="false"
+				class="view min-h-11 rounded-sm border border-border px-3 text-sm text-fg-muted transition-colors hover:border-border-strong hover:text-fg"
+			>
+				After cleaning
+			</button>
+		</div>
+	</div>
+
+	<div class="overflow-hidden rounded-lg border border-border bg-bg-soft">
+		<div class="flex items-center justify-between gap-4 border-b border-border px-4 py-2">
+			<span class="font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase" data-pane-label>
+				Pasted from an AI chat
+			</span>
+			<span class="font-mono text-2xs text-fg-muted" data-pane-count>
+				{total} characters caught
+			</span>
+		</div>
+
+		<div class="text font-mono text-xs leading-loose sm:text-sm" data-pane="found">
+			{lines.map((line) => (
+				<p>
+					{line.map((part) =>
+						typeof part === 'string' ? (
+							part
+						) : (
+							<span class="mark" data-kind={part.kind} title={part.name}>
+								{part.tag ? <span class="tag">{part.tag}</span> : part.found}
+							</span>
+						),
+					)}
+				</p>
+			))}
+		</div>
+
+		<div class="text font-mono text-xs leading-loose sm:text-sm" data-pane="clean" hidden>
+			{lines.map((line) => (
+				<p>{line.map((part) => (typeof part === 'string' ? part : part.clean))}</p>
+			))}
+		</div>
+	</div>
+
+	<div class="mt-4">
+		<p class="text-sm text-fg-muted">
+			{total} characters across {legend.length} categories.
+			<span class="hidden" data-filter-hint>
+				{' '}
+				Pick a category to isolate it.
+			</span>
+		</p>
+		<ul class="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+			{legend.map((l) => (
+				<li>
+					<button
+						type="button"
+						data-filter={l.kind}
+						aria-pressed="false"
+						disabled
+						class="filter flex min-h-11 w-full items-center gap-3 rounded-sm border border-border px-3 py-2 text-left text-sm transition-colors enabled:hover:border-border-strong"
+					>
+						<span class="swatch mark" data-kind={l.kind} aria-hidden="true"></span>
+						<span class="min-w-0 flex-1">
+							<span class="block font-medium text-fg">{l.label}</span>
+							<code class="block truncate text-2xs text-fg-muted">{l.example}</code>
+						</span>
+						<span class="font-mono text-xs text-fg-muted">{counts[l.kind]}</span>
+					</button>
+				</li>
+			))}
+		</ul>
+	</div>
+
+	<figcaption class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
+		Every highlight is a character you cannot see, or would not think to look for. Nothing gets
+		rewritten: only these artifacts change, and the rest of your words stay exactly as they were.
+	</figcaption>
+</figure>
+
+<style>
+	.text {
+		padding: 1rem;
+		overflow-wrap: anywhere;
+	}
+
+	.text p {
+		margin: 0 0 0.5rem;
+	}
+
+	.text p:last-child {
+		margin-bottom: 0;
+	}
+
+	/* One tint per category. Text stays at the foreground color, so contrast
+	   comes from the page theme and the tint only has to be visible. */
+	.mark {
+		--h: 250;
+		background: oklch(0.7 0.14 var(--h) / 0.3);
+		border-bottom: 2px solid oklch(0.68 0.16 var(--h));
+		border-radius: 2px;
+		padding: 0 1px;
+		transition: opacity 0.15s;
+	}
+
+	.mark[data-kind='quote'] {
+		--h: 85;
+	}
+	.mark[data-kind='dash'] {
+		--h: 25;
+	}
+	.mark[data-kind='ellipsis'] {
+		--h: 160;
+	}
+	.mark[data-kind='invisible'] {
+		--h: 300;
+	}
+	.mark[data-kind='space'] {
+		--h: 340;
+	}
+	.mark[data-kind='lookalike'] {
+		--h: 195;
+	}
+	.mark[data-kind='citation'] {
+		--h: 55;
+	}
+	.mark[data-kind='tracking'] {
+		--h: 130;
+	}
+	.mark[data-kind='markdown'] {
+		--h: 250;
+	}
+
+	.mark.dim {
+		background: transparent;
+		border-bottom-color: transparent;
+	}
+
+	/* Tag for a character with no glyph: a small chip so it can be seen. */
+	.tag {
+		font-size: 0.65em;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		padding: 0 0.3em;
+	}
+
+	.swatch {
+		display: inline-block;
+		flex: none;
+		width: 1.25rem;
+		height: 1rem;
+	}
+
+	.view[aria-pressed='true'],
+	.filter[aria-pressed='true'] {
+		border-color: var(--color-fg);
+		color: var(--color-fg);
+	}
+
+	.filter:disabled {
+		cursor: default;
+	}
+
+	:global(html.light) .mark {
+		background: oklch(0.8 0.12 var(--h) / 0.45);
+		border-bottom-color: oklch(0.55 0.17 var(--h));
+	}
+
+	:global(html.light) .mark.dim {
+		background: transparent;
+		border-bottom-color: transparent;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.mark {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	for (const root of document.querySelectorAll<HTMLElement>('[data-cc-demo]')) {
+		const viewControls = root.querySelector<HTMLElement>('[data-view-controls]');
+		const filterHint = root.querySelector<HTMLElement>('[data-filter-hint]');
+		const paneLabel = root.querySelector<HTMLElement>('[data-pane-label]');
+		const paneCount = root.querySelector<HTMLElement>('[data-pane-count]');
+		const panes = [...root.querySelectorAll<HTMLElement>('[data-pane]')];
+		const views = [...root.querySelectorAll<HTMLButtonElement>('[data-view]')];
+		const filters = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+		const marks = [...root.querySelectorAll<HTMLElement>('[data-pane="found"] .mark')];
+		if (!viewControls || !paneLabel || !paneCount) continue;
+
+		const total = marks.length;
+		let activeFilter: string | null = null;
+
+		const showView = (view: string) => {
+			panes.forEach((el) => (el.hidden = el.dataset.pane !== view));
+			views.forEach((el) => el.setAttribute('aria-pressed', String(el.dataset.view === view)));
+			const found = view === 'found';
+			paneLabel.textContent = found ? 'Pasted from an AI chat' : 'After copy-cleanse';
+			paneCount.textContent = found ? `${total} characters caught` : 'Clean';
+		};
+
+		const applyFilter = (kind: string | null) => {
+			activeFilter = kind;
+			marks.forEach((el) => el.classList.toggle('dim', kind !== null && el.dataset.kind !== kind));
+			filters.forEach((el) =>
+				el.setAttribute('aria-pressed', String(kind !== null && el.dataset.filter === kind)),
+			);
+		};
+
+		views.forEach((el) =>
+			el.addEventListener('click', () => {
+				if (el.dataset.view === 'clean') applyFilter(null);
+				showView(el.dataset.view ?? 'found');
+			}),
+		);
+
+		filters.forEach((el) => {
+			el.disabled = false;
+			el.addEventListener('click', () => {
+				showView('found');
+				applyFilter(activeFilter === el.dataset.filter ? null : (el.dataset.filter ?? null));
+			});
+		});
+
+		viewControls.classList.replace('hidden', 'flex');
+		filterHint?.classList.remove('hidden');
+	}
+</script>

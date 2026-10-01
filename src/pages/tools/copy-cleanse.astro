@@ -1,0 +1,180 @@
+---
+import CopyCleanseDemo from '../../components/tools/CopyCleanseDemo.astro';
+import Base from '../../layouts/Base.astro';
+import { TOOLS } from '../../data/tools';
+
+const tool = TOOLS.find((t) => t.name === 'copy-cleanse')!;
+
+const title = 'copy-cleanse · Tools · Roga Digital';
+const description =
+	'copy-cleanse cleans AI-written text in your browser: it removes em dashes, curly quotes, invisible characters, citation leftovers, and tracking links, and shows you exactly what it changed.';
+
+const catches = [
+	{
+		name: 'Hidden characters',
+		body: 'Zero-width spaces, soft hyphens, word joiners, and other marks that take up no room but travel with your text.',
+	},
+	{
+		name: 'Look-alike characters',
+		body: 'Odd spaces, fancy styled letters, and Cyrillic or Greek letters that pass for Latin ones inside a word.',
+	},
+	{
+		name: 'Typography habits',
+		body: 'Em dashes, curly quotes, and the single ellipsis character, all turned into the plain keyboard versions.',
+	},
+	{
+		name: 'Leftovers',
+		body: 'Leaked citation markers, AI tracking parameters on links, and Markdown symbols when you do not want them.',
+	},
+];
+
+const limits = [
+	'It runs entirely in your browser. Your text is never sent to a server.',
+	'It does not rewrite anything. Your words stay yours; only character-level artifacts change.',
+	'It does not claim to beat AI detectors. Those look at word choice, which no character cleaner can touch.',
+	'Markdown is on by default, with a switch to keep it and a button to copy real formatting into Docs or Word.',
+];
+---
+
+<Base {title} {description} ogPath="/og/tools.png">
+	<!-- Hero -->
+	<section class="border-b border-border">
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<div class="pt-20 pb-16 sm:pt-28 sm:pb-20">
+				<a
+					href="/tools/"
+					class="inline-flex min-h-11 items-center gap-1.5 font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors hover:text-fg"
+				>
+					<span aria-hidden="true">←</span> Tools
+				</a>
+				<h1 class="mt-4 max-w-3xl font-mono text-4xl font-medium tracking-tight sm:text-5xl">
+					{tool.name}
+				</h1>
+				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
+					Text from an AI chat carries baggage you cannot see: em dashes, curly quotes, hidden
+					characters, even tracking links. Paste it into copy-cleanse and get it back clean, with
+					every change highlighted so you can see what was caught.
+				</p>
+				<div class="mt-8 flex flex-wrap items-center gap-3">
+					<a
+						href="https://copycleanse.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+					>
+						Try it live <span aria-hidden="true">↗</span>
+						<span class="sr-only">(opens in a new tab)</span>
+					</a>
+					<a
+						href={tool.repo}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md border border-border px-4 text-sm font-medium text-fg transition-colors hover:border-border-strong hover:bg-bg-elevated"
+					>
+						View on GitHub <span aria-hidden="true">↗</span>
+						<span class="sr-only">(opens in a new tab)</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Demo -->
+	<section class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="demo">
+		<h2 id="demo" class="max-w-3xl text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+			What is hiding in a paragraph
+		</h2>
+		<p class="mt-4 mb-10 max-w-2xl text-fg-muted text-pretty">
+			This sample looks like ordinary text. Every highlight below is something copy-cleanse finds
+			and fixes. Pick a category to isolate it, or switch to the cleaned version.
+		</p>
+		<CopyCleanseDemo />
+	</section>
+
+	<!-- What it catches -->
+	<section class="border-t border-border" aria-labelledby="catches">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="catches" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				What it catches
+			</h2>
+			<ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{catches.map((c) => (
+					<li class="flex flex-col rounded-lg border border-border bg-bg-soft p-6">
+						<h3 class="text-lg font-medium tracking-tight">{c.name}</h3>
+						<p class="mt-2 text-sm text-fg-muted text-pretty">{c.body}</p>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<!-- Honest limits -->
+	<section class="border-t border-border" aria-labelledby="limits">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="limits" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				Private, and honest about its limits
+			</h2>
+			<ul class="mt-8 grid gap-4 sm:grid-cols-2">
+				{limits.map((item) => (
+					<li class="rounded-lg border border-border bg-bg-soft p-6 text-sm text-fg-muted text-pretty">
+						{item}
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<!-- Run it yourself -->
+	<section id="install" class="border-t border-border" aria-labelledby="install-heading">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="install-heading" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				Run it yourself
+			</h2>
+			<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+				Use it at{' '}
+				<a
+					href="https://copycleanse.com"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-fg underline underline-offset-4 hover:no-underline"
+				>
+					copycleanse.com<span class="sr-only"> (opens in a new tab)</span>
+				</a>
+				, or run your own copy. It is open source under the MIT license.
+			</p>
+			<pre
+				class="mt-6 max-w-2xl overflow-x-auto rounded-sm border border-border bg-bg-soft p-4 font-mono text-xs leading-relaxed"
+				tabindex="0"
+				role="region"
+				aria-label="Run commands"
+			><code>git clone https://github.com/rogadev/copy-cleanse.git
+cd copy-cleanse
+pnpm install
+pnpm dev</code></pre>
+		</div>
+	</section>
+
+	<!-- End CTA -->
+	<section class="border-t border-border bg-bg-soft">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<div class="grid gap-6 lg:grid-cols-12 lg:items-center">
+				<div class="lg:col-span-8">
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase">
+						Want tooling like this for your team?
+					</p>
+					<h2 class="mt-3 text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+						Let&rsquo;s talk about it.
+					</h2>
+				</div>
+				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
+					<a
+						href="/contact/"
+						class="inline-flex items-center gap-2 rounded-md bg-fg px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+					>
+						Get in touch
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</Base>

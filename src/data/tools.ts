@@ -38,4 +38,12 @@ export const TOOLS: Tool[] = [
 			'A Claude Code status line that turns your weekly usage limit into a daily budget, so you know whether to push or ease off, and tells your sessions apart at a glance.',
 		tag: 'Claude Code',
 	},
+	{
+		name: 'copy-cleanse',
+		href: '/tools/copy-cleanse/',
+		repo: 'https://github.com/rogadev/copy-cleanse',
+		description:
+			'Paste in AI-written text and get it back clean. It strips the em dashes, curly quotes, invisible characters, and tracking links that give machine-written copy away, all in your browser.',
+		tag: 'Writing',
+	},
 ];
