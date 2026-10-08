@@ -7,40 +7,69 @@ const tool = TOOLS.find((t) => t.name === 'paceline')!;
 
 const title = 'paceline · Tools · Roga Digital';
 const description =
-	'paceline is a Claude Code status line that paces your weekly usage limit into a daily budget and shows, at a glance, where every session stands.';
+	'paceline is a Claude Code status line that paces your usage limits into a daily budget and shows, at a glance, where every session stands.';
 
 const segments = [
 	{
 		name: 'Model',
 		example: 'Opus 5.5',
-		body: 'The model, plus effort and fast mode when they are on.',
+		body: 'The model, without the context-size suffix.',
+	},
+	{
+		name: 'Effort',
+		example: 'high effort',
+		body: 'Only when effort is above low or medium.',
+	},
+	{
+		name: 'Fast mode',
+		example: 'fast mode',
+		body: 'Only while fast mode is on.',
 	},
 	{
 		name: 'Project',
-		example: 'acme-portal (dev)',
+		example: 'techcentral (dev)',
 		body: 'The folder in a color unique to that project, and its git branch. Easy to tell three sessions apart.',
 	},
 	{
 		name: 'Session',
-		example: '18% session (resets 3:40pm)',
-		body: 'Five-hour limit left. The reset time appears once it drops below 30%.',
+		example: 's 18% (resets 3:40pm)',
+		body: 'Five-hour limit left. The reset time appears once less than 30% is left. Verbose: "session 18% left".',
 	},
-	{ name: 'Week', example: '96% week', body: 'Weekly limit left.' },
+	{
+		name: 'Week',
+		example: 'w 96%',
+		body: 'Weekly limit left. Verbose: "week 96% left".',
+	},
 	{
 		name: 'Today',
-		example: "▲ 54% left of today's 28% budget",
-		body: 'Your share of the week for today, counting down. Flips to "used" once you go over.',
+		example: 't 54% of 28%',
+		body: 'How much of the budget for today is left, then the budget: the share of the week set aside for today, fixed all day. Go over and it turns red and shows how far over you are instead: "t over 18% of 28%". Verbose: "today 54% left of 28% budget".',
 	},
 	{
-		name: 'Warnings',
-		example: 'ctx 72% · cache cold: 82k @ ~2x',
-		body: 'Only when they matter: the context window filling up, or the prompt cache going cold.',
+		name: 'Context',
+		example: 'ctx 72%',
+		body: 'Only when the context window is 70% or more full.',
+	},
+	{
+		name: 'Cache',
+		example: 'cache cold: 82k @ ~2x',
+		body: 'Only when the prompt cache has expired.',
+	},
+	{
+		name: 'Progress',
+		example: 'loop ▰▰▰▰▱ #44 3/5',
+		body: 'Only while an agent reports progress on a long job: one cell per step, with the current step and count.',
+	},
+	{
+		name: 'Duration',
+		example: '16m',
+		body: 'How long the session has run. Always last, at the right edge.',
 	},
 ];
 
 const safety = [
 	'No dependencies. It uses only the Go standard library.',
-	'It never starts processes or touches the network, and the build fails if that changes.',
+	'It never starts processes or touches the network, and the build fails if that changes. The optional paceline-mcp helper follows the same rules and only writes a progress file.',
 	'It strips control characters from folder and branch names, so a hostile repo name cannot hijack your terminal.',
 	'The installer backs up your settings and never overwrites a file it cannot parse.',
 ];
@@ -92,8 +121,8 @@ const safety = [
 			One line, every session
 		</h2>
 		<p class="mt-4 mb-10 max-w-2xl text-fg-muted text-pretty">
-			The status line sits under the prompt and updates as you work. Here is how it reads across a
-			typical week.
+			The status line sits under the prompt and updates as you work. Here is how it reads from a
+			fresh day to a limit running out.
 		</p>
 		<PacelineDemo />
 	</section>
@@ -106,9 +135,11 @@ const safety = [
 					What each part means
 				</h2>
 				<p class="mt-4 text-fg-muted text-pretty">
-					The arrow is pace advice. It compares today&rsquo;s budget to an even share of the week:
-					&#9650; means you have room to push, &#9660; means ease off, and &#9679; means about even.
-					A light Monday leaves bigger budgets for the rest of the week.
+					Every number is how much is left, counting down, so lower always means closer to a limit.
+					The color of the today segment is the pace advice: green while you have room, yellow once
+					less than 30% of the budget is left, and red below 15%. Whatever you don&rsquo;t spend
+					spreads over the rest of the week, so a light Monday leaves bigger budgets later on.
+					Prefer words? A verbose style spells the labels out.
 				</p>
 			</div>
 			<dl class="divide-y divide-border border-y border-border">
@@ -173,6 +204,16 @@ paceline install</code></pre>
 			<p class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
 				<code class="font-mono text-fg">paceline uninstall</code> puts back whatever status line you
 				had before.
+			</p>
+			<p class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
+				Run long jobs with
+				<a href="/tools/orc-pack/" class="text-fg underline underline-offset-4 hover:no-underline">
+					orc-pack
+				</a>
+				? Register the <code class="font-mono text-fg">paceline-mcp</code> server that ships in the
+				same release, and every <code class="font-mono text-fg">/orc</code> run or
+				<code class="font-mono text-fg">/orc-loop</code> batch shows up as a progress bar in your
+				status line, with no extra setup.
 			</p>
 		</div>
 	</section>
