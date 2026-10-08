@@ -55,6 +55,9 @@ export default defineConfig({
 	integrations: [
 		mdx(),
 		sitemap({
+			// The /labs pages are noindex, so listing them makes Search Console
+			// report "Submitted URL marked noindex" for each one.
+			filter: (page) => !new URL(page).pathname.startsWith('/labs/'),
 			// A per-URL freshness hint. Without it the sitemap is a bare list of
 			// <loc> elements and Google has nothing to prioritise crawling on.
 			serialize(item) {
