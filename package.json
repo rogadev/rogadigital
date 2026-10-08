@@ -21,7 +21,8 @@
 		"format": "prettier --write . --log-level warn",
 		"format:check": "prettier --check . --log-level warn",
 		"fix": "pnpm format && pnpm format:check && pnpm lint:fix && pnpm lint",
-		"ready": "pnpm fix && pnpm check"
+		"ready": "pnpm fix && pnpm check",
+		"sync:paceline": "node scripts/sync-paceline.mjs"
 	},
 	"dependencies": {
 		"@astrojs/mdx": "^8.0.2",
