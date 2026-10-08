@@ -14,7 +14,7 @@ Audience is operators and decision-makers at small-to-mid businesses who already
 
 ## 2. Positioning
 
-- **What I do:** Build internal tools and web applications for businesses. Dashboards, integrations, workflow automation, line-of-business apps.
+- **What I do:** A software studio building internal tools, dashboards, integrations, and AI features for businesses. Workflow automation, line-of-business apps.
 - **What separates the work:** Functional design — the interface earns its keep. Things load fast, fit on screen, surface the right data, stay out of the way during real use.
 - **The site should prove that** by being one. Not by claiming it.
 

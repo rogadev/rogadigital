@@ -89,6 +89,6 @@ export const STATIC_PAGE_OGS: ReadonlySet<string> = new Set(Object.keys(OG_PAGES
  * offer rather than something specific to any one fallback route.
  */
 export const DEFAULT_OG: OgPageConfig = {
-	title: 'We build business websites & web applications.',
+	title: 'We build internal tools & business software.',
 	footnote: `Software studio · ${SITE_LOCATION}`,
 };
