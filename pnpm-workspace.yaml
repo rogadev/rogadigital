@@ -2,11 +2,14 @@ allowBuilds:
   esbuild: true
   sharp: true
 minimumReleaseAgeExclude:
-  - fast-uri@4.1.2
+  - fast-uri@4.1.2 || 4.2.3
   - brace-expansion@5.0.9
   - js-yaml@4.3.1
   - nanoid@3.3.17
   - fflate@0.7.5
+  - vite@8.3.3
+  - zod@4.6.6
+  - undici@8.12.2
 overrides:
   yaml@>=2.0.0 <2.8.3: '>=2.8.3'
   fast-xml-builder@<=1.1.6: '>=1.1.7'
