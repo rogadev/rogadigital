@@ -9,9 +9,16 @@
 		mounted = true;
 	});
 
+	let fadeTimer: ReturnType<typeof setTimeout> | undefined;
+
 	function toggle() {
 		theme = theme === 'dark' ? 'light' : 'dark';
-		document.documentElement.classList.toggle('light', theme === 'light');
+		const root = document.documentElement;
+		// Enable the cross-fade only for this switch (see `.theme-fade` in global.css).
+		root.classList.add('theme-fade');
+		clearTimeout(fadeTimer);
+		fadeTimer = setTimeout(() => root.classList.remove('theme-fade'), 500);
+		root.classList.toggle('light', theme === 'light');
 		try {
 			localStorage.setItem('theme', theme);
 		} catch {

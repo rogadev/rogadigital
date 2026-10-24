@@ -130,6 +130,22 @@ html.light {
 	}
 }
 
+/* Theme switch fade. ThemeToggle adds `theme-fade` to <html> for the length of the
+   transition, so colors cross-fade on a toggle but never on page load or hover. */
+@media (prefers-reduced-motion: no-preference) {
+	html.theme-fade,
+	html.theme-fade *,
+	html.theme-fade *::before,
+	html.theme-fade *::after {
+		transition:
+			background-color 0.4s ease,
+			color 0.4s ease,
+			border-color 0.4s ease,
+			fill 0.4s ease,
+			stroke 0.4s ease !important;
+	}
+}
+
 /* Smooth scroll for in-page anchors */
 @media (prefers-reduced-motion: no-preference) {
 	html {
