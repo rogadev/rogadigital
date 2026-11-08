@@ -175,6 +175,10 @@ const chromeLabel = label ?? new URL(src).hostname;
 		if (!live || !snapshot) continue;
 		void isUp(live).then((up) => {
 			if (up) return;
+			// Snapshots are served from our own origin, so an empty sandbox (no
+			// scripts, unique origin) keeps captured third-party HTML from acting
+			// as rogadigital.com. Set before src so the first load is sandboxed.
+			iframe.setAttribute('sandbox', '');
 			iframe.src = snapshot;
 			iframe.closest('[data-demo-frame]')?.classList.add('is-snapshot');
 		});

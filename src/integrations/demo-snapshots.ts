@@ -89,8 +89,9 @@ function readManifest(): Manifest {
 	}
 }
 
-async function fetchOk(url: string): Promise<Response> {
+async function fetchOk(url: string, redirect: RequestRedirect = 'follow'): Promise<Response> {
 	const res = await fetch(url, {
+		redirect,
 		signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
 		headers: { 'user-agent': 'rogadigital.com demo-snapshots (+https://rogadigital.com)' },
 	});
@@ -140,10 +141,15 @@ async function inlineCssAssets(css: string, cssUrl: string, origin: string): Pro
 }
 
 async function archivePage(url: string, origin: string): Promise<string> {
-	let html = await (await fetchOk(url)).text();
+	// A demo route that redirects (for example to a login page) is not the
+	// sample-data page we mean to publish, so the capture fails instead.
+	const res = await fetchOk(url, 'error');
+	let html = await res.text();
 
 	// The demo pages are fully server-rendered; the snapshot is static on purpose.
 	html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+	// Inline event handlers would run like scripts; strip them too.
+	html = html.replace(/\son[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
 	html = html.replace(/<link\b[^>]*\brel=["'](?:modulepreload|preload)["'][^>]*>/gi, '');
 
 	// Inline stylesheets (and the fonts/images they reference).
@@ -176,6 +182,15 @@ async function archivePage(url: string, origin: string): Promise<string> {
 	// Whatever still points at the live origin gets an absolute URL, so links
 	// and leftovers resolve once the site is back rather than 404ing on ours.
 	html = html.replace(/(\s(?:href|action)=["'])\/(?!\/)/gi, `$1${origin}/`);
+
+	// Belt and braces with the iframe sandbox in DemoFrame.astro: the snapshot
+	// itself forbids scripts, forms, and nested frames wherever it is opened.
+	const csp =
+		"default-src 'none'; img-src data: https:; style-src 'unsafe-inline' https:; font-src data: https:; form-action 'none'; base-uri 'none'";
+	html = html.replace(
+		/<head\b[^>]*>/i,
+		(head) => `${head}\n<meta http-equiv="Content-Security-Policy" content="${csp}">`,
+	);
 
 	return html.replace(
 		/(<!doctype[^>]*>)/i,
