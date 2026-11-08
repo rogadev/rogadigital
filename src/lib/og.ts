@@ -103,6 +103,7 @@ function buildTree({ title, eyebrow, footnote }: OgInput) {
 			style: {
 				width: 1200,
 				height: 630,
+				boxSizing: 'border-box',
 				display: 'flex',
 				flexDirection: 'column',
 				justifyContent: 'space-between',
