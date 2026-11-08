@@ -8,7 +8,8 @@
  * frame tracks the page layout responsively.
  *
  * With `href` set, the frame is a pure preview: a full-frame link covers the
- * embed (clicks navigate, page scrolling never gets trapped inside it).
+ * embed (clicks navigate, page scrolling never gets trapped inside it), and the
+ * live iframe is sandboxed without forms, popups, or top navigation.
  * Without `href`, the embed is directly interactive. When a `snapshot` path is
  * given, a client-side reachability probe swaps the iframe to the local
  * snapshot (captured by src/integrations/demo-snapshots.ts) if the live site
@@ -87,6 +88,7 @@ const chromeLabel = label ?? new URL(src).hostname;
 				width={native.w}
 				height={native.h}
 				inert={href ? true : undefined}
+				sandbox={href ? 'allow-scripts allow-same-origin' : undefined}
 				class:list={[!href && 'demo-interactive']}
 			></iframe>
 			{href && (
@@ -136,6 +138,11 @@ const chromeLabel = label ?? new URL(src).hostname;
 	.demo-overlay {
 		position: absolute;
 		inset: 0;
+	}
+
+	/* .demo-viewport clips overflow, so the global ring would be cut off outside the frame. */
+	.demo-overlay:focus-visible {
+		outline-offset: -3px;
 	}
 
 	.snapshot-badge {
