@@ -28,7 +28,7 @@ const work = (await getCollection('work'))
 			role="list"
 		>
 			{work.map((w) => (
-				<li class="group bg-bg transition-colors hover:bg-bg-soft">
+				<li class="group bg-bg transition-colors hover:bg-bg-soft lg:odd:last:col-span-2">
 					<a
 						href={`/work/${w.id}/`}
 						class="flex h-full flex-col gap-6 p-6 sm:p-8"

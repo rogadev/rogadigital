@@ -86,6 +86,7 @@ const chromeLabel = label ?? new URL(src).hostname;
 				data-snapshot-src={snapshot}
 				width={native.w}
 				height={native.h}
+				inert={href ? true : undefined}
 				class:list={[!href && 'demo-interactive']}
 			></iframe>
 			{href && (
