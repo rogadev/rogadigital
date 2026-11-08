@@ -1,0 +1,99 @@
+---
+id: RD-008
+client: Roga Dispatch · Our product
+industry: Medical & assisted transport
+headline: Dispatch, driver, and billing software for medical and assisted-transport companies — one calm system for the whole office.
+outcome: Roga Dispatch replaces the whiteboard, the spreadsheet, and the phone tree with a live dispatch board, a driver app built for the road, automatic driver standing, and payor billing — sold to transport companies at one flat price, with unlimited trips and clients.
+tags:
+  - SvelteKit
+  - Svelte 5
+  - TypeScript
+  - Neon Postgres
+  - Drizzle
+  - Vercel
+  - Multi-tenant
+period: 2025 — Present
+role: Product, design & development
+status: live
+featured: false
+order: 0
+liveUrl: https://trips.roga.dev
+highlight: The previews on this page are the real app, rendered with sample data. The live demo is a working transport company you can run for yourself.
+---
+
+import DemoFrame from '../../components/DemoFrame.astro';
+import { demoPage, demoSite, demoUrl, publicUrl, snapshotPath } from '../../lib/demos';
+
+export const site = demoSite('dispatch');
+export const board = demoPage(site, 'dispatch-board');
+export const driver = demoPage(site, 'dispatch-driver');
+
+## Context
+
+In medical and assisted transport, a late ride isn't an inconvenience. It's a missed dialysis appointment, or someone stranded at a clinic door. Most small transport offices still hold the day together with a whiteboard, a spreadsheet, a group chat, and one dispatcher's memory. Then billing week comes, and someone rebuilds every trip by hand to invoice each payor.
+
+Roga Dispatch started in 2025 as a trip tracker for a single local medical-transport company. Running it day to day showed which parts every transport office needs, so we rebuilt it in 2026 as a multi-tenant product that any transport company can sign up for and run.
+
+## The product
+
+This is the real application, rendered with sample data: the same components and layout dispatchers and drivers use every day. Select a preview to open the live demo in a new tab.
+
+<DemoFrame
+	src={demoUrl(site, board)}
+	snapshot={snapshotPath(board)}
+	label={board.label}
+	title="Roga Dispatch — the dispatcher's live board (desktop preview)"
+	href={publicUrl(site, board)}
+	hrefLabel="Open the Roga Dispatch live demo in a new tab"
+	external
+	class="my-8"
+/>
+
+The dispatcher's screen is built to be dense and calm at the same time:
+
+- **A live dispatch board.** Every trip, driver, and coverage gap on one screen, grouped by the hour and updated as the day moves. Problems such as an unassigned pickup or a driver running late rise to the top, so the office catches them before riders do.
+- **Recurring trips that schedule themselves.** Set a standing appointment once, such as dialysis three times a week, and its trips land on the board every week. Regular riders never get re-entered by hand.
+- **Zones and rate sheets.** Draw your service zones once and every trip gets an accurate fare automatically, with no per-ride math and no rate lookups.
+- **Payor billing and invoicing.** Coverage and zone rates apply to every trip, then roll up into payor invoices that match what you actually drove, with your company name on every invoice.
+- **Online ride requests.** A request form a transport company can embed on its own website, so new bookings arrive in the dispatcher's inbox instead of on a voicemail.
+
+## Built for the road
+
+Drivers don't get a shrunken desktop app. They get a phone screen that answers one question, "what's next?", with big buttons to start, navigate to, and finish each trip.
+
+<div class="not-prose mx-auto my-8 w-full max-w-[18rem]">
+	<DemoFrame
+		kind="phone"
+		src={demoUrl(site, driver)}
+		snapshot={snapshotPath(driver)}
+		title="Roga Dispatch — the driver app mid-shift (mobile preview)"
+		href={publicUrl(site, driver)}
+		hrefLabel="Open the Roga Dispatch live demo in a new tab"
+		external
+	/>
+</div>
+
+Behind the driver app sits **driver standing**: a reliability score for every driver that moves with the incidents the office logs, from an accident to a rider's compliment. When a score slips past a threshold, the system opens a disciplinary task for the office automatically, so accountability doesn't depend on anyone remembering.
+
+## How it's built
+
+- **Front end:** SvelteKit 2 with Svelte 5 runes, Tailwind CSS v4, and shadcn-svelte. Dispatcher and admin screens are desktop-first and information-dense; driver screens are mobile-first, with 44-pixel touch targets.
+- **Data:** Neon serverless Postgres with Drizzle ORM. Every company's data is isolated by organization, and production schema changes ship only through committed migrations.
+- **Auth and roles:** Better Auth with role-based access for admins, dispatchers, and drivers. One person can hold several roles.
+- **Automation:** Vercel cron jobs generate recurring trips nightly and run the weekly standing assessment.
+- **Hosting and monitoring:** Vercel, with Sentry for errors in both the server and the browser.
+- **Quality gates:** Vitest and Playwright behind a `ready` script that runs before every change ships.
+
+## Try it yourself
+
+The [live demo](https://trips.roga.dev/demo) is a working transport company, already full of trips, drivers, clients, and invoices. Launch it and you're signed in as the dispatcher, with no sign-up. It resets on its own, so go ahead and assign, reschedule, and bill.
+
+The previews above come from dedicated `/preview/*` routes on trips.roga.dev: the production UI backed by frozen sample data, with headers that let this site embed it. If trips.roga.dev is ever unreachable, the previews fall back to a cached snapshot captured at build time.
+
+## Outcome
+
+- **Live and selling** at [trips.roga.dev](https://trips.roga.dev), with one plan that includes everything: unlimited trips and clients, the board, the driver app, standing, and billing.
+- **Grown from real operations.** The product started as a tool for one transport office and grew from what that office needed every day.
+- **Built and run end to end by us:** product, design, development, hosting, and support from one place.
+
+Run a transport company and want to see it with your own trips? [Book a walkthrough](/contact/).
