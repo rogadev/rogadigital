@@ -2,10 +2,10 @@
  * demo-snapshots — build-time fallback snapshots for embedded demo sites.
  *
  * For every page in src/lib/demos.ts this integration captures a self-contained
- * HTML snapshot into public/demos/: scripts are stripped (the demo pages are
- * fully server-rendered), stylesheets are inlined, same-origin assets (fonts,
- * images) become data: URIs, and remaining root-relative URLs are absolutized
- * against the live origin. The result renders our own origin with zero requests
+ * HTML snapshot into public/demos/: scripts and event handlers are stripped
+ * (the demo pages are fully server-rendered), stylesheets are inlined,
+ * same-origin assets (fonts, images) become data: URIs, and remaining
+ * root-relative URLs are absolutized against the live origin. The result renders our own origin with zero requests
  * to the live site, so DemoFrame.astro can serve it when the live site is down.
  *
  * Snapshots and public/demos/manifest.json are committed to git — that is the
@@ -18,6 +18,11 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DEMO_SITES, demoUrl } from '../lib/demos';
+import {
+	dataUriMimeType,
+	sanitizeSnapshotHtml,
+	stripActiveContent,
+} from '../lib/snapshot-sanitize';
 
 const MAX_AGE_DAYS = 7;
 const FETCH_TIMEOUT_MS = 15_000;
@@ -89,8 +94,9 @@ function readManifest(): Manifest {
 	}
 }
 
-async function fetchOk(url: string): Promise<Response> {
+async function fetchOk(url: string, redirect: RequestRedirect = 'follow'): Promise<Response> {
 	const res = await fetch(url, {
+		redirect,
 		signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
 		headers: { 'user-agent': 'rogadigital.com demo-snapshots (+https://rogadigital.com)' },
 	});
@@ -101,10 +107,10 @@ async function fetchOk(url: string): Promise<Response> {
 /** Fetch a same-origin asset and return it as a data: URI, or null to fall back. */
 async function assetDataUri(url: string): Promise<string | null> {
 	try {
-		const res = await fetchOk(url);
+		const res = await fetchOk(url, 'error');
 		const buf = Buffer.from(await res.arrayBuffer());
 		if (buf.byteLength > MAX_INLINE_BYTES) return null;
-		const type = res.headers.get('content-type')?.split(';')[0] ?? 'application/octet-stream';
+		const type = dataUriMimeType(res.headers.get('content-type'));
 		return `data:${type};base64,${buf.toString('base64')}`;
 	} catch {
 		return null;
@@ -140,11 +146,14 @@ async function inlineCssAssets(css: string, cssUrl: string, origin: string): Pro
 }
 
 async function archivePage(url: string, origin: string): Promise<string> {
-	let html = await (await fetchOk(url)).text();
+	// A demo route that redirects (for example to a login page) is not the
+	// sample-data page we mean to publish, so the capture fails instead.
+	const res = await fetchOk(url, 'error');
+	let html = await res.text();
 
 	// The demo pages are fully server-rendered; the snapshot is static on purpose.
-	html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
-	html = html.replace(/<link\b[^>]*\brel=["'](?:modulepreload|preload)["'][^>]*>/gi, '');
+	// Stripping here keeps preloads and script assets from being fetched below.
+	html = stripActiveContent(html);
 
 	// Inline stylesheets (and the fonts/images they reference).
 	html = await replaceAsync(html, /<link\b[^>]*\brel=["']stylesheet["'][^>]*>/gi, async (match) => {
@@ -152,7 +161,11 @@ async function archivePage(url: string, origin: string): Promise<string> {
 		if (!href) return '';
 		const cssUrl = new URL(href, url).href;
 		try {
-			const css = await inlineCssAssets(await (await fetchOk(cssUrl)).text(), cssUrl, origin);
+			const css = await inlineCssAssets(
+				await (await fetchOk(cssUrl, 'error')).text(),
+				cssUrl,
+				origin,
+			);
 			return `<style>${css}</style>`;
 		} catch {
 			return match[0].replace(href, cssUrl);
@@ -176,6 +189,10 @@ async function archivePage(url: string, origin: string): Promise<string> {
 	// Whatever still points at the live origin gets an absolute URL, so links
 	// and leftovers resolve once the site is back rather than 404ing on ours.
 	html = html.replace(/(\s(?:href|action)=["'])\/(?!\/)/gi, `$1${origin}/`);
+
+	// Strip again now that stylesheets are inlined, then add the CSP: belt and
+	// braces with the iframe sandbox in DemoFrame.astro.
+	html = sanitizeSnapshotHtml(html);
 
 	return html.replace(
 		/(<!doctype[^>]*>)/i,

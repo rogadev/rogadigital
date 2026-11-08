@@ -8,7 +8,8 @@
  * frame tracks the page layout responsively.
  *
  * With `href` set, the frame is a pure preview: a full-frame link covers the
- * embed (clicks navigate, page scrolling never gets trapped inside it).
+ * embed (clicks navigate, page scrolling never gets trapped inside it), and the
+ * live iframe is sandboxed without forms, popups, or top navigation.
  * Without `href`, the embed is directly interactive. When a `snapshot` path is
  * given, a client-side reachability probe swaps the iframe to the local
  * snapshot (captured by src/integrations/demo-snapshots.ts) if the live site
@@ -86,6 +87,8 @@ const chromeLabel = label ?? new URL(src).hostname;
 				data-snapshot-src={snapshot}
 				width={native.w}
 				height={native.h}
+				inert={href ? true : undefined}
+				sandbox={href ? 'allow-scripts allow-same-origin' : undefined}
 				class:list={[!href && 'demo-interactive']}
 			></iframe>
 			{href && (
@@ -137,6 +140,11 @@ const chromeLabel = label ?? new URL(src).hostname;
 		inset: 0;
 	}
 
+	/* .demo-viewport clips overflow, so the global ring would be cut off outside the frame. */
+	.demo-overlay:focus-visible {
+		outline-offset: -3px;
+	}
+
 	.snapshot-badge {
 		display: none;
 	}
@@ -175,6 +183,10 @@ const chromeLabel = label ?? new URL(src).hostname;
 		if (!live || !snapshot) continue;
 		void isUp(live).then((up) => {
 			if (up) return;
+			// Snapshots are served from our own origin, so an empty sandbox (no
+			// scripts, unique origin) keeps captured third-party HTML from acting
+			// as rogadigital.com. Set before src so the first load is sandboxed.
+			iframe.setAttribute('sandbox', '');
 			iframe.src = snapshot;
 			iframe.closest('[data-demo-frame]')?.classList.add('is-snapshot');
 		});

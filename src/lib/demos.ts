@@ -28,6 +28,25 @@ export interface DemoSite {
 
 export const DEMO_SITES: DemoSite[] = [
 	{
+		id: 'dispatch',
+		name: 'Roga Dispatch',
+		origin: 'https://trips.roga.dev',
+		pages: [
+			{
+				id: 'dispatch-board',
+				path: '/preview/board',
+				publicPath: '/demo',
+				label: 'trips.roga.dev/dispatch',
+			},
+			{
+				id: 'dispatch-driver',
+				path: '/preview/driver',
+				publicPath: '/demo',
+				label: 'trips.roga.dev/driver',
+			},
+		],
+	},
+	{
 		id: 'puntledge',
 		name: 'Puntledge Tube Report',
 		origin: 'https://puntledge.ca',
