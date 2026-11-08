@@ -2,10 +2,10 @@
  * demo-snapshots — build-time fallback snapshots for embedded demo sites.
  *
  * For every page in src/lib/demos.ts this integration captures a self-contained
- * HTML snapshot into public/demos/: scripts are stripped (the demo pages are
- * fully server-rendered), stylesheets are inlined, same-origin assets (fonts,
- * images) become data: URIs, and remaining root-relative URLs are absolutized
- * against the live origin. The result renders our own origin with zero requests
+ * HTML snapshot into public/demos/: scripts and event handlers are stripped
+ * (the demo pages are fully server-rendered), stylesheets are inlined,
+ * same-origin assets (fonts, images) become data: URIs, and remaining
+ * root-relative URLs are absolutized against the live origin. The result renders our own origin with zero requests
  * to the live site, so DemoFrame.astro can serve it when the live site is down.
  *
  * Snapshots and public/demos/manifest.json are committed to git — that is the
@@ -18,6 +18,11 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DEMO_SITES, demoUrl } from '../lib/demos';
+import {
+	dataUriMimeType,
+	sanitizeSnapshotHtml,
+	stripActiveContent,
+} from '../lib/snapshot-sanitize';
 
 const MAX_AGE_DAYS = 7;
 const FETCH_TIMEOUT_MS = 15_000;
@@ -102,10 +107,10 @@ async function fetchOk(url: string, redirect: RequestRedirect = 'follow'): Promi
 /** Fetch a same-origin asset and return it as a data: URI, or null to fall back. */
 async function assetDataUri(url: string): Promise<string | null> {
 	try {
-		const res = await fetchOk(url);
+		const res = await fetchOk(url, 'error');
 		const buf = Buffer.from(await res.arrayBuffer());
 		if (buf.byteLength > MAX_INLINE_BYTES) return null;
-		const type = res.headers.get('content-type')?.split(';')[0] ?? 'application/octet-stream';
+		const type = dataUriMimeType(res.headers.get('content-type'));
 		return `data:${type};base64,${buf.toString('base64')}`;
 	} catch {
 		return null;
@@ -147,10 +152,8 @@ async function archivePage(url: string, origin: string): Promise<string> {
 	let html = await res.text();
 
 	// The demo pages are fully server-rendered; the snapshot is static on purpose.
-	html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
-	// Inline event handlers would run like scripts; strip them too.
-	html = html.replace(/\son[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
-	html = html.replace(/<link\b[^>]*\brel=["'](?:modulepreload|preload)["'][^>]*>/gi, '');
+	// Stripping here keeps preloads and script assets from being fetched below.
+	html = stripActiveContent(html);
 
 	// Inline stylesheets (and the fonts/images they reference).
 	html = await replaceAsync(html, /<link\b[^>]*\brel=["']stylesheet["'][^>]*>/gi, async (match) => {
@@ -158,7 +161,11 @@ async function archivePage(url: string, origin: string): Promise<string> {
 		if (!href) return '';
 		const cssUrl = new URL(href, url).href;
 		try {
-			const css = await inlineCssAssets(await (await fetchOk(cssUrl)).text(), cssUrl, origin);
+			const css = await inlineCssAssets(
+				await (await fetchOk(cssUrl, 'error')).text(),
+				cssUrl,
+				origin,
+			);
 			return `<style>${css}</style>`;
 		} catch {
 			return match[0].replace(href, cssUrl);
@@ -183,14 +190,9 @@ async function archivePage(url: string, origin: string): Promise<string> {
 	// and leftovers resolve once the site is back rather than 404ing on ours.
 	html = html.replace(/(\s(?:href|action)=["'])\/(?!\/)/gi, `$1${origin}/`);
 
-	// Belt and braces with the iframe sandbox in DemoFrame.astro: the snapshot
-	// itself forbids scripts, forms, and nested frames wherever it is opened.
-	const csp =
-		"default-src 'none'; img-src data: https:; style-src 'unsafe-inline' https:; font-src data: https:; form-action 'none'; base-uri 'none'";
-	html = html.replace(
-		/<head\b[^>]*>/i,
-		(head) => `${head}\n<meta http-equiv="Content-Security-Policy" content="${csp}">`,
-	);
+	// Strip again now that stylesheets are inlined, then add the CSP: belt and
+	// braces with the iframe sandbox in DemoFrame.astro.
+	html = sanitizeSnapshotHtml(html);
 
 	return html.replace(
 		/(<!doctype[^>]*>)/i,
