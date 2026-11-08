@@ -1,72 +1,65 @@
 ---
-import { demoPage, demoSite, demoUrl, publicUrl, snapshotPath } from '../../lib/demos';
+import { demoPage, demoSite, demoUrl, snapshotPath } from '../../lib/demos';
 import DemoFrame from '../DemoFrame.astro';
 import Section from '../Section.astro';
 
-const site = demoSite('dispatch');
-const board = demoPage(site, 'dispatch-board');
-const driver = demoPage(site, 'dispatch-driver');
-const liveDemo = publicUrl(site, board);
+const site = demoSite('puntledge');
+const home = demoPage(site, 'puntledge-home');
+const report = demoPage(site, 'puntledge-report');
 ---
 
 <Section
 	id="live-demo"
-	eyebrow="Featured product · Live"
-	heading="Roga Dispatch"
-	dek="Dispatch and billing software for medical and assisted-transport companies. A live board shows every trip, driver, and coverage gap as the day moves; drivers get a phone app with their next trip and big, easy buttons; recurring trips schedule themselves; and payor rates roll up into invoices that match what you actually drove. One flat price, unlimited trips and clients."
+	eyebrow="Featured project · Live"
+	heading="Puntledge Tube Report"
+	dek="Our latest launch answers one question: is the Puntledge River worth floating today? The site blends live river gauge data, weather, and tides with anonymous reports from tubers who just got off the water, then turns it all into a plain-language verdict. Built with SvelteKit and Neon Postgres, deployed on Cloudflare."
 >
 	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 		<div class="relative md:pr-32 md:pb-14">
 			<DemoFrame
-				src={demoUrl(site, board)}
-				snapshot={snapshotPath(board)}
-				label={board.label}
-				title="Roga Dispatch — the dispatcher's live board (desktop preview)"
-				href="/work/roga-dispatch/"
-				hrefLabel="Read the Roga Dispatch case study"
+				src={demoUrl(site, home)}
+				snapshot={snapshotPath(home)}
+				label={home.label}
+				title="Puntledge Tube Report — today's conditions (desktop demo)"
+				href="/work/puntledge/"
+				hrefLabel="Read the Puntledge Tube Report case study"
 			/>
 			<div class="absolute right-0 -bottom-2 hidden w-[13.5rem] md:block">
 				<DemoFrame
 					kind="phone"
-					src={demoUrl(site, driver)}
-					snapshot={snapshotPath(driver)}
-					title="Roga Dispatch — the driver app mid-shift (mobile preview)"
-					href="/work/roga-dispatch/"
-					hrefLabel="Read the Roga Dispatch case study"
+					src={demoUrl(site, report)}
+					snapshot={snapshotPath(report)}
+					title="Puntledge Tube Report — report your float (mobile demo)"
+					href="/work/puntledge/"
+					hrefLabel="Read the Puntledge Tube Report case study"
 				/>
 			</div>
 		</div>
 		<div class="mx-auto mt-8 w-full max-w-[16rem] md:hidden">
 			<DemoFrame
 				kind="phone"
-				src={demoUrl(site, driver)}
-				snapshot={snapshotPath(driver)}
-				title="Roga Dispatch — the driver app mid-shift (mobile preview)"
-				href="/work/roga-dispatch/"
-				hrefLabel="Read the Roga Dispatch case study"
+				src={demoUrl(site, report)}
+				snapshot={snapshotPath(report)}
+				title="Puntledge Tube Report — report your float (mobile demo)"
+				href="/work/puntledge/"
+				hrefLabel="Read the Puntledge Tube Report case study"
 			/>
 		</div>
 		<div class="mt-10 flex flex-wrap items-center gap-x-10 gap-y-3">
 			<a
-				href={liveDemo}
-				target="_blank"
-				rel="noopener noreferrer"
+				href="/work/puntledge/"
 				class="inline-flex min-h-11 items-center gap-2 font-mono text-xs tracking-[0.16em] text-fg uppercase underline-offset-4 hover:underline"
-			>
-				Try the live demo <span aria-hidden="true">↗</span>
-				<span class="sr-only"> (opens in a new tab)</span>
-			</a>
-			<a
-				href="/work/roga-dispatch/"
-				class="inline-flex min-h-11 items-center gap-2 font-mono text-xs tracking-[0.16em] text-fg-muted uppercase transition-colors hover:text-fg"
 			>
 				Read the case study →
 			</a>
 			<a
-				href="/contact/"
+				href="https://puntledge.ca"
+				target="_blank"
+				rel="noopener noreferrer"
 				class="inline-flex min-h-11 items-center gap-2 font-mono text-xs tracking-[0.16em] text-fg-muted uppercase transition-colors hover:text-fg"
 			>
-				Ask for a walkthrough →
+				Visit puntledge.ca <span aria-hidden="true">↗</span>
+				<span class="sr-only"> (opens in a new tab)</span>
 			</a>
 		</div>
 	</div>
