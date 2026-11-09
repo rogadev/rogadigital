@@ -8,6 +8,15 @@ export const SITE_DESCRIPTION =
 export const SITE_AUTHOR = 'Ryan Roga';
 export const SITE_LOCATION = 'Vancouver Island, BC, Canada';
 
+/**
+ * The BC nonprofit Ryan founded and runs. It owns E&EO and the Puntledge
+ * Tube Report; Roga Digital builds them.
+ */
+export const PDW = {
+	name: 'Public Data Works Society',
+	url: 'https://publicdataworks.ca',
+} as const;
+
 export const SOCIAL = {
 	github: 'https://github.com/rogadev',
 	linkedin: 'https://linkedin.com/in/ryanroga',

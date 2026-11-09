@@ -72,7 +72,7 @@ const experience = [
 		period: '2026 — Present',
 		body: 'A society that builds free, public-facing apps on public data. I founded it, run it, and lead product development across its apps.',
 		bullets: [
-			'E&EO (eaeo.ca) — a free, bilingual platform linking Canadian credentials to the careers and labour-market outlooks that follow them. BC is live, with a national rollout through late 2026.',
+			'E&EO (eaeo.ca) — a free, bilingual platform linking Canadian credentials to the careers and labour-market outlooks that follow them. Programs from across Canada are live, with career links rolling out after B.C.',
 			'Puntledge Tube Report (puntledge.ca) — a crowdsourced river-conditions site for Comox Valley tubers, live since summer 2026.',
 			'GoFloat (gofloat.ca) — a companion app in the same river-float recreation space.',
 		],
@@ -89,6 +89,8 @@ const experience = [
 			"Awarded the follow-on contract for Summit — overhauling TELUS's training, mentorship, and credential-certification system from the ground up. Launching 2027.",
 			'Forward-deployed lead product developer for CarEvo since 2023 — built and maintain the multi-lot used-vehicle operations platform that runs their vehicles, vendors, lots, and deliveries.',
 			'Designed and shipped LLM-backed features in production (retrieval, structured output, evaluation pipelines) for client tools.',
+			'Built and run Roga Dispatch, a multi-tenant dispatch and billing product for medical and assisted-transport companies.',
+			'Publish open-source tooling for Claude Code, including orc-pack (an autonomous build-and-review orchestrator), paceline, and glance.',
 		],
 	},
 	{
@@ -142,7 +144,7 @@ const projects = [
 	{
 		name: 'E&EO',
 		summary:
-			'Free, bilingual platform connecting Canadian credentials to careers and labour-market outlooks. BC live, national rollout through late 2026.',
+			'Free, bilingual platform connecting Canadian credentials to careers and labour-market outlooks. Live across Canada, with career links rolling out after B.C.',
 		tech: ['SvelteKit', 'Postgres', 'Job Bank · NOC', 'Bilingual EN/FR', 'Public site'],
 		links: [
 			{ label: 'Case study', url: '/work/eaeo/' },
@@ -157,11 +159,14 @@ const projects = [
 		links: [{ label: 'Case study', url: '/work/carevo-logistics/' }],
 	},
 	{
-		name: 'EzTripr',
+		name: 'Roga Dispatch',
 		summary:
-			'Capstone project — trip-planning tool for a senior-transport service. Multi-passenger routing with live ETAs and driver UI.',
-		tech: ['Nuxt 3', 'Supabase', 'Prisma', 'Mapbox', 'Google Maps API', 'OpenAI', 'TypeScript'],
-		links: [{ label: 'Repo', url: 'https://github.com/rogadev/capstone' }],
+			'Multi-tenant dispatch, driver, and billing software for medical and assisted-transport companies. My own product, in use since 2025.',
+		tech: ['SvelteKit', 'Svelte 5', 'Neon Postgres', 'Drizzle', 'Multi-tenant'],
+		links: [
+			{ label: 'Case study', url: '/work/roga-dispatch/' },
+			{ label: 'Live', url: 'https://trips.roga.dev' },
+		],
 	},
 ];
 
@@ -201,7 +206,10 @@ const education = {
 						<div>
 							<dt class="text-fg-subtle">Contact</dt>
 							<dd class="mt-0.5 break-all">
-								<a class="text-fg hover:underline" href="/contact/">
+								<a
+									class="inline-flex min-h-11 items-center text-fg hover:underline"
+									href="/contact/"
+								>
 									Get in touch
 								</a>
 							</dd>
@@ -213,7 +221,10 @@ const education = {
 						<div>
 							<dt class="text-fg-subtle">Web</dt>
 							<dd class="mt-0.5">
-								<a class="text-fg hover:underline" href="https://rogadigital.com">
+								<a
+									class="inline-flex min-h-11 items-center text-fg hover:underline"
+									href="https://rogadigital.com"
+								>
 									rogadigital.com
 								</a>
 							</dd>
@@ -222,7 +233,7 @@ const education = {
 							<dt class="text-fg-subtle">Profiles</dt>
 							<dd class="mt-0.5 flex flex-wrap gap-3 lg:justify-end">
 								<a
-									class="text-fg hover:underline"
+									class="inline-flex min-h-11 items-center text-fg hover:underline"
 									href={SOCIAL.github}
 									target="_blank"
 									rel="noopener noreferrer"
@@ -230,7 +241,7 @@ const education = {
 									GitHub<span class="sr-only"> (opens in a new tab)</span>
 								</a>
 								<a
-									class="text-fg hover:underline"
+									class="inline-flex min-h-11 items-center text-fg hover:underline"
 									href={SOCIAL.linkedin}
 									target="_blank"
 									rel="noopener noreferrer"
@@ -320,7 +331,7 @@ const education = {
 											href={l.url}
 											target={l.url.startsWith('/') ? undefined : '_blank'}
 											rel={l.url.startsWith('/') ? undefined : 'noopener noreferrer'}
-											class="text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+											class="inline-flex min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
 										>
 											{l.label} →
 											{!l.url.startsWith('/') && <span class="sr-only"> (opens in a new tab)</span>}
@@ -431,7 +442,7 @@ const education = {
 				<div class="flex flex-wrap items-center gap-3">
 					<a
 						href="/contact/"
-						class="inline-flex items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Get in touch
 					</a>

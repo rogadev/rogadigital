@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
+import ryan from '../assets/ryan.jpg';
 import InquiryForm from '../components/InquiryForm.svelte';
 import Section from '../components/Section.astro';
-import { SITE_LOCATION, SOCIAL } from '../consts';
+import { SITE_AUTHOR, SITE_LOCATION, SOCIAL } from '../consts';
 import Base from '../layouts/Base.astro';
 
 const title = 'Contact · Roga Digital';
@@ -12,7 +14,7 @@ const expect = [
 	{
 		n: '01',
 		h: 'Send a message.',
-		b: "Bullet points, a Loom, or a paragraph — whatever's easiest. The clearer the picture of what's broken or missing, the more useful my reply.",
+		b: "Bullet points, a Loom, or a paragraph, whichever is easiest. The clearer the picture of what's broken or missing, the more useful my reply.",
 	},
 	{
 		n: '02',
@@ -27,9 +29,9 @@ const expect = [
 ];
 
 const helpful = [
-	'A short description of the problem — no jargon required.',
-	'How your team works around it today — the manual workaround.',
-	'What success looks like — saved hours, revenue, or fewer mistakes.',
+	'A short description of the problem. No jargon required.',
+	'How your team works around it today.',
+	'What success looks like: saved hours, revenue, or fewer mistakes.',
 	'Constraints worth knowing: deadlines, existing systems, team size, budget range.',
 ];
 ---
@@ -48,11 +50,11 @@ const helpful = [
 				<!-- Two columns: intro + what to expect (left), message form (right) -->
 				<div class="mt-12 grid items-start gap-x-16 gap-y-14 sm:mt-14 lg:grid-cols-12">
 					<!-- Left column: intro + what to expect -->
-					<div class="lg:col-span-6">
+					<div class="min-w-0 lg:col-span-6">
 						<p class="max-w-xl text-lg text-fg-muted text-pretty sm:text-xl">
-							Tell me what you&rsquo;re working on &mdash; what&rsquo;s broken, what you&rsquo;ve
-							tried, and what success looks like. If I can help, you&rsquo;ll have a written read on
-							scope and a rough budget within 48 hours. If I can&rsquo;t, I&rsquo;ll say so.
+							Tell me what you&rsquo;re working on: what&rsquo;s broken, what you&rsquo;ve tried,
+							and what success looks like. If I can help, you&rsquo;ll have a written read on scope
+							and a rough budget within 48 hours. If I can&rsquo;t, I&rsquo;ll say so.
 						</p>
 
 						<div class="mt-10 border-t border-border pt-8">
@@ -76,13 +78,25 @@ const helpful = [
 					</div>
 
 					<!-- Right column: the message form -->
-					<div class="lg:col-span-6 lg:col-start-7">
+					<div class="min-w-0 lg:col-span-6 lg:col-start-7">
+						<div class="mb-6 flex items-center gap-4">
+							<Image
+								src={ryan}
+								alt=""
+								width={112}
+								height={112}
+								class="h-14 w-14 rounded-full border border-border"
+							/>
+							<p class="text-sm">
+								<span class="block font-medium text-fg">{SITE_AUTHOR}</span>
+								<span class="block text-fg-muted">Your message goes to me, not a sales team.</span>
+							</p>
+						</div>
 						<h2 class="text-2xl font-medium tracking-tight text-balance text-fg sm:text-3xl">
 							Send a message.
 						</h2>
 						<p class="mt-3 mb-8 text-fg-muted text-pretty">
-							Straight to my inbox &mdash; no forms routed to a sales team, no pitch in return. A
-							real reply within 48 hours.
+							No pitch in return. You get a real reply within 48 hours.
 						</p>
 						<InquiryForm endpoint="/api/contact" client:load />
 					</div>
@@ -95,7 +109,7 @@ const helpful = [
 	<Section
 		eyebrow="Before you write"
 		heading="What's helpful to include."
-		dek="None of it is required — but if you have it handy, my first reply goes a lot further."
+		dek="None of it is required. If you have it handy, my first reply goes a lot further."
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<ul class="divide-y divide-border border-y border-border" role="list">
@@ -122,7 +136,7 @@ const helpful = [
 								href={SOCIAL.linkedin}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="group inline-flex items-center gap-2"
+								class="group inline-flex min-h-11 items-center gap-2"
 							>
 								<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
 									LinkedIn
@@ -135,7 +149,7 @@ const helpful = [
 								href={SOCIAL.github}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="group inline-flex items-center gap-2"
+								class="group inline-flex min-h-11 items-center gap-2"
 							>
 								<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
 									GitHub
@@ -165,7 +179,7 @@ const helpful = [
 				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
 					<a
 						href="/work/"
-						class="inline-flex items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm font-medium text-fg transition-colors hover:border-fg-subtle"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm font-medium text-fg transition-colors hover:border-fg-subtle"
 					>
 						View the work
 					</a>

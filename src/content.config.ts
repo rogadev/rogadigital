@@ -22,6 +22,10 @@ const work = defineCollection({
 	schema: ({ image }) =>
 		z.object({
 			id: z.string(),
+			/** Short system name: the title on cards, the /work table, and the case study. */
+			name: z.string(),
+			/** One fact that sizes the project. Must be stated in a case study body. */
+			metric: z.object({ value: z.string(), label: z.string() }).optional(),
 			client: z.string(),
 			industry: z.string(),
 			headline: z.string(),
@@ -33,6 +37,8 @@ const work = defineCollection({
 			featured: z.boolean().default(false),
 			order: z.number().default(99),
 			heroImage: z.optional(image()),
+			/** Dark-theme capture of `heroImage`, shown when the site is in dark mode. */
+			heroImageDark: z.optional(image()),
 			liveUrl: z.url().optional(),
 			repoUrl: z.url().optional(),
 			highlight: z.string().optional(),

@@ -1,9 +1,14 @@
 ---
 id: EAEO-004
+name: Employment and Education Outlooks
+metric:
+  value: Canada-wide
+  label: 17,000+ programs listed
+heroImage: '../../assets/work/eaeo/01-homepage.png'
 client: Public Data Works Society · E&EO
 industry: Public site · Education · Labour-market data
 headline: A free, bilingual platform that connects Canadian credentials to the careers and labour-market outlooks that actually follow them.
-outcome: BC institutions and programs live now, with a national rollout through late 2026. Built around the question prospective students actually ask — "what does this lead to?" — and answered with real Job Bank, NOC, and StatsCan data.
+outcome: Programs from institutions across Canada are live now, more than 17,000 in all, and the careers each one leads to are rolling out province by province after B.C. Built around the question prospective students actually ask — "what does this lead to?" — and answered with real Job Bank, NOC, and StatsCan data.
 tags:
   - SvelteKit
   - Postgres
@@ -104,7 +109,7 @@ The interesting part of E&EO is not the front end. It's the data plumbing that l
 - **i18n** — Paraglide JS, with EN-CA and FR-CA modeled at the message and route layer. There's a parity check in CI so a missing French string is a build failure, not a runtime fallback.
 - **Data layer** — Postgres (Neon, serverless) with Drizzle ORM. The schema models institutions, programs, credentials, NOC occupations, regions (province + economic region), outlooks, and wages as first-class entities — not denormalized blobs.
 - **The hard part: CIP–NOC concordance.** Programs are classified by CIP (Classification of Instructional Programs); jobs are classified by NOC. The federal concordance between them is _one-to-many in both directions_ and is the actual product. Without it, "this credential leads to these careers" is wishful thinking. E&EO carries a maintained concordance and exposes it as the join that powers both search modes.
-- **Ingestion** — a set of typed import scripts pull the NOC structure, regions, Job Bank outlooks, institution and credential data, and a province-specific scrape pipeline (BC first). Each step is idempotent so a partial run doesn't poison the index.
+- **Ingestion** — a set of typed import scripts pull the NOC structure, regions, Job Bank outlooks, institution and credential data, and a scrape pipeline for every province and territory. Each step is idempotent so a partial run doesn't poison the index.
 - **Search** — built and optimized offline against the database, served as a typed index so a query doesn't have to trigger a half-dozen joins on the request path.
 - **Observability** — Sentry for errors and performance, geoip for soft regional defaults so the first page already feels local.
 - **Quality gates** — Vitest for unit and integration, Playwright for E2E, an i18n parity check, and a custom test-pyramid preflight. If French strings drift or the test mix gets top-heavy, CI says so.
@@ -113,16 +118,16 @@ The architecture is built for scaling province-by-province. Adding a new provinc
 
 ## Status
 
-- **Live**, with British Columbia institutions and programs available now.
+- **Live across Canada**, with more than 17,000 programs from institutions in nearly every province and territory.
+- **Career links in B.C. today**, so B.C. programs show the careers they lead to. The same links are rolling out to the other provinces next.
 - **Bilingual** EN-CA / FR-CA from launch — not retrofitted later.
 - **Free**, with no account required to search.
-- **National rollout through late 2026**, province by province, on the same data model.
 
 ## What's next
 
 The roadmap, in priority order:
 
-- **Provincial expansion.** Each province has its own scrape contract and its own quirks; the data model is ready, the ingestion work is per-province.
+- **Career links nationwide.** Programs from across Canada are in; the next step is linking them to careers with the same checks B.C.'s links go through.
 - **Saved searches and shortlists for accounts.** The infrastructure for it is there; the value lands once a user has more than one province's data to compare across.
 - **Editorial layer** (the Blog / Regional sections in the nav) for the kind of context that data alone can't carry — what a "Moderate" outlook actually means, how to read NOC codes, what's changing in a given region.
 - **Counsellor-facing surfaces** for the people who use this professionally rather than personally.

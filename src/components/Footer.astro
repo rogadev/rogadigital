@@ -1,5 +1,5 @@
 ---
-import { SITE_LOCATION, SOCIAL } from '../consts';
+import { PDW, SITE_LOCATION, SOCIAL } from '../consts';
 
 const today = new Date();
 
@@ -9,12 +9,17 @@ const cols = [
 		links: [
 			{ href: '/work/', label: 'Work' },
 			{ href: '/services/', label: 'Services' },
-			{ href: '/insights/', label: 'Writing' },
-			{ href: '/tools/', label: 'Tools' },
-			{ href: '/labs/benchmarks/', label: 'Benchmarks' },
+			{ href: '/insights/', label: 'Insights' },
 			{ href: '/about/', label: 'About' },
 			{ href: '/contact/', label: 'Contact' },
-			{ href: '/support/', label: 'Support' },
+		],
+	},
+	{
+		heading: 'More',
+		links: [
+			{ href: '/tools/', label: 'Tools' },
+			{ href: '/labs/benchmarks/', label: 'Benchmarks' },
+			{ href: '/support/', label: 'Product support' },
 			{ href: '/media/', label: 'Media' },
 		],
 	},
@@ -23,12 +28,8 @@ const cols = [
 		links: [
 			{ href: SOCIAL.github, label: 'GitHub', external: true },
 			{ href: SOCIAL.linkedin, label: 'LinkedIn', external: true },
+			{ href: PDW.url, label: 'Public Data Works', external: true },
 			{ href: '/rss.xml', label: 'RSS' },
-		],
-	},
-	{
-		heading: 'Legal',
-		links: [
 			{ href: '/privacy/', label: 'Privacy' },
 			{ href: '/terms-of-service/', label: 'Terms' },
 		],
@@ -52,8 +53,8 @@ const cols = [
 					Roga Digital
 				</a>
 				<p class="mt-4 max-w-sm text-sm text-fg-muted">
-					A software studio building internal tools, dashboards, integrations, and AI features for
-					businesses.
+					Ryan Roga&rsquo;s software studio. Internal tools, dashboards, integrations, and AI
+					features for businesses.
 				</p>
 				<a
 					href="/contact/"

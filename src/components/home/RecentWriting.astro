@@ -18,8 +18,8 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 <Section
 	id="insights"
 	eyebrow="Insights"
-	heading="Professional notes, opinions, and forecasts."
-	dek="Opinions on tooling and technology, honest takes on where AI is actually headed, and notes from the work itself — written for people who build and run software, not the hype cycle."
+	heading="Notes from the work."
+	dek="Opinions on tooling, where AI is headed, and what I learn building and running software for clients."
 >
 	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 		<ul class="divide-y divide-border border-y border-border" role="list">
@@ -47,16 +47,14 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 				</li>
 			))}
 			{posts.length === 0 && (
-				<li class="py-10 text-center text-sm text-fg-muted">
-					First post lands soon — Roga Digital just relaunched.
-				</li>
+				<li class="py-10 text-center text-sm text-fg-muted">First post lands soon.</li>
 			)}
 		</ul>
 
 		<div class="mt-10">
 			<a
 				href="/insights/"
-				class="inline-flex items-center gap-2 font-mono text-xs tracking-[0.16em] text-fg-muted uppercase transition-colors hover:text-fg"
+				class="inline-flex min-h-11 items-center gap-2 font-mono text-xs tracking-[0.16em] text-fg-muted uppercase transition-colors hover:text-fg"
 			>
 				All insights
 				<svg

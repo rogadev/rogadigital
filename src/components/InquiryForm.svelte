@@ -116,7 +116,7 @@
 {:else}
 	<form
 		onsubmit={handleSubmit}
-		class="relative flex flex-col gap-6 rounded-lg border border-border bg-bg p-8 sm:p-10"
+		class="relative flex min-w-0 flex-col gap-6 rounded-lg border border-border bg-bg p-5 sm:p-10"
 		novalidate
 	>
 		<div class="grid gap-6 sm:grid-cols-2">
@@ -130,7 +130,7 @@
 					maxlength="200"
 					autocomplete="name"
 					bind:value={name}
-					class="min-h-11 rounded-md border border-border bg-bg px-3 text-fg"
+					class="min-h-11 w-full min-w-0 rounded-md border border-border bg-bg px-3 text-fg"
 				/>
 			</div>
 			<div class="flex flex-col gap-2">
@@ -143,7 +143,7 @@
 					maxlength="254"
 					autocomplete="email"
 					bind:value={email}
-					class="min-h-11 rounded-md border border-border bg-bg px-3 text-fg"
+					class="min-h-11 w-full min-w-0 rounded-md border border-border bg-bg px-3 text-fg"
 				/>
 			</div>
 		</div>
@@ -162,7 +162,7 @@
 						maxlength="200"
 						autocomplete="organization"
 						bind:value={outlet}
-						class="min-h-11 rounded-md border border-border bg-bg px-3 text-fg"
+						class="min-h-11 w-full min-w-0 rounded-md border border-border bg-bg px-3 text-fg"
 					/>
 				</div>
 				<div class="flex flex-col gap-2">
@@ -176,7 +176,7 @@
 						maxlength="200"
 						placeholder="e.g. Friday 5pm PT"
 						bind:value={deadline}
-						class="min-h-11 rounded-md border border-border bg-bg px-3 text-fg"
+						class="min-h-11 w-full min-w-0 rounded-md border border-border bg-bg px-3 text-fg"
 					/>
 				</div>
 			</div>
@@ -190,7 +190,7 @@
 					name="product"
 					required
 					bind:value={product}
-					class="min-h-11 rounded-md border border-border bg-bg px-3 text-fg"
+					class="min-h-11 w-full min-w-0 rounded-md border border-border bg-bg px-3 text-fg"
 				>
 					{#each SUPPORT_PRODUCTS as p (p.slug)}
 						<option value={p.slug}>{p.label}</option>
@@ -208,7 +208,7 @@
 				maxlength="5000"
 				rows="6"
 				bind:value={message}
-				class="rounded-md border border-border bg-bg px-3 py-2.5 text-fg"></textarea>
+				class="w-full min-w-0 rounded-md border border-border bg-bg px-3 py-2.5 text-fg"></textarea>
 		</div>
 
 		<!-- Honeypot: real users never see or reach this field. -->

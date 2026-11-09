@@ -29,6 +29,7 @@ describe('deriveOgPath', () => {
 		['/work/', '/og/work.png'],
 		['/work/puntledge/', '/og/work/puntledge.png'],
 		['/insights/why-this-stack/', '/og/insights/why-this-stack.png'],
+		['/services/internal-tools/', '/og/services.png'],
 		['/labs/apps/', '/og/default.png'],
 		['/nowhere/', '/og/default.png'],
 	];

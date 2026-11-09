@@ -29,17 +29,17 @@ export interface OgPageConfig {
 export const OG_PAGES: Record<string, OgPageConfig> = {
 	about: {
 		eyebrow: 'About',
-		title: 'We build the software your business runs on.',
+		title: 'I build the software your business runs on.',
 		footnote: SITE_LOCATION,
 	},
 	contact: {
 		eyebrow: 'Contact',
 		title: "Let's talk about your project.",
-		footnote: 'Free 30-min call · Reply ≤ 48h',
+		footnote: 'A written reply within 48 hours',
 	},
 	services: {
 		eyebrow: 'Services',
-		title: 'What we work on, in detail.',
+		title: 'What I build, in detail.',
 		footnote: 'Product · Architecture · Code · AI · Ops',
 	},
 	resume: {
@@ -54,7 +54,7 @@ export const OG_PAGES: Record<string, OgPageConfig> = {
 	},
 	insights: {
 		eyebrow: 'Insights',
-		title: 'Professional notes, opinions, and forecasts.',
+		title: 'Notes from the work.',
 		footnote: 'Studio updates · tooling · AI takes',
 	},
 	media: {
@@ -89,6 +89,6 @@ export const STATIC_PAGE_OGS: ReadonlySet<string> = new Set(Object.keys(OG_PAGES
  * offer rather than something specific to any one fallback route.
  */
 export const DEFAULT_OG: OgPageConfig = {
-	title: 'We build internal tools & business software.',
+	title: 'I build internal tools & business software.',
 	footnote: `Software studio · ${SITE_LOCATION}`,
 };

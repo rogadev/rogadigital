@@ -1,103 +1,132 @@
 ---
+import ThemedImage from '../../components/ThemedImage.astro';
 import { getCollection } from 'astro:content';
+import StatusIndicator from '../../components/StatusIndicator.astro';
 import Base from '../../layouts/Base.astro';
 
-const title = 'Work · Roga Digital';
+const title = 'Work: internal tools & business software in production · Roga Digital';
 const description =
-	'Selected case studies from Roga Digital — operations platforms, internal tools, public sites, and AI features built end-to-end for businesses.';
+	'Case studies from Roga Digital: operations platforms, internal tools, public sites, and AI features, each designed, built, shipped, and maintained for a business that depends on it.';
 
 const work = (await getCollection('work'))
 	.filter((entry) => entry.data.status !== 'draft')
 	.toSorted((a, b) => a.data.order - b.data.order);
+
+const liveCount = work.filter((entry) => entry.data.status === 'live').length;
+
+const statusLabel = {
+	live: 'Live',
+	'in-development': 'In development',
+	archived: 'Archived',
+	draft: 'Draft',
+} as const;
+
+// One grid template shared by the column header and every row, so they stay aligned.
+const columns =
+	'lg:grid lg:grid-cols-[6.5rem_minmax(0,2.4fr)_minmax(0,1.2fr)_minmax(0,1.1fr)_6.5rem_8rem] lg:items-center lg:gap-x-6';
+const columnLabel = 'font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase';
 ---
 
 <Base {title} {description}>
 	<!-- Hero -->
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-			<div class="grid gap-10 pt-20 pb-16 sm:pt-28 sm:pb-20 lg:grid-cols-12 lg:gap-16">
-				<div class="lg:col-span-8">
-					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Work</p>
-					<h1 class="mt-6 text-4xl font-medium tracking-tight text-balance sm:text-5xl lg:text-6xl">
-						Selected work,
-						<br />
-						<span class="text-fg-muted">in production.</span>
-					</h1>
-					<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty sm:text-xl">
-						A selection from a longer list of client and studio projects, each shipped end-to-end —
-						product, architecture, code, deploy, and ongoing maintenance — by the studio. Most are
-						still running today.
-					</p>
-				</div>
-				{/* Stats panel hidden temporarily — restore when numbers are confirmed.
-					<div class="lg:col-span-4">
-						<dl
-							class="grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-border bg-border"
-						>
-							<div class="bg-bg-soft px-4 py-4">
-								<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Shipped</dt>
-								<dd class="mt-1 text-xl font-medium text-fg">{work.length}</dd>
-							</div>
-							<div class="bg-bg-soft px-4 py-4">
-								<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Maintained</dt>
-								<dd class="mt-1 text-xl font-medium text-fg">
-									{work.filter((w) => w.data.status === 'live').length}
-								</dd>
-							</div>
-							<div class="bg-bg-soft px-4 py-4">
-								<dt class="font-mono text-2xs tracking-wider text-fg-subtle uppercase">Clients</dt>
-								<dd class="mt-1 text-xl font-medium text-fg">7+</dd>
-							</div>
-						</dl>
-					</div>
-					*/}
+			<div class="pt-16 pb-12 sm:pt-20 sm:pb-14">
+				<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Work</p>
+				<h1 class="mt-6 text-3xl font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl">
+					{work.length} systems, {liveCount} live in production.
+				</h1>
+				<p class="mt-5 max-w-2xl text-lg text-fg-muted text-pretty">
+					Client and studio projects I took from product decisions through architecture, code,
+					deploy, and ongoing maintenance. Select a row for the case study.
+				</p>
 			</div>
 		</div>
 	</section>
 
-	<!-- Work list -->
+	<!-- Work table -->
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page">
+			<div class:list={['hidden border-b border-border px-8 py-3', columns]} aria-hidden="true">
+				<span></span>
+				<span class={columnLabel}>System</span>
+				<span class={columnLabel}>Client</span>
+				<span class={columnLabel}>Scale</span>
+				<span class={columnLabel}>Period</span>
+				<span class={columnLabel}>Status</span>
+			</div>
+
 			<ul class="divide-y divide-border" role="list">
 				{work.map((w) => (
 					<li>
 						<a
 							href={`/work/${w.id}/`}
-							class="group block px-6 py-10 transition-colors hover:bg-bg-soft sm:px-8 sm:py-12"
-							aria-label={`${w.data.client} — ${w.data.headline}`}
+							class:list={[
+								'group block px-6 py-6 transition-colors hover:bg-bg-soft sm:px-8 lg:py-4',
+								columns,
+							]}
 						>
-							<div class="grid gap-6 lg:grid-cols-12 lg:gap-12">
-								<div class="lg:col-span-3">
-									<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
-										{w.data.id}
-									</p>
-									<p class="mt-2 font-mono text-2xs tracking-[0.16em] text-[var(--color-accent)] uppercase">
-										{w.data.client}
-									</p>
-									<p class="mt-3 font-mono text-2xs tracking-wider text-fg-subtle uppercase">
-										{w.data.industry}
-									</p>
-								</div>
-								<div class="lg:col-span-9">
-									<h2 class="text-2xl font-medium tracking-tight text-balance text-fg group-hover:underline group-hover:underline-offset-4 sm:text-3xl">
-										{w.data.headline}
-									</h2>
-									<p class="mt-3 max-w-2xl text-fg-muted text-pretty">{w.data.outcome}</p>
-									{w.data.highlight && (
-										<p class="mt-3 max-w-2xl text-sm text-pretty text-fg-subtle italic">
-											{w.data.highlight}
-										</p>
-									)}
-									<ul class="mt-5 flex flex-wrap gap-1.5 font-mono text-2xs" role="list">
-										{w.data.tags.map((t) => (
-											<li class="rounded-sm border border-border px-2 py-0.5 text-fg-muted">{t}</li>
-										))}
-									</ul>
-									<p class="mt-6 inline-flex items-center gap-1.5 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase transition-colors group-hover:text-fg">
-										Read case study →
-									</p>
-								</div>
+							<div
+								class:list={[
+									'mb-4 w-full max-w-sm overflow-hidden rounded-sm border border-border bg-bg-soft lg:mb-0',
+									// No screenshot yet: keep the table cell on desktop, drop the empty box on mobile.
+									!w.data.heroImage && 'hidden lg:block',
+								]}
+							>
+								{w.data.heroImage ? (
+									<ThemedImage
+										src={w.data.heroImage}
+										darkSrc={w.data.heroImageDark}
+										alt=""
+										widths={[208, 416, 768]}
+										sizes="(min-width: 1024px) 104px, 384px"
+										class="block aspect-[16/10] h-auto w-full object-cover object-top"
+									/>
+								) : (
+									<div class="thumb-pending aspect-[16/10]" aria-hidden="true" />
+								)}
 							</div>
+
+							<div>
+								<p class="font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+									{w.data.id}
+								</p>
+								<h2 class="mt-1 text-lg font-medium tracking-tight text-fg underline-offset-4 group-hover:underline">
+									{w.data.name}
+								</h2>
+								<p class="mt-1 line-clamp-2 text-sm text-fg-muted">{w.data.headline}</p>
+							</div>
+
+							<div class="mt-4 text-sm lg:mt-0">
+								<p class="text-fg">
+									<span class="sr-only">Client: </span>
+									{w.data.client.split(' · ')[0]}
+								</p>
+								<p class="mt-0.5 text-fg-subtle">{w.data.industry}</p>
+							</div>
+
+							<div class="mt-3 text-sm lg:mt-0">
+								{w.data.metric && (
+									<>
+										<p class="font-medium text-fg tabular-nums">
+											<span class="sr-only">Scale: </span>
+											{w.data.metric.value}
+										</p>
+										<p class="mt-0.5 text-fg-subtle">{w.data.metric.label}</p>
+									</>
+								)}
+							</div>
+
+							<p class="mt-3 font-mono text-xs text-fg-muted tabular-nums lg:mt-0">
+								<span class="sr-only">Period: </span>
+								{w.data.period}
+							</p>
+
+							<p class="mt-2 inline-flex items-center gap-2 font-mono text-xs text-fg-muted lg:mt-0">
+								<StatusIndicator status={w.data.status} />
+								<span class="sr-only">Status: </span>
+								{statusLabel[w.data.status]}
+							</p>
 						</a>
 					</li>
 				))}
@@ -107,20 +136,20 @@ const work = (await getCollection('work'))
 
 	<!-- End CTA -->
 	<section class="bg-bg-soft">
-		<div class="mx-auto w-full max-w-page px-6 py-20 sm:px-8 sm:py-24">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
 			<div class="grid gap-6 lg:grid-cols-12 lg:items-center">
 				<div class="lg:col-span-8">
 					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
-						Got a project like one of these?
+						Have a project like one of these?
 					</p>
-					<h2 class="mt-3 text-3xl font-medium tracking-tight text-balance sm:text-4xl">
-						Let's talk about it.
+					<h2 class="mt-3 text-2xl font-medium tracking-tight text-balance sm:text-3xl lg:text-4xl">
+						Tell me what your team is working around.
 					</h2>
 				</div>
 				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
 					<a
 						href="/contact/"
-						class="inline-flex items-center gap-2 rounded-md bg-fg px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Get in touch
 					</a>
@@ -129,3 +158,10 @@ const work = (await getCollection('work'))
 		</div>
 	</section>
 </Base>
+
+<style>
+	.thumb-pending {
+		background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
+		background-size: 10px 10px;
+	}
+</style>

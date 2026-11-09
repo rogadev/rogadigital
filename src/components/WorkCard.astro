@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import StatusIndicator from './StatusIndicator.astro';
+import ThemedImage from './ThemedImage.astro';
+
+/** A case study as a card: screenshot, client, short name, one sizing fact, and the headline. */
+interface Props {
+	entry: CollectionEntry<'work'>;
+	/** Heading level for the system name. Defaults to h3. */
+	headingLevel?: 'h2' | 'h3';
+}
+
+const { entry, headingLevel: Heading = 'h3' } = Astro.props;
+const { data } = entry;
+---
+
+<a href={`/work/${entry.id}/`} class="group flex h-full flex-col">
+	<div class="overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors group-hover:border-border-strong">
+		{data.heroImage ? (
+			<ThemedImage
+				src={data.heroImage}
+				darkSrc={data.heroImageDark}
+				alt=""
+				widths={[480, 720, 1200]}
+				sizes="(min-width: 768px) 590px, 100vw"
+				class="block aspect-[16/10] h-auto w-full object-cover object-top"
+			/>
+		) : (
+			<div class="pending flex aspect-[16/10] items-center justify-center" aria-hidden="true">
+				<span class="inline-flex items-center gap-2 rounded-sm border border-border bg-bg-soft px-3 py-1.5 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+					<StatusIndicator status={data.status} />
+					In development
+				</span>
+			</div>
+		)}
+	</div>
+
+	<p class="mt-5 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase md:truncate">
+		{data.client.split(' · ')[0]} · {data.industry.split(' · ')[0]}
+	</p>
+	{/* Name and metric each take their own line, so cards in a row line up whatever the name's length. */}
+	<Heading class="mt-2 text-2xl font-medium tracking-tight text-fg underline-offset-4 group-hover:underline">
+		{data.name}
+	</Heading>
+	{data.metric && (
+		<p class="mt-1 text-sm text-fg-muted">
+			<span class="font-medium text-fg tabular-nums">{data.metric.value}</span> {data.metric.label}
+		</p>
+	)}
+	<p class="mt-2 max-w-xl text-sm text-fg-muted text-pretty">{data.headline}</p>
+</a>
+
+<style>
+	.pending {
+		background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
+		background-size: 20px 20px;
+	}
+</style>

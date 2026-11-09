@@ -1,5 +1,10 @@
 ---
 id: TC-003
+name: TechCentral
+metric:
+  value: 2,500+
+  label: active users, hundreds daily
+heroImage: '../../assets/work/telus-techcentral/dashboard.png'
 client: TELUS · TechCentral
 industry: Telecommunications · Field operations
 headline: Bilingual operations and reference platform for 2,500+ TELUS field technicians and contractors across Western Canada.
@@ -19,6 +24,12 @@ order: 3
 
 import Screenshot from '../../components/Screenshot.astro';
 import dashboard from '../../assets/work/telus-techcentral/dashboard.png';
+
+<Screenshot
+	src={dashboard}
+	alt="TechCentral dashboard — bilingual operations and reference platform for TELUS field technicians, with role-aware navigation, search, and content surfaces."
+	caption="TechCentral — the daily-driver dashboard for field technicians and contractors."
+/>
 
 ## Context
 
@@ -59,12 +70,6 @@ I led the architecture and delivery from blank repo to production. A few decisio
 - **Search as a first-class surface.** Built on a typed index with relevance tuned to how technicians actually phrase questions, not how content is filed. Search-rank previewing is a real tool inside the editor experience — see [TC Tools](/work/telus-tc-tools/).
 - **Density without overwhelm.** Field staff use the platform on phones, in vehicles, between jobs. The interface is built for thumbs and dim screens, not for screenshots.
 - **Built to grow.** The architecture made room for the LMS and certification system that became a separate engagement — see [Summit](/work/telus-summit/).
-
-<Screenshot
-	src={dashboard}
-	alt="TechCentral dashboard — bilingual operations and reference platform for TELUS field technicians, with role-aware navigation, search, and content surfaces."
-	caption="TechCentral — the daily-driver dashboard for field technicians and contractors."
-/>
 
 ## How it's built
 

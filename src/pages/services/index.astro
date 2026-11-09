@@ -1,0 +1,222 @@
+---
+import ThemedImage from '../../components/ThemedImage.astro';
+import { getCollection } from 'astro:content';
+import Section from '../../components/Section.astro';
+import { ENGAGEMENT_FORMATS, SERVICE_PAGES, SERVICES } from '../../data/services';
+import Base from '../../layouts/Base.astro';
+
+const title = 'Services: internal tools, custom software, AI & integrations · Roga Digital';
+const description =
+	'What Roga Digital builds: internal tools and dashboards, custom software, AI features, integrations, and the long-term maintenance of the software businesses depend on.';
+
+const allWork = await getCollection('work');
+
+// The four main services, each paired with the first related case study that has a screenshot.
+const main = SERVICE_PAGES.map((service) => {
+	const proof = service.page.work
+		.map((id) => allWork.find((w) => w.id === id))
+		.find((w) => w?.data.heroImage);
+	return { service, proof };
+});
+
+const more = SERVICES.filter((s) => !s.page);
+
+const eyebrow = 'font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase';
+---
+
+<Base {title} {description}>
+	<!-- Hero -->
+	<section class="border-b border-border">
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<div class="pt-16 pb-12 sm:pt-20 sm:pb-14">
+				<p class={eyebrow}>Services</p>
+				<h1 class="mt-6 text-3xl font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl">
+					Four things I build most. Five more I do around them.
+				</h1>
+				<p class="mt-5 max-w-2xl text-lg text-fg-muted text-pretty">
+					Most projects draw on two or three of these at once. Start with whichever sounds closest
+					to your problem.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Main services -->
+	{main.map(({ service: s, proof }, i) => (
+		<section id={s.id} class="scroll-mt-20 border-b border-border">
+			<div class="mx-auto w-full max-w-page px-6 py-12 sm:px-8 sm:py-16">
+				<div class="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
+					<div class:list={['lg:col-span-6', i % 2 === 1 && 'lg:order-2']}>
+						<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">{s.number}</p>
+						<h2 class="mt-3 text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+							{s.title}
+						</h2>
+						<p class="mt-3 text-lg text-fg text-pretty">{s.summary}</p>
+						<p class={`mt-6 ${eyebrow}`}>It fits when</p>
+						<ul class="mt-3 space-y-2 text-sm text-fg-muted" role="list">
+							{s.whenYouReachFor.map((c) => (
+								<li class="flex gap-2.5">
+									<span
+										class="mt-2 inline-block h-1 w-1 flex-shrink-0 rounded-full bg-[var(--color-accent)]"
+										aria-hidden="true"
+									/>
+									<span class="text-pretty">{c}</span>
+								</li>
+							))}
+						</ul>
+						<a
+							href={`/services/${s.page.slug}/`}
+							class="mt-6 inline-flex min-h-11 items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm text-fg transition-colors hover:border-fg-subtle"
+						>
+							What you get, and where I&rsquo;ve done it
+							<span aria-hidden="true">→</span>
+						</a>
+					</div>
+
+					{proof?.data.heroImage && (
+						<figure class:list={['lg:col-span-6', i % 2 === 1 && 'lg:order-1']}>
+							<a
+								href={`/work/${proof.id}/`}
+								class="block overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors hover:border-border-strong"
+								aria-label={`${proof.data.name} case study`}
+							>
+								<ThemedImage
+									src={proof.data.heroImage}
+									darkSrc={proof.data.heroImageDark}
+									alt=""
+									widths={[480, 720, 1200]}
+									sizes="(min-width: 1024px) 590px, 100vw"
+									class="block aspect-[16/10] h-auto w-full object-cover object-left-top"
+								/>
+							</a>
+							<figcaption class="mt-3 font-mono text-2xs tracking-[0.14em] text-fg-subtle uppercase">
+								In production · {proof.data.name}
+							</figcaption>
+						</figure>
+					)}
+				</div>
+			</div>
+		</section>
+	))}
+
+	<!-- The rest, collapsed -->
+	<section class="border-b border-border">
+		<div class="mx-auto w-full max-w-page px-6 py-14 sm:px-8 sm:py-20">
+			<h2 class="text-2xl font-medium tracking-tight sm:text-3xl">Around the build</h2>
+			<p class="mt-3 max-w-2xl text-fg-muted text-pretty">
+				Work that comes before, alongside, or after a build. Open any row for the details.
+			</p>
+
+			<div class="mt-8 border-t border-border">
+				{more.map((s) => (
+					<details id={s.id} class="group scroll-mt-20 border-b border-border">
+						<summary class="flex min-h-11 cursor-pointer list-none items-baseline gap-4 py-5 [&::-webkit-details-marker]:hidden">
+							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle">{s.number}</span>
+							<span class="flex-1">
+								<span class="block text-lg font-medium tracking-tight text-fg">{s.title}</span>
+								<span class="mt-0.5 block text-sm text-fg-muted">{s.summary}</span>
+							</span>
+							<span
+								class="font-mono text-lg leading-none text-fg-subtle transition-transform group-open:rotate-45 motion-reduce:transition-none"
+								aria-hidden="true"
+							>
+								+
+							</span>
+						</summary>
+						<div class="grid gap-8 pb-8 pl-0 sm:pl-10 lg:grid-cols-12">
+							<p class="text-fg-muted text-pretty lg:col-span-12 lg:max-w-3xl">{s.lead}</p>
+							<div class="lg:col-span-6">
+								<h3 class={eyebrow}>What you get</h3>
+								<ul class="mt-3 space-y-2 text-sm text-fg-muted" role="list">
+									{s.deliverables.map((d) => (
+										<li class="flex gap-2.5">
+											<span
+												class="mt-2 inline-block h-1 w-1 flex-shrink-0 rounded-full bg-[var(--color-accent)]"
+												aria-hidden="true"
+											/>
+											<span class="text-pretty">{d}</span>
+										</li>
+									))}
+								</ul>
+							</div>
+							<div class="lg:col-span-6">
+								<h3 class={eyebrow}>It fits when</h3>
+								<ul class="mt-3 space-y-2 text-sm text-fg-muted" role="list">
+									{s.whenYouReachFor.map((c) => (
+										<li class="flex gap-2.5">
+											<span
+												class="mt-2 inline-block h-1 w-1 flex-shrink-0 rounded-full bg-border-strong"
+												aria-hidden="true"
+											/>
+											<span class="text-pretty">{c}</span>
+										</li>
+									))}
+								</ul>
+								{s.example && (
+									<a
+										href={s.example.href}
+										class="mt-3 inline-flex min-h-11 items-center gap-2 font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors hover:text-fg"
+									>
+										See in production · {s.example.label} →
+									</a>
+								)}
+							</div>
+						</div>
+					</details>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Engagement formats -->
+	<Section eyebrow="Engagement formats" heading="Three ways I usually work." bordered={false}>
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<dl class="grid gap-x-12 gap-y-8 border-t border-border pt-8 lg:grid-cols-3">
+				{ENGAGEMENT_FORMATS.map((f) => (
+					<div>
+						<dt class="text-lg font-medium tracking-tight text-fg">{f.name}</dt>
+						<dd class="mt-2 text-sm text-fg-muted text-pretty">{f.body}</dd>
+					</div>
+				))}
+			</dl>
+		</div>
+	</Section>
+
+	<!-- End CTA -->
+	<section class="border-t border-border bg-bg-soft">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<div class="grid gap-6 lg:grid-cols-12 lg:items-center">
+				<div class="lg:col-span-8">
+					<p class={eyebrow}>Not sure which of these fits?</p>
+					<h2 class="mt-3 text-2xl font-medium tracking-tight text-balance sm:text-3xl lg:text-4xl">
+						Send the problem, not the spec.
+					</h2>
+					<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+						We&rsquo;ll work out together which of these, if any, fits what you&rsquo;re trying to
+						do.
+					</p>
+				</div>
+				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
+					<a
+						href="/contact/"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+					>
+						Get in touch
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</Base>
+
+<script>
+	// A link to a collapsed service (for example /services/#maintenance) should land on it open.
+	function openTarget() {
+		const id = location.hash.slice(1);
+		if (!id) return;
+		const target = document.getElementById(id);
+		if (target instanceof HTMLDetailsElement) target.open = true;
+	}
+	openTarget();
+	window.addEventListener('hashchange', openTarget);
+</script>

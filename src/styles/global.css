@@ -213,3 +213,19 @@ html.light .astro-code span {
 	margin-right: 0.75em;
 	color: var(--color-negative);
 }
+
+/* ---------------------------------------------------------------------------
+   Themed images — ThemedImage.astro renders a dark and a light capture.
+   Unlayered, so these beat Tailwind's `block` utility on the same <img>.
+   --------------------------------------------------------------------------- */
+.themed-light {
+	display: none;
+}
+
+html.light .themed-dark {
+	display: none;
+}
+
+html.light .themed-light {
+	display: block;
+}
