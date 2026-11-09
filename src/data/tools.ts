@@ -9,6 +9,7 @@ import copyCleanseShot from '../assets/work/copycleanse/01-hero.png';
 import blobbiesShot from '../assets/tools/blobbies.png';
 import campcastShot from '../assets/tools/campcast.png';
 import converterShot from '../assets/tools/converter.png';
+import glanceShot from '../assets/tools/glance/four.png';
 import orcPackShot from '../assets/tools/orc-pack.png';
 import pacelineShot from '../assets/tools/paceline.png';
 import passwordsShot from '../assets/tools/passwords.png';
@@ -46,6 +47,16 @@ export interface Tool {
  */
 export const TOOLS: Tool[] = [
 	{
+		name: 'glance',
+		kind: 'mod',
+		tag: 'Claude Code plugin',
+		href: '/tools/glance/',
+		repo: 'https://github.com/rogadev/glance',
+		description:
+			'Tints your terminal pane while Claude Code works and resets it the moment Claude needs you, so you can tell from across the room which sessions are waiting.',
+		image: glanceShot,
+	},
+	{
 		name: 'orc-pack',
 		kind: 'mod',
 		tag: 'Claude Code skill pack',
@@ -73,14 +84,6 @@ export const TOOLS: Tool[] = [
 			'Turns a pane into a lava lamp. A blob rises while Claude works and buds off a smaller one for every subagent, so you can see how much is running without reading the stream.',
 		image: blobbiesShot,
 		unreleased: true,
-	},
-	{
-		name: 'glance',
-		kind: 'mod',
-		tag: 'Claude Code plugin',
-		repo: 'https://github.com/rogadev/glance',
-		description:
-			'Tints your terminal pane while Claude Code works and resets it the moment Claude needs you, so you can tell from across the room which sessions are waiting.',
 	},
 	{
 		name: 'stp',
