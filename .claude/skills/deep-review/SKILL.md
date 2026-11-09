@@ -1,220 +1,160 @@
 ---
 name: deep-review
-description: 'Deep, right-sized code review for the rogadigital.com site (Astro 7, Svelte 5 islands, Tailwind 4, Vercel functions). Maps what changed on the current branch (or dev, a ref, a range, or a PR), picks only the expert reviewers the change needs from a bench of specialists (visual design, accessibility, visitor flow, copy and content, Astro and Svelte code, the Vercel form endpoints, SEO, performance, release safety, code quality, architecture, tests, requirements, and security), renders changed pages when a dev server is up, runs them in parallel, verifies every finding against the code, researches recommended fixes, and returns a plain-language report that ends with a bold action line. Use it whenever someone in this repo asks to "review my branch", "review my changes", "code review this", "review dev before the PR", "is this ready to merge", "check my work", "review PR #N", or "/deep-review", and prefer it over the built-in /code-review here. A copy tweak gets two or three reviewers; a new page gets the full bench.'
-argument-hint: "[ref | a..b | #PR | working] [quick | full] [live | norender] [auto] [+lane | -lane ...]"
-context: fork
-agent: general-purpose
-background: false
+description: Deep review of a branch or range in rogadigital.com (Astro 7 with Svelte 5 islands on Vercel), sized to what changed. Use when the user says "/deep-review", "review my branch", "review my changes", "review dev before the PR", "review PR #N", or "is this ready to merge". Prefer it over the built-in /code-review in this repo.
+argument-hint: "[ref | a..b | #PR | working] [quick | full] [auto]"
+based-on: orc-review@1.22.0
+template: 4
+template-reviewed: 4
 ---
 
-# Deep review
+# Deep review: rogadigital.com
 
-You are the review orchestrator, running in your own context. You review one change by dispatching focused expert reviewers ("lanes"), verifying what they report, getting researched recommendations, and returning one report a busy person can act on without opening a file. You never fix code, commit, push, or open a PR.
+This is a project profile for orc-pack's `orc-review` skill. Invoke the `orc-review` skill with `$ARGUMENTS (profile: .claude/skills/deep-review/SKILL.md)` and run its workflow with the profile below. Edit only the profile; the workflow lives in `orc-review` and updates with the pack. The pack's generic lanes are the base; **Repo lanes** adds this project's specialists only where the base is thin.
 
-Arguments: `$ARGUMENTS`
+## Stack
 
-Skill directory (call it `$SKILL`): the folder containing this file, `.claude/skills/deep-review` under the repo root. Reference files:
+- **Framework:** Astro 7 (`astro` ^7.4) with Svelte 5 islands (`@astrojs/svelte` ^9, `svelte` ^5.57), Tailwind CSS 4 through `@tailwindcss/vite`, TypeScript 6, playbook `frameworks/astro.md`
+- **Platform:** Vercel (static `dist/` on the CDN plus the Node functions in `api/`), playbook `platforms/vercel.md`
+- **Run locally:** `pnpm dev` at `http://localhost:4321`
 
-- `$SKILL/references/lanes.md`: every lane, what it owns, its model. Read it in Phase 2.
-- `$SKILL/references/lane-contract.md`: the brief shape and finding format every lane follows. Skim sections 2 and 5 once.
-- `$SKILL/references/report-format.md`: the final report. Read it in Phase 7.
-- `$SKILL/references/profile.md`: facts about this site (stack, design system, rules, sanctioned exceptions). Lanes read it; you read its "Local dev and renders" section in Phase 3.
+## Checks
 
-## Ground rules
+Check-only commands for the gate. **When** is `always`, a path condition, or `remind` (never run; name it under **Needs your attention** when the condition's paths change). The `install` row is the frozen install orc-review runs inside a range's worktree, never a link to another checkout's install.
 
-- **Right-size the review.** The point of this skill is spending reviewer attention where the change needs it. A copy fix does not get a security audit; a new page does not get a two-lane skim. Say in the report what ran, what was skipped, and why.
-- **Signal over volume.** "Ready to merge" is a valid, valuable result. Never manufacture a finding.
-- **Scope is the change.** Pre-existing problems appear only when the change interacts with them, and never count toward the verdict.
-- **Read-only.** Nothing in this review changes a file in the repo, except saving the final report under the gitignored `tmp/`. No `git add`, `commit`, `stash`, `checkout`, `restore`, `reset`, `push`, no fixers or formatters in write mode.
-- **Never revert, restore, or "fix" anything in the working tree, even a change you believe a subagent made.** The person keeps working while the review runs, and other sessions may share the repo, so an uncommitted change that appears mid-review is theirs. Record it under "Needs your attention" (what changed, when you noticed) and leave it exactly as it is.
-- **Keep your own context small.** Lanes get file paths, never pasted diffs. You read lane report headers, not full reports; the verifier reads the full reports.
-- **You are not notified when subagents finish.** Inside this forked skill, a completion notification never reaches you, and ending your turn ends the review. Every subagent writes a report file, and you block on those files with the wait script. Never write "waiting for the lanes" and stop.
+| Check     | Command                                               | When                                                                                                                                                                                                                      |
+| --------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| install   | `CI=true pnpm install --frozen-lockfile --prefer-offline` | worktree                                                                                                                                                                                                                  |
+| lint      | `pnpm format:check && pnpm lint`                      | always                                                                                                                                                                                                                    |
+| typecheck | `pnpm check`                                          | always                                                                                                                                                                                                                    |
+| test      | `pnpm test`                                           | source (`api/`, `src/`) or `tests/` changed                                                                                                                                                                               |
+| build     | `pnpm build`                                          | remind: `astro.config.mjs`, `src/content.config.ts`, `src/content/**`, `src/pages/**`, `src/layouts/**`, `src/integrations/**`, `src/lib/og*.ts`, `src/lib/schema.ts`, `svelte.config.js`, `package.json`, `pnpm-workspace.yaml`, `vercel.json` |
 
-## Phase 1: Map the change
+`format:check` and `lint` (`oxlint && eslint .`) only read. `pnpm check` writes the gitignored `.astro/`. CI never runs `pnpm test`, so the gate is often the only place the unit tests run before merge. The build is a reminder, not a gate step, because the `demoSnapshots` integration (`src/integrations/demo-snapshots.ts`) re-captures any snapshot older than 7 days into the committed `public/demos/` at build start, so running it can change tracked files. CI builds every pull request to `dev` and `main`.
 
-**1. Scratch directory.** Use the session scratchpad if your environment names one (`<scratchpad>/deep-review-<HHMMSS>`), otherwise `mktemp -d -t deep-review.XXXXXX`. Call it `$D`. Use forward slashes in paths you pass to Bash.
+**Never run:** `pnpm ready`, `pnpm fix`, `pnpm format`, `pnpm lint:fix` (they rewrite files), `pnpm build` (can rewrite `public/demos/`), `pnpm sync:paceline` (rewrites `src/data/paceline-scenes.json`), and anything under `vercel`.
 
-**2. Resolve the target and build the change map.** From the repo root, run the map script with the flag that matches the arguments:
+## Platform constraints
 
-| Argument | Flag |
-| --- | --- |
-| none (default) | none: a feature branch is compared with `origin/dev`, `dev` with `origin/main`; uncommitted and untracked files are included |
-| `working` | `--working` (uncommitted changes only) |
-| `dev` | on `dev`, none (the default; `--base dev` would compare `dev` with itself and find nothing); on another branch, `--range $(git merge-base origin/main origin/dev)..origin/dev` |
-| any other ref, such as `main` or `HEAD~3` | `--base <ref>` |
-| `a..b` | `--range a..b` |
-| `#123` or `pr 123` | `--pr 123` |
+- Static output with no adapter: every page is prerendered at build. Nothing request-time runs in `src/`; the only runtime code is the Vercel Node functions in `api/*.ts`, each `export async function POST(request: Request): Promise<Response>`. Functions are stateless between invocations.
+- Imports inside `api/` keep `.js` extensions (`./_lib/email.js`, `../../src/consts.js`) for Node ESM resolution on Vercel.
+- Env: `PUBLIC_TURNSTILE_SITE_KEY` is build-time, inlined into `InquiryForm.svelte` through `import.meta.env`. `TURNSTILE_SECRET_KEY` and `RESEND_API_KEY` are runtime, read with `process.env` only in `api/_lib/`. A new env var must be added in Vercel for Production and Preview and documented in `CLAUDE.md`.
+- The outbound `fetch` calls in `api/_lib/turnstile.ts` and `api/_lib/email.ts` have no timeout, so a hung upstream runs until the function's maximum duration.
+- Vercel builds need `build.env.ENABLE_EXPERIMENTAL_COREPACK=1` in `vercel.json` so Corepack provisions the pinned `pnpm@11.9.0`; without it the build falls back to pnpm 9 and fails on `pnpm-workspace.yaml`. `installCommand` stays plain `pnpm install --frozen-lockfile`; `npx pnpm@...` loses Corepack's integrity check.
+- `trailingSlash: true` in `vercel.json` and `trailingSlash: 'always'` in `astro.config.mjs`. The Astro `redirects` (`/blog`) are emitted as meta-refresh pages in static output; only `vercel.json` `redirects` are real permanent redirects, so a renamed route belongs there.
+- Mail sends from `roga.dev` through Resend. pnpm settings live in `pnpm-workspace.yaml` (`allowBuilds`, `minimumReleaseAgeExclude`, `overrides`), and `pnpm audit` must stay at 0.
 
-```bash
-git fetch --quiet origin dev main 2>/dev/null || true
-node .claude/skills/deep-review/scripts/change-map.mjs --out "$D" [flag]
-```
+## Risk map
 
-It writes `diff.patch`, `files.txt`, `stat.txt`, `change-map.json`, and `change-map.md`, and prints the map: target, size, surfaces, blast radius, suggested tier, suggested lanes, candidate URLs, intent sources. If the diff is empty, report "Nothing to review" with the target it tried, and stop.
+Each row tells orc-review which surface a path is, and a path may sit in several rows (an auth endpoint is both Trust boundary and Server); the lanes come from orc-review's rules for every surface a changed file touches. **Surface** is one of orc-review's nine (Docs, Comments, Tests, UI, Logic, Server, Data, Trust boundary, Config and infra), optionally with a label in parentheses, for example `Server (API contract)`. A labelled row only attaches its repo lanes to those paths and never classifies them, so the generic lanes are unaffected. **Extra lanes** names repo lanes that run on top when a row matches. A path no row matches is classified by the generic rules. Paths are globs that exist in this repo, except a framework file convention the repo hasn't used yet, marked `(none yet)`; write `None` in a row that doesn't apply, with the reason. A row never hides Logic: a file whose hunks change behavior is also Logic, whatever rows match it.
 
-**3. Gather intent** into `$D/intent.md` (lanes read it; `review-intent` depends on it):
+| Surface              | Paths                                                                                                                                                                                                                                                                                                    | Extra lanes   |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Trust boundary       | `api/**`, `src/components/InquiryForm.svelte`, `src/components/BaseHead.astro` (JSON-LD `set:html`), `src/layouts/Base.astro` (inline theme script), `src/components/DemoFrame.astro`, `src/components/EmbeddedPage.astro`, `src/integrations/**`, `src/lib/snapshot-sanitize.ts`, `src/lib/demos.ts`, `public/embeds/**`, `vercel.json`, `src/middleware.ts` (none yet) |               |
+| Server               | `api/**`                                                                                                                                                                                                                                                                                                 |               |
+| Data                 | None: no database. Content collections and `src/data/` are UI; browser storage (the `theme` key) is Logic.                                                                                                                                                                                              |               |
+| UI                   | `src/pages/**/*.astro`, `src/layouts/**`, `src/components/**`, `src/styles/**`, `src/content/**`, `src/data/**`, `src/consts.ts`, `src/assets/**`, `public/embeds/**`                                                                                                                                    |               |
+| Tests                | `tests/**`                                                                                                                                                                                                                                                                                               |               |
+| Config and infra     | `astro.config.mjs`, `svelte.config.js`, `tsconfig.json`, `src/content.config.ts`, `vercel.json`, `package.json`, `pnpm-workspace.yaml`, `.github/**`, `eslint.config.js`, `.oxlintrc.json`, `.prettierrc.json`, `.prettierignore`                                                                        |               |
+| UI (accessibility)   | `src/pages/**/*.astro`, `src/layouts/**`, `src/components/**`, `src/styles/**`, `src/content/**`, `public/embeds/**`                                                                                                                                                                                     | `review-a11y` |
+| UI (copy)            | `src/pages/**`, `src/layouts/**`, `src/components/**`, `src/content/**`, `src/data/**`, `src/consts.ts`, `src/lib/og-pages.ts`, `src/lib/schema.ts`, `api/**`                                                                                                                                             | `review-copy` |
+| UI (performance)     | `src/pages/**`, `src/layouts/**`, `src/components/**`, `src/styles/**`, `src/assets/**`, `src/content/**`, `public/**`, `src/integrations/**`, `src/lib/og.ts`, `astro.config.mjs`, `package.json`                                                                                                       | `review-perf` |
+| UI (SEO)             | `src/pages/**`, `src/layouts/**`, `src/components/BaseHead.astro`, `src/lib/schema.ts`, `src/lib/og-pages.ts`, `src/lib/og-path.ts`, `src/content/**`, `src/content.config.ts`, `src/consts.ts`, `astro.config.mjs`, `vercel.json`, `public/robots.txt`                                                   | `review-seo`  |
 
-- For each issue number in the map: `gh issue view <n> --json number,title,body,labels -q '"#\(.number) \(.title)\n\(.body)"'`. Cap each body at about 150 lines.
-- The branch's PR, if one exists: `gh pr view --json number,title,body 2>/dev/null` (or the PR from the arguments).
-- If the `TaskList` tool is available, the open or in-progress tasks whose subject matches the change (this repo tracks work in Claude Code Tasks, list `ryanroga-com`).
-- The commit subjects from the map, and the paths of specs touched and related specs (`docs/superpowers/specs/`, `docs/BRIEF.md`, `docs/PLAN.md`).
-- If `gh` fails or finds nothing, write what you have and the line `No issue or PR found.` Do not stop.
+Markdown under `src/content/` is UI, not Docs: an article or case study is published copy, so it never takes the docs-only shortcut. Prose under `docs/`, `.claude/`, and the root `*.md` files is Docs.
 
-**4. Understand the change.** Read `change-map.md` and enough of `diff.patch` to write one sentence each: what the change is for (in visitor terms), which surfaces it touches, and its blast radius. For a diff over about 1,500 lines, read the stat and sample the riskiest files rather than the whole patch. Open a full file only when a hunk is not self-explanatory.
+## Repo lanes
 
-## Phase 2: Choose the reviewers
+Each lane is an agent in `.claude/agents/` that follows orc-review's repo-lane contract (`orc-review/references/lane-template.md`). **Owns** is what it reviews in depth, so the verifier merges duplicates toward the owner. **Runs when** is a condition on the change, or `always`, which means whenever one of the lane's risk-map rows matches; a lane with no risk-map row runs on any change outside the docs-only and tests-only shortcuts when its condition holds. **Standards** are the orc standards and playbooks it gets.
 
-Read `$SKILL/references/lanes.md`. Start from the map's suggestions, then apply judgement: the script matches patterns, you understand the change.
+| Lane          | Owns                                                                                                                                                                                                                                                    | Runs when                                                                                                                                                                                                                         | Standards                       |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `review-a11y` | WCAG 2.2 AA in depth: contrast in both themes computed from the token hex values, semantics and landmarks, one `h1` and heading order, names and labels, ARIA, keyboard and focus order and management, visible focus, 44 px targets, reduced motion, form status announcements, `alt` text | markup, classes, styles, tokens, interactive behaviour, headings, or image `alt` text changed (not a prose-only edit inside an article body)                                                                                         | `ui.md`, `frameworks/astro.md`  |
+| `review-copy` | The words: clarity, positioning and the ten-second test (`docs/BRIEF.md`), the "engineer" rule, names consistent with `src/consts.ts` and `src/data/`, CTAs, form and error messages, promises that disagree across pages, sentence case, spelling and grammar in the site's Canadian spelling | user-facing text changed: page or component copy, content collection bodies or frontmatter, display strings in `src/data/` or `src/consts.ts`, OG titles, JSON-LD text, or a message returned by `api/`                              | `ui.md`                         |
+| `review-perf` | Front-end and build performance against the brief's bar (Lighthouse 100, LCP under 1 s fast and 2.5 s slow 4G, home JS under 30 KB gzipped, no CLS, renders without JS): islands and directives, client dependencies, images and the LCP element, fonts, render-blocking CSS and scripts, layout shift, iframes and embeds, animation cost, build cost of OG and snapshots | an island or client directive, a `<script>`, a client-side dependency, an image or asset, a font, global CSS, an iframe or embed, an integration, OG generation, or the above-the-fold markup of a page changed                     | `frameworks/astro.md`, `ui.md`  |
+| `review-seo`  | Discoverability and sharing: titles and meta descriptions, canonical URLs and trailing slashes, Open Graph and Twitter tags, OG image registration, JSON-LD correctness, sitemap and `lastmod`, RSS, `robots.txt`, redirects, `noindex`, drafts, internal links to new pages | a page was added, renamed, or removed, or head metadata, a layout's `<head>` props, frontmatter that feeds meta, the OG registry, `src/lib/schema.ts`, the sitemap or RSS config, `robots.txt`, or a redirect changed             | `frameworks/astro.md`           |
 
-**Tier and budget.** Confirm or adjust the suggested tier. The budget is the maximum number of reviewing lanes, not counting `review-gate`, `review-verifier`, or `review-advisor`.
+## Ignore
 
-| Tier | Typical change | Budget |
-| --- | --- | --- |
-| 0 trivial | Docs, specs, or tests only | No lanes. Read it yourself; report anything inaccurate. Run the gate only when tests changed. |
-| 1 small | 1 to 3 files, under about 60 lines, one surface; for example a colour, a label, a typo in an article | 3 |
-| 2 medium | Up to about 12 files or 400 lines, or any risk surface (`api/`, env, an HTML sink, an iframe or embed, redirects, CI or `vercel.json`, the content schema, an integration, a shared layout or token file) | 6 |
-| 3 large | A new page or section, a new island, a component or layout refactor, several new files | 9 |
-| 4 very large | Over about 40 files or 2,500 lines | every qualifying lane, sharded (see below), at most 14 dispatches |
+Paths left out of the diff the reviewers read: `public/demos/**` (committed snapshots the build writes; review `src/integrations/demo-snapshots.ts` instead), `src/data/paceline-scenes.json` (generated by `pnpm sync:paceline`), `docs/archive/**` (historical Beads data), `.claude/agent-memory/**`.
 
-**Judgement calls the script cannot make.** Examples:
+## Architecture
 
-- A markup change that only swaps classes (the map tags it `style-only`): `review-ux-visual` and `review-ux-a11y` (contrast), nothing else, even at tier 2. Add `review-perf` only for `global.css`.
-- A text-only change (the map tags files `copy-only`, or only `src/content/` changed): `review-ux-copy`, plus `review-seo` only when a title, description, or frontmatter that feeds meta tags changed, plus `review-ux-a11y` if labels or `alt` text changed. A new article or case study also gets `review-ux-visual` when it embeds components or images.
-- A design-token change (`src/styles/global.css`): its blast radius is every page. `review-ux-visual` and `review-ux-a11y` are strong; tell both in `Focus:` to check both themes and the most-used pages, not only the changed lines.
-- A shared component or layout used in many places (see the blast radius): tell the UX lanes which pages consume it.
-- A renamed or moved file with no content change: `review-architecture` only (plus `review-seo` if a route moved), plus the gate.
-- An `api/`-only change: `review-api`, `review-security`, `review-tests`, the gate. No UX lanes unless `InquiryForm.svelte` changed with it.
-- **Security is a judgement, not a tag match.** `review-security` is the heaviest lane (Opus), so dispatch it when the change touches something an attacker could use: an `api/` function or its `_lib`, env vars or secrets, an HTML sink (`set:html`, `{@html}`, `innerHTML`), an iframe, embed, or raw HTML under `public/`, an inline script that reads URL or storage data, redirects, CI or `vercel.json`, or a new dependency. When it does, **it is never dropped for budget.** When the change touches none of those, skip it and say why in one clause. Typical skips: copy or article text, a colour, class, or token change, spacing and layout, docs, tests only, or a presentational component that handles no input or data. The map's tags are hints: a `secrets` tag from a comment mentioning `import.meta.env` is not a security change.
+- **Pages and routing:** `src/pages/` holds the file routes (`.astro`), the dynamic `insights/[...slug].astro`, `work/[...slug].astro`, and `services/[slug].astro`, `rss.xml.js`, and build-time OG endpoints under `src/pages/og/**` (satori, run at build, not runtime APIs). Layouts in `src/layouts/`: `Base.astro` (shell, head, no-FOUC theme script), `CaseStudy.astro`, `Insights.astro`.
+- **Components:** `.astro` by default in `src/components/` (home sections in `home/`, tool demos in `tools/`). Svelte islands only where state or browser APIs are real: `ThemeToggle.svelte` (`client:idle`), `MobileNav.svelte` (`client:load`), `InquiryForm.svelte` (contact, support, media; `client:load`), and the `labs/` benchmarks chart.
+- **Data:** two content collections in `src/content.config.ts` (`insights`, `work`); site constants in `src/consts.ts` (import, never hard-code); typed display data in `src/data/`; pure helpers in `src/lib/`. Work entries have two ids: frontmatter `data.id` (a display code such as `EAEO-004`) and the route id `entry.id` (the file name); mixing them breaks links.
+- **Server boundary:** the only server code is `api/` (three endpoints plus `api/_lib/` for validation, Turnstile, and email). `api/` may import `src/consts.js`; nothing under `src/` imports from `api/`. The recipient and sender addresses live only in `api/_lib/email.ts`.
+- **Styling:** Tailwind 4 with `@theme` tokens in `src/styles/global.css`, imported once in `src/components/BaseHead.astro`; no `tailwind.config.js` or PostCSS config. The theme is dark-first: `:root` is dark and `html.light` overrides the neutrals, so Tailwind's `dark:` variant follows the OS, not the site toggle.
+- **Svelte 5 runes only:** `$props`, `$state`, `$derived`, `$effect`, snippets, `onclick`, callback props. `svelte.config.js` doesn't force runes mode, so legacy `export let`, `$:`, `<slot />`, `on:click`, or `createEventDispatcher` compile silently; each is a finding. Component order follows `CLAUDE.md`.
+- **Where the repo overrides the playbooks:** forms post to the root `api/` Vercel functions, not `astro:actions`; env is read with `import.meta.env` (client, `PUBLIC_` only) and `process.env` (in `api/_lib/`), not `astro:env` or a config module. There is no component, end-to-end, or accessibility test setup, so `.astro` and `.svelte` rendering is covered by `astro check`, the build, and review; testable logic is pure code in `api/_lib/` and `src/lib/`, and modules that import `satori`, `sharp`, or `astro:*` can't run under Vitest (tests mirror such logic as literals, as `tests/og-coverage.test.ts` does).
+- **Conventions:** TypeScript with `import type`; PascalCase components, kebab-case routes; Prettier owns formatting (tabs, single quotes, width 100), so formatting is never a finding. No raw smart quotes or non-breaking spaces in `.ts`, `.astro`, `.svelte`, or `.html`; markup encodes them as entities. Never call Ryan an "engineer" anywhere, including meta, JSON-LD, alt text, and OG titles (a protected title in BC).
+- **Known pre-existing gaps** (count only where a change interacts): no skip link and no `id` on the `<main>` in `src/layouts/Base.astro`; `InquiryForm.svelte` shows its error with `text-red-600 dark:text-red-400` (raw palette plus `dark:`); its success message promises "two business days" (also `src/lib/og-pages.ts`) while `/contact/` and the rest of the site promise 48 hours; work entries with `status: 'draft'` still build a page and an OG image (`src/pages/work/[...slug].astro` and `src/pages/og/work/[...slug].png.ts` don't filter); `src/components/home/ClientLogos.astro` and `src/components/home/Industries.astro` (the only users of `Marquee.astro`) are rendered nowhere; `src/assets/blog-placeholder-*.jpg` and `src/assets/fonts/atkinson-*.woff` are unused; `CLAUDE.md` still says `/support` is the only server piece and the recipient lives in `api/support.ts`.
 
-**Over budget.** Keep strong suggestions before medium ones. Within the same strength, drop in this order until you fit: `review-intent`, `review-architecture`, `review-quality`, `review-ops`, `review-perf`, `review-seo`, `review-ux-copy`, `review-fe-framework`, `review-ux-flow`, `review-tests`. Protect the lanes that own the change's main risk even when the order says otherwise, and say what you dropped and why.
+## Intentional non-issues
 
-**Arguments override.** `quick` forces the tier 1 budget. `full` runs every qualifying lane with no budget. `+lane` adds a lane (`+perf` means `review-perf`), `-lane` removes one (removing `security` requires the user to have typed `-security`).
+- Static output with no SSR adapter; don't recommend SSR, ISR, or an adapter unless the change needs one.
+- No accounts, login, sessions, database, or CORS and CSRF configuration: the endpoints are public by design, protected by Turnstile plus the `website` honeypot, not by a rate limiter in code (Vercel's platform limits apply).
+- The honeypot returns a fake `200 { ok: true }` on purpose, so bots learn nothing.
+- `PUBLIC_TURNSTILE_SITE_KEY` is meant to be public, and the Turnstile script loads from `challenges.cloudflare.com` without SRI because Cloudflare forbids pinning it.
+- `api/_lib/validation.ts` importing `../../src/consts.js` is the sanctioned direction; only `src/` importing `api/` is a problem.
+- The benchmarks chart uses `client:load` on purpose (comment in `src/pages/labs/benchmarks.astro`).
+- The accent written as an arbitrary value (`text-[var(--color-accent)]`), and the islands' `[var(--color-*)]` classes, resolve to the same tokens as the named utilities.
+- `EmbeddedPage.astro` reaches into its same-origin embed's DOM by design.
+- Live `DemoFrame.astro` iframes use `sandbox="allow-scripts allow-same-origin"` for cross-origin demo sites Ryan owns; the same-origin snapshot fallback gets an empty sandbox.
+- English only (`docs/BRIEF.md` section 9); no i18n, no CMS, no newsletter.
+- Static pages carry no sitemap `lastmod` (comment in `astro.config.mjs`); only insights do.
+- `_references/` is excluded from lint and TypeScript on purpose.
 
-**Sharding** (tier 3 and 4). A lane whose share of the change exceeds about 15 files or 1,200 changed lines gets split into shards by area (pages, components, content, `api/`), each with its own file list `$D/files-<lane>-<k>.txt` and report `$D/<lane>-<k>.md`. Never shard the gate, the verifier, or the advisor. Prefer sharding the lanes that read every line (`review-fe-framework`, `review-quality`, `review-ux-copy` on a large content drop) over the ones that judge the whole (`review-ux-flow`, `review-intent`, `review-architecture`).
+## Extra focus
 
-**Model escalation.** Lanes default to the model in their own file. Pass `model: "opus"` to `review-api` when the change reworks validation or the email path across all three endpoints, and to `review-architecture` when more than 15 files move. Never override `review-gate` (haiku) or `review-security`.
+### security-reviewer: trust model
 
-Write the plan as one line for the report, for example: `Tier 2 (medium: 6 files, new form endpoint). Lanes: gate, security, api, ux-flow, fe-framework, tests. Skipped: ux-visual and ux-a11y (form markup unchanged), seo (no page added).`
+Reference: `.claude/skills/deep-review/references/security-reviewer.md`
 
-## Phase 3: Render the changed pages (UX lanes only)
+- Blocker: a path reaches `sendEmail` without `verifyTurnstile` returning true.
+- Blocker: a secret introduced as `PUBLIC_*`, or `TURNSTILE_SECRET_KEY` or `RESEND_API_KEY` read anywhere under `src/`.
+- Blocker: `to`, `cc`, `bcc`, or `from` built from request input, or anything under `src/` importing `api/_lib/email.ts`.
+- Blocker: a new HTML sink (`set:html`, `{@html}`, `innerHTML`, `srcdoc`) fed by input an anonymous visitor or a third-party origin controls.
 
-Skip this phase when no UX lane is selected, when the arguments say `norender`, or when the map has no candidate URLs. A dev server serves the working tree, so also skip it when the target is not what is checked out (a PR, or a range whose end is not `HEAD`), and record "not rendered: the reviewed code is not checked out". Otherwise read the profile's "Local dev and renders" section, then:
+### ui-reviewer: design system and visitor flow
 
-1. **Find the running dev server.** Astro 7 runs at most one dev server per project and refuses to start a second. Run `pnpm exec astro dev status`: it prints `Dev server running at http://localhost:<port> (pid ..., background)` or says none is running. Use that URL. Confirm with `curl -s -o /dev/null -w '%{http_code}' <url> --max-time 5`.
-2. **If none is running**, render only when the arguments say `live`. Then start one with the Bash tool's `run_in_background`, `pnpm exec astro dev`, wait up to 90 seconds for `astro dev status` to report it, and run `pnpm exec astro dev stop` when rendering is done. Only stop a server you started; a server that was already running is the user's. Without `live`, record "not rendered: no dev server running (start `pnpm dev` or pass `live`)" and continue.
-3. **Get Playwright.** It is not a dependency of this repo, so install it into the scratch directory, never the repo: `npm install --prefix "$D/pw" --no-save --silent playwright-core axe-core`. If the Chromium launch later fails, run `npx --prefix "$D/pw" playwright-core install chromium` once and retry. If either step fails (offline, blocked), record "not rendered: Playwright unavailable (<reason>)" and continue.
-4. **Pick the URLs**: the candidate URLs, at most four, dropping `DYNAMIC:` entries. For a design-token change, add `/` and `/work/`. URLs keep their trailing slash.
-5. **Render**:
+Reference: `.claude/skills/deep-review/references/design-system.md`
 
-```bash
-MSYS_NO_PATHCONV=1 node .claude/skills/deep-review/scripts/snap.mjs --base http://localhost:<port> --urls "/a/,/b/" --out "$D/renders" --resolve-from "$D/pw"
-```
+- Warning: a drop shadow, a raw palette class (`text-gray-500`, `bg-blue-600`) or raw hex in markup, a `dark:` utility, or a second accent colour. Hairline borders and lighter surfaces carry structure.
+- Warning: a page title (`h1`) or section heading that breaks the type scale its siblings use: the Work, Services, Insights, Tools, and About index pages share `text-3xl sm:text-4xl lg:text-5xl`, and closing bands use `text-3xl sm:text-4xl`, never larger than the page's `h1`. Heading-scale drift is the most common real defect in this site's reviews.
+- Visitor flow: can a cold visitor tell what Ryan does and reach `/contact/`; the inquiry form's pending, success, failure, validation, and Turnstile states; what renders without JavaScript; what a visitor sees when a `DemoFrame.astro` demo origin is down (the snapshot fallback, a snapshot that doesn't exist yet); dead links, dead ends, the 404 path; internal links in trailing-slash form (`/work/`).
+- Rendering: Playwright isn't a dependency of this repo, so install it into the scratch folder, never the repo. Set the theme with localStorage `theme` (`light` or `dark`) before load. Astro 7 runs one dev server per project: check `pnpm exec astro dev status` and use a running server first; stop only a server you started. Starting `astro dev` re-captures any snapshot older than 7 days into the committed `public/demos/` in the background, so name any `public/demos/` change it causes in the report and leave it in place. The `api/` functions don't run under `astro dev`, and without `PUBLIC_TURNSTILE_SITE_KEY` the submit button stays disabled, so form submission can't be rendered locally.
 
-Keep `MSYS_NO_PATHCONV=1`: without it, Git Bash rewrites `/` into `C:/Program Files/Git/` and the script refuses the URLs.
+### quality-reviewer, architecture-reviewer: Astro and Svelte code
 
-It renders at 390, 768, and 1440 px in light and dark, and writes screenshots plus `summary.md` with status codes, console errors, horizontal overflow, targets under 24 px and under 44 px (the second count includes inline text links in prose, which are exempt; lanes judge), images without `alt`, and axe violations. If it fails, record why and continue: renders make the UX lanes better, they are not a prerequisite.
+Paths: `src/**`
 
-## Phase 4: Dispatch the reviewers
+- Warning: legacy Svelte syntax (`export let`, `$:`, `<slot />`, `on:click`, `createEventDispatcher`) in a `.svelte` file.
+- The laziest client directive that works; props that cross an island boundary are serializable; `$effect` cleans up listeners and timers; no hydration mismatch from reading `window`, `localStorage`, or the date during render.
+- Collection queries filter `draft` the way the insights routes do (`({ data }) => !data.draft`); a route uses `entry.id`, never `data.id`.
+- Local raster images go through `astro:assets` (`<Image>`, `image()` in schemas); `is:inline` scripts ship verbatim and unprocessed.
+- Display constants come from `src/consts.ts` or `src/data/`, not inline literals in a page.
 
-Send every selected lane (and shard) in a **single message** with one Agent call each, using the exact `subagent_type` names from `lanes.md`. If a name is missing from your available agent types, stop and report that the deep-review agents are not installed in this repo or the session needs a restart; do not substitute a generic agent.
+### quality-reviewer, test-coverage-reviewer: the form endpoints
 
-Each brief follows `lane-contract.md` section 2:
+Paths: `api/**`, `src/components/InquiryForm.svelte`, `tests/support-validation.test.ts`
 
-```
-Goal: <one sentence, visitor terms>
-Profile: <abs path>/.claude/skills/deep-review/references/profile.md
-Base: <target label from the map>
-Diff: $D/diff.patch
-Files: $D/files.txt (or the shard's list)
-Change map: $D/change-map.md
-Intent: $D/intent.md
-Renders: $D/renders/summary.md (UX lanes; otherwise omit) | not rendered: <reason>
-Shard: none | <k/n: area>
-Lanes running: <all lanes in this dispatch>
-Focus: <optional, from your triage: what to look at first and why>
-Stat: <paste stat.txt when under 40 lines, else its last line>
-Escalation: <why this lane is on a stronger model, or omit>
-Report file: $D/<lane-without-review-prefix>.md
-Write your complete report to the report file as your last action, then reply with one line.
-```
+- The pipeline in every endpoint: parse JSON (400) → `validate*Submission` (400 with a user-facing `error`) → honeypot fake 200 → 500 when Turnstile or email isn't configured → `verifyTurnstile` (400) → `buildEmail` → `sendEmail` (502) → `200 { ok: true }`. The three endpoints stay consistent.
+- Warning: a status code or the `{ ok }` / `{ error }` shape changed on one side of the contract without the other: `InquiryForm.svelte` posts to its `endpoint` prop and shows the `error` string from a non-2xx response.
+- Warning: changed validation, Turnstile, or email logic in `api/_lib/` without a matching test in `tests/`.
 
-The gate runs checks on the working tree. When the target is not what is checked out (a PR, or a range that does not end at `HEAD`), put `Focus: the reviewed code is not checked out; say in your report that the checks ran on the working tree at <branch>` in the gate's brief, and report the gate as advisory in Phase 7.
+### architecture-reviewer, security-reviewer: release safety
 
-Do not paste the diff. Do not describe what you expect a lane to find; `Focus:` names where to look, never what to conclude.
+Paths: `vercel.json`, `package.json`, `pnpm-workspace.yaml`, `.github/**`, `astro.config.mjs`
 
-Right after the dispatch message, with no prose in between, block on the reports:
+- Blocker: `vercel.json` loses `build.env.ENABLE_EXPERIMENTAL_COREPACK`, or `installCommand` or `buildCommand` switches to `npx pnpm@...`.
+- Warning: a route renamed or removed with no permanent redirect in `vercel.json`.
+- Warning: a new `allowBuilds` entry (install scripts run on every install, in CI and on Vercel), a `minimumReleaseAgeExclude` entry that isn't an exact version with a reason, or an `overrides` change that reopens an advisory.
+- Warning: a new env var not documented in `CLAUDE.md`, or read without the `isXConfigured` 500 path the endpoints use.
 
-```bash
-bash .claude/skills/deep-review/scripts/wait-for-reports.sh "$D" 570 gate security ux-visual ...
-```
+## After verification
 
-Use `timeout: 600000` on that Bash call. It prints each report's header and finding titles, and the names still missing. If lanes are missing, run it again (the gate can take several minutes when it builds). A reviewing lane still missing after the first full wait has almost certainly finished and forgotten its file: send it one `SendMessage` (load the tool with ToolSearch if needed): `Write your report file now, with whatever you have or "No findings.", to <path>, then stop.` Then wait again. Give up on a lane after about 25 minutes in total and record it as "did not report". Never read files under the session's `tasks/` directory; those are transcripts.
+`review-advisor` runs when at least one Blocker or Warning survives verification. It reads the verified findings, researches each fix in this repo's own helpers and components and in the official Astro, Svelte, Tailwind, Vercel, and W3C docs, and returns each finding as one plain-language problem and one recommended fix, plus cross-cutting recommendations and a fix order. Its answer replaces the wording and order of the Blockers and Warnings in the report and adds a **Recommendations** and **Fix order** section; it never changes a severity or the verdict.
 
-## Phase 5: Verify
+## Report destination
 
-If every reviewing lane reported `No findings.` and the gate passed, skip to Phase 7.
-
-Otherwise dispatch `review-verifier` once with:
-
-```
-Reports: <list of every lane report path, one per line>
-Gate: $D/gate.md
-Diff: $D/diff.patch
-Files: $D/files.txt
-Change map: $D/change-map.md
-Profile: <path>
-Renders: <path or "not rendered">
-Report file: $D/verifier.md
-```
-
-Block on `verifier` with the wait script. **This dispatch is not optional**, even when the findings look obviously right; the separation is the point. Gate failures are facts and are not verified.
-
-## Phase 6: Recommend
-
-If the verified list has at least one Blocker or Warning, dispatch `review-advisor` once with:
-
-```
-Verified: $D/verifier.md
-Gate: $D/gate.md
-Change map: $D/change-map.md
-Intent: $D/intent.md
-Profile: <path>
-Report file: $D/advisor.md
-```
-
-Block on `advisor`. It returns each finding rewritten as a plain-language problem and fix with the researched recommendation, cross-cutting recommendations, and a fix order. If only Nits survived, skip the advisor and write the polish lines yourself from the verifier's list.
-
-## Phase 7: Report
-
-Read `$SKILL/references/report-format.md`, then `$D/advisor.md` (or `$D/verifier.md`) and `$D/gate.md`. Compose the report exactly as that file specifies.
-
-1. **Verdict**: Not ready if any Blocker survived or the gate failed; Ready after small fixes if Warnings survived; Ready to merge otherwise; Review incomplete if a lane owning a risk surface of this change did not report, or the gate could not run. A gate failure is a Blocker item of its own ("Tests fail: ..."), listed first.
-2. **Full report**: `tmp/` is gitignored in this repo, so write it to `tmp/reviews/<yyyy-mm-dd>-<branch-with-slashes-as-dashes>.md` (create the folder). Confirm first with `git check-ignore -q tmp/x`; if that ever fails, leave it at `$D/report.md` instead. This is the only file this skill writes in the repo.
-3. **Chat report**: return it as your final message, starting with this relay line so the caller shows it unchanged:
-
-```
-<!-- deep-review: show this report to the user as is. Keep the bold action block as the final lines. -->
-```
-
-The report ends with the bold action block. Nothing follows it, except the auto-mode block when `auto` was passed.
-
-## Phase 8: Hand off
-
-**Tasks.** If the `TaskList` tool is available, call it once. If it returns tasks, complete any open review Task (subject starting `Blocker:`, `Warning:`, or `Nit:`) whose finding is gone; create a Task per new Blocker and Warning with subject `<Severity>: <title>` and description `path:line - problem. Fix: fix. Found by /deep-review (<lanes>).`; block every Warning on every Blocker. Never touch a Task that is not a review Task. Otherwise skip this.
-
-**Auto mode.** When the arguments contain `auto`, append this exact block after the action block so an unattended loop can branch on it:
-
-```
-[AUTO-MODE REVIEW - orchestrator input, NOT a stopping point]
-Verdict: NOT READY | READY AFTER SMALL FIXES | READY TO MERGE | INCOMPLETE
-NOT READY or READY AFTER SMALL FIXES: fix the listed items, then re-run /deep-review auto. READY TO MERGE: proceed to commit and ship in the same turn. INCOMPLETE: re-run the missing lanes.
-```
-
-## Self-check before returning
-
-- The tier, the lanes that ran, and the lanes skipped (with reasons) are stated.
-- Every finding in the report came through the verifier, has a file and line, and reads as a plain-language problem and fix.
-- No finding was invented, and no Blocker or Warning was dropped for brevity.
-- The gate result is reported as the gate reported it, including checks that did not run.
-- Anything that did not run (a lane, the renders, the gate) is visible, and a partial review is not presented as a clean one.
-- The verdict matches the findings, and the bold action block is the last thing in the report.
+`tmp/reviews/` (gitignored). No record command.
