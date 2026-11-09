@@ -10,5 +10,13 @@
 	"puntledge-report": {
 		"url": "https://puntledge.ca/demo/report",
 		"capturedAt": "2026-11-08T17:51:01.275Z"
+	},
+	"dispatch-board": {
+		"url": "https://trips.roga.dev/preview/board",
+		"capturedAt": "2026-11-09T19:48:50.746Z"
+	},
+	"dispatch-driver": {
+		"url": "https://trips.roga.dev/preview/driver",
+		"capturedAt": "2026-11-09T19:48:51.557Z"
 	}
 }
