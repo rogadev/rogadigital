@@ -32,7 +32,7 @@
 	onclick={toggle}
 	aria-label="Toggle color theme"
 	title={mounted ? `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode` : 'Toggle theme'}
-	class="grid h-7 w-7 place-items-center rounded-sm text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-fg)]"
+	class="grid h-11 w-11 place-items-center rounded-sm text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-fg)]"
 >
 	{#if mounted && theme === 'dark'}
 		<!-- Sun -->

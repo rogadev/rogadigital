@@ -14,10 +14,11 @@ import pacelineShot from '../assets/tools/paceline.png';
 import passwordsShot from '../assets/tools/passwords.png';
 
 /**
- * `mod`: something that changes or accompanies Claude Code (a mod, plugin,
- * skill pack, or companion desktop app). `site`: a website anyone can open.
+ * `mod`: something that changes Claude Code (a mod, plugin, or skill pack).
+ * `app`: a desktop productivity app that works on its own. `site`: a website
+ * anyone can open.
  */
-export type ToolKind = 'mod' | 'site';
+export type ToolKind = 'mod' | 'app' | 'site';
 
 export interface Tool {
 	/** Tool name as shown on the card and its page. */
@@ -83,16 +84,16 @@ export const TOOLS: Tool[] = [
 	},
 	{
 		name: 'stp',
-		kind: 'mod',
-		tag: 'Desktop app',
+		kind: 'app',
+		tag: 'Windows · macOS · Linux',
 		description:
-			"Speech To Prompt. Push-to-talk dictation for Windows, macOS, and Linux that transcribes on your own computer and pastes the text where you're typing.",
+			"Speech To Prompt. Push-to-talk dictation that works in any desktop app. It transcribes on your own computer and pastes the text where you're typing, as spoken or cleaned up.",
 		unreleased: true,
 	},
 	{
 		name: 'Launchpad',
-		kind: 'mod',
-		tag: 'Desktop app',
+		kind: 'app',
+		tag: 'Windows',
 		description:
 			'A Windows tray app that opens Claude Code sessions for your projects from one grid of tiles, in place of a desktop full of shortcuts.',
 		unreleased: true,

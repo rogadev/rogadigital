@@ -206,7 +206,10 @@ const education = {
 						<div>
 							<dt class="text-fg-subtle">Contact</dt>
 							<dd class="mt-0.5 break-all">
-								<a class="text-fg hover:underline" href="/contact/">
+								<a
+									class="inline-flex min-h-11 items-center text-fg hover:underline"
+									href="/contact/"
+								>
 									Get in touch
 								</a>
 							</dd>
@@ -218,7 +221,10 @@ const education = {
 						<div>
 							<dt class="text-fg-subtle">Web</dt>
 							<dd class="mt-0.5">
-								<a class="text-fg hover:underline" href="https://rogadigital.com">
+								<a
+									class="inline-flex min-h-11 items-center text-fg hover:underline"
+									href="https://rogadigital.com"
+								>
 									rogadigital.com
 								</a>
 							</dd>
@@ -227,7 +233,7 @@ const education = {
 							<dt class="text-fg-subtle">Profiles</dt>
 							<dd class="mt-0.5 flex flex-wrap gap-3 lg:justify-end">
 								<a
-									class="text-fg hover:underline"
+									class="inline-flex min-h-11 items-center text-fg hover:underline"
 									href={SOCIAL.github}
 									target="_blank"
 									rel="noopener noreferrer"
@@ -235,7 +241,7 @@ const education = {
 									GitHub<span class="sr-only"> (opens in a new tab)</span>
 								</a>
 								<a
-									class="text-fg hover:underline"
+									class="inline-flex min-h-11 items-center text-fg hover:underline"
 									href={SOCIAL.linkedin}
 									target="_blank"
 									rel="noopener noreferrer"
@@ -325,7 +331,7 @@ const education = {
 											href={l.url}
 											target={l.url.startsWith('/') ? undefined : '_blank'}
 											rel={l.url.startsWith('/') ? undefined : 'noopener noreferrer'}
-											class="text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+											class="inline-flex min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
 										>
 											{l.label} →
 											{!l.url.startsWith('/') && <span class="sr-only"> (opens in a new tab)</span>}
@@ -436,7 +442,7 @@ const education = {
 				<div class="flex flex-wrap items-center gap-3">
 					<a
 						href="/contact/"
-						class="inline-flex items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Get in touch
 					</a>

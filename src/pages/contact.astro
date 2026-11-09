@@ -50,7 +50,7 @@ const helpful = [
 				<!-- Two columns: intro + what to expect (left), message form (right) -->
 				<div class="mt-12 grid items-start gap-x-16 gap-y-14 sm:mt-14 lg:grid-cols-12">
 					<!-- Left column: intro + what to expect -->
-					<div class="lg:col-span-6">
+					<div class="min-w-0 lg:col-span-6">
 						<p class="max-w-xl text-lg text-fg-muted text-pretty sm:text-xl">
 							Tell me what you&rsquo;re working on: what&rsquo;s broken, what you&rsquo;ve tried,
 							and what success looks like. If I can help, you&rsquo;ll have a written read on scope
@@ -78,7 +78,7 @@ const helpful = [
 					</div>
 
 					<!-- Right column: the message form -->
-					<div class="lg:col-span-6 lg:col-start-7">
+					<div class="min-w-0 lg:col-span-6 lg:col-start-7">
 						<div class="mb-6 flex items-center gap-4">
 							<Image
 								src={ryan}
@@ -136,7 +136,7 @@ const helpful = [
 								href={SOCIAL.linkedin}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="group inline-flex items-center gap-2"
+								class="group inline-flex min-h-11 items-center gap-2"
 							>
 								<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
 									LinkedIn
@@ -149,7 +149,7 @@ const helpful = [
 								href={SOCIAL.github}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="group inline-flex items-center gap-2"
+								class="group inline-flex min-h-11 items-center gap-2"
 							>
 								<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
 									GitHub
@@ -179,7 +179,7 @@ const helpful = [
 				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
 					<a
 						href="/work/"
-						class="inline-flex items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm font-medium text-fg transition-colors hover:border-fg-subtle"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm font-medium text-fg transition-colors hover:border-fg-subtle"
 					>
 						View the work
 					</a>

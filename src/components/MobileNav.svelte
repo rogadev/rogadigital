@@ -42,7 +42,7 @@
 	onclick={toggle}
 	aria-label={open ? 'Close menu' : 'Open menu'}
 	aria-expanded={open}
-	class="grid h-7 w-7 place-items-center rounded-sm text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-fg)]"
+	class="grid h-11 w-11 place-items-center rounded-sm text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-fg)]"
 >
 	{#if open}
 		<svg

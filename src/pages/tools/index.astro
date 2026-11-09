@@ -6,14 +6,20 @@ import Base from '../../layouts/Base.astro';
 
 const title = 'Tools: Claude Code mods and free web tools · Roga Digital';
 const description =
-	'Claude Code mods, plugins, and companion apps, plus free browser tools, built by Ryan Roga for his own work and shared where they are useful to others.';
+	'Claude Code mods and plugins, desktop productivity apps, and free browser tools, built by Ryan Roga for his own work and shared where they are useful to others.';
 
 const groups = [
 	{
 		id: 'claude-code',
 		heading: 'For Claude Code',
-		dek: 'Mods, plugins, and companion apps I run every day while building client software with Claude Code.',
+		dek: 'Mods, plugins, and skill packs I run every day while building client software with Claude Code.',
 		tools: TOOLS.filter((t) => t.kind === 'mod'),
+	},
+	{
+		id: 'apps',
+		heading: 'Productivity apps',
+		dek: 'Desktop apps I use all day. Both are still private while I finish them.',
+		tools: TOOLS.filter((t) => t.kind === 'app'),
 	},
 	{
 		id: 'websites',
