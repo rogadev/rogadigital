@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/**
+ * A raster image that matches the site theme. With `darkSrc`, it renders both
+ * captures and shows the one for the current theme (the swap rule lives in
+ * global.css, keyed on `html.light`); without it, it renders `src` alone.
+ */
+interface Props {
+	/** The light capture, and the only image when there is no `darkSrc`. */
+	src: ImageMetadata;
+	/** The dark capture. Shown by default, because dark is the site default. */
+	darkSrc?: ImageMetadata;
+	alt: string;
+	widths: number[];
+	sizes: string;
+	/** Classes for each `<img>`. Include `block`: the swap toggles between `block` and `none`. */
+	class?: string;
+	/** Load eagerly at high priority, for an image that is the page's LCP element. */
+	priority?: boolean;
+}
+
+const { src, darkSrc, alt, widths, sizes, class: className, priority = false } = Astro.props;
+
+// Only the dark image can be eager: a lazy image under display: none is never
+// fetched, so keeping the light one lazy spares dark visitors the download.
+const eager = priority ? ({ loading: 'eager', fetchpriority: 'high' } as const) : {};
+---
+
+{darkSrc ? (
+	<>
+		<Image
+			src={darkSrc}
+			{alt}
+			{widths}
+			{sizes}
+			{...eager}
+			class:list={['themed-dark', className]}
+		/>
+		<Image {src} {alt} {widths} {sizes} loading="lazy" class:list={['themed-light', className]} />
+	</>
+) : (
+	<Image {src} {alt} {widths} {sizes} {...eager} class={className} />
+)}

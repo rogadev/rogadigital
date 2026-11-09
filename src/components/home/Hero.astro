@@ -1,8 +1,8 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import dispatchBoard from '../../assets/work/roga-dispatch/01-board.png';
 import dispatchBoardDark from '../../assets/work/roga-dispatch/01-board-dark.png';
+import ThemedImage from '../ThemedImage.astro';
 import { SITE_LOCATION } from '../../consts';
 
 const work = (await getCollection('work')).filter((entry) => entry.data.status !== 'draft');
@@ -19,9 +19,6 @@ const proof = [
 		href: '/work/carevo-logistics/',
 	},
 ];
-
-const boardAlt =
-	"The Roga Dispatch board: today's trips grouped by what needs attention, with late pickups, drivers out of service, and unassigned trips at the top.";
 ---
 
 <section class="border-b border-border">
@@ -96,27 +93,14 @@ const boardAlt =
 					class="block overflow-hidden rounded-lg border border-border-strong bg-bg-soft"
 					aria-label="Roga Dispatch case study"
 				>
-					{/*
-						The board in the same theme as the site. Dark is the site default, so it
-						loads eagerly as the LCP image; the light capture is lazy, and a lazy image
-						under display: none is never fetched, so dark visitors skip it.
-					*/}
-					<Image
-						src={dispatchBoardDark}
-						alt={boardAlt}
-						widths={[640, 960, 1280]}
-						sizes="(min-width: 1024px) 680px, 100vw"
-						loading="eager"
-						fetchpriority="high"
-						class="board-dark block h-auto w-full"
-					/>
-					<Image
+					<ThemedImage
 						src={dispatchBoard}
-						alt={boardAlt}
+						darkSrc={dispatchBoardDark}
+						alt="The Roga Dispatch board: today's trips grouped by what needs attention, with late pickups, drivers out of service, and unassigned trips at the top."
 						widths={[640, 960, 1280]}
 						sizes="(min-width: 1024px) 680px, 100vw"
-						loading="lazy"
-						class="board-light hidden h-auto w-full"
+						priority
+						class="block h-auto w-full"
 					/>
 				</a>
 				<figcaption class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-2xs tracking-[0.14em] text-fg-subtle uppercase">
@@ -132,13 +116,3 @@ const boardAlt =
 		</div>
 	</div>
 </section>
-
-<style>
-	:global(html.light .board-dark) {
-		display: none;
-	}
-
-	:global(html.light .board-light) {
-		display: block;
-	}
-</style>

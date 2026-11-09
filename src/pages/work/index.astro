@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import ThemedImage from '../../components/ThemedImage.astro';
 import { getCollection } from 'astro:content';
 import StatusIndicator from '../../components/StatusIndicator.astro';
 import Base from '../../layouts/Base.astro';
@@ -74,8 +74,9 @@ const columnLabel = 'font-mono text-2xs tracking-[0.16em] text-fg-subtle upperca
 								]}
 							>
 								{w.data.heroImage ? (
-									<Image
+									<ThemedImage
 										src={w.data.heroImage}
+										darkSrc={w.data.heroImageDark}
 										alt=""
 										widths={[208, 416, 768]}
 										sizes="(min-width: 1024px) 104px, 384px"

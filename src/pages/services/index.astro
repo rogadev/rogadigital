@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import ThemedImage from '../../components/ThemedImage.astro';
 import { getCollection } from 'astro:content';
 import Section from '../../components/Section.astro';
 import { ENGAGEMENT_FORMATS, SERVICE_PAGES, SERVICES } from '../../data/services';
@@ -82,8 +82,9 @@ const eyebrow = 'font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase';
 								class="block overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors hover:border-border-strong"
 								aria-label={`${proof.data.name} case study`}
 							>
-								<Image
+								<ThemedImage
 									src={proof.data.heroImage}
+									darkSrc={proof.data.heroImageDark}
 									alt=""
 									widths={[480, 720, 1200]}
 									sizes="(min-width: 1024px) 590px, 100vw"

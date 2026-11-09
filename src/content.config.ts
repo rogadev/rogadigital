@@ -37,6 +37,8 @@ const work = defineCollection({
 			featured: z.boolean().default(false),
 			order: z.number().default(99),
 			heroImage: z.optional(image()),
+			/** Dark-theme capture of `heroImage`, shown when the site is in dark mode. */
+			heroImageDark: z.optional(image()),
 			liveUrl: z.url().optional(),
 			repoUrl: z.url().optional(),
 			highlight: z.string().optional(),

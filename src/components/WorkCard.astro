@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { Image } from 'astro:assets';
 import StatusIndicator from './StatusIndicator.astro';
+import ThemedImage from './ThemedImage.astro';
 
 /** A case study as a card: screenshot, client, short name, one sizing fact, and the headline. */
 interface Props {
@@ -17,8 +17,9 @@ const { data } = entry;
 <a href={`/work/${entry.id}/`} class="group flex h-full flex-col">
 	<div class="overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors group-hover:border-border-strong">
 		{data.heroImage ? (
-			<Image
+			<ThemedImage
 				src={data.heroImage}
+				darkSrc={data.heroImageDark}
 				alt=""
 				widths={[480, 720, 1200]}
 				sizes="(min-width: 768px) 590px, 100vw"
