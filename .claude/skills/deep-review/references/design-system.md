@@ -41,7 +41,7 @@ Status colours `positive` (`#22c55e`), `warning` (`#f59e0b`), and `negative` (`#
 ## Layout and primitives
 
 - Content regions use `max-w-page` with auto margins; styles are mobile-first (`sm:`, `md:`, `lg:`), with no horizontal scroll from 320 px to 1920 px and touch targets of at least 44 px (`min-h-11 min-w-11`).
-- Shared building blocks in `src/components/`: `Section.astro` (section heading at `text-3xl sm:text-4xl`), `WindowCard.astro`, `Screenshot.astro`, `ThemedImage.astro`, `StatusIndicator.astro`, `Marquee.astro`, `DemoFrame.astro`, `EmbeddedPage.astro`, `WorkCard.astro`. A new card, frame, or section that forks one of these is a finding.
+- Shared building blocks in `src/components/`: `Section.astro` (its `h2` sets the section-heading size, a step below the page `h1`), `WindowCard.astro`, `Screenshot.astro`, `ThemedImage.astro`, `StatusIndicator.astro`, `Marquee.astro`, `DemoFrame.astro`, `EmbeddedPage.astro`, `WorkCard.astro`. A new card, frame, or section that forks one of these is a finding.
 - Focus: `*:focus-visible` in `global.css` draws a 2 px accent outline with a 2 px offset; never remove it without a replacement.
 
 ## Pages to render
