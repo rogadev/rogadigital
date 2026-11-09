@@ -70,21 +70,6 @@ const proof = [
 						See the work
 					</a>
 				</div>
-
-				<ul class="mt-12 grid grid-cols-1 border-t border-border sm:grid-cols-3" role="list">
-					{proof.map((p) => (
-						<li class="border-b border-border sm:border-b-0 sm:pr-6">
-							<a href={p.href} class="group block py-4">
-								<span class="block text-2xl font-medium tracking-tight text-fg tabular-nums">
-									{p.value}
-								</span>
-								<span class="mt-1 block text-sm text-fg-muted transition-colors group-hover:text-fg">
-									{p.label}
-								</span>
-							</a>
-						</li>
-					))}
-				</ul>
 			</div>
 
 			<figure class="lg:col-span-7">
@@ -113,6 +98,21 @@ const proof = [
 					</a>
 				</figcaption>
 			</figure>
+
+			<ul class="grid grid-cols-1 border-t border-border sm:grid-cols-3 lg:col-span-12" role="list">
+				{proof.map((p) => (
+					<li class="border-b border-border sm:border-b-0 sm:pr-6">
+						<a href={p.href} class="group block py-4">
+							<span class="block text-2xl font-medium tracking-tight text-fg tabular-nums">
+								{p.value}
+							</span>
+							<span class="mt-1 block text-sm text-fg-muted transition-colors group-hover:text-fg">
+								{p.label}
+							</span>
+						</a>
+					</li>
+				))}
+			</ul>
 		</div>
 	</div>
 </section>
