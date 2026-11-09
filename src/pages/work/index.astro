@@ -66,7 +66,13 @@ const columnLabel = 'font-mono text-2xs tracking-[0.16em] text-fg-subtle upperca
 								columns,
 							]}
 						>
-							<div class="mb-4 w-full max-w-sm overflow-hidden rounded-sm border border-border bg-bg-soft lg:mb-0">
+							<div
+								class:list={[
+									'mb-4 w-full max-w-sm overflow-hidden rounded-sm border border-border bg-bg-soft lg:mb-0',
+									// No screenshot yet: keep the table cell on desktop, drop the empty box on mobile.
+									!w.data.heroImage && 'hidden lg:block',
+								]}
+							>
 								{w.data.heroImage ? (
 									<Image
 										src={w.data.heroImage}
