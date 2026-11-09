@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import ryan from '../assets/ryan.jpg';
 import Section from '../components/Section.astro';
-import { SITE_AUTHOR, SITE_LOCATION, SOCIAL } from '../consts';
+import { PDW, SITE_AUTHOR, SITE_LOCATION, SOCIAL } from '../consts';
 import Base from '../layouts/Base.astro';
 import { personSchema } from '../lib/schema';
 
@@ -77,6 +77,31 @@ const principles = [
 							I founded Roga Digital in 2021, graduated top of class from Vancouver Island
 							University&rsquo;s Web &amp; Mobile Application Development program in 2023, and have
 							built full-time for clients in telecom, healthcare, education, and logistics since.
+						</p>
+						<p>
+							I also founded and run{' '}
+							<a
+								href={PDW.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="text-fg underline underline-offset-4 hover:no-underline"
+							>
+								{PDW.name}
+								<span class="sr-only"> (opens in a new tab)</span>
+							</a>
+							, a BC nonprofit that builds free public tools on government data, public data, and
+							open APIs. Its first two are{' '}
+							<a href="/work/eaeo/" class="text-fg underline underline-offset-4 hover:no-underline">
+								Employment and Education Outlooks
+							</a>{' '}
+							and the{' '}
+							<a
+								href="/work/puntledge/"
+								class="text-fg underline underline-offset-4 hover:no-underline"
+							>
+								Puntledge Tube Report
+							</a>
+							.
 						</p>
 					</div>
 					<div class="mt-8 flex flex-wrap items-center gap-3">

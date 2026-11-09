@@ -9,7 +9,7 @@
  * canonical form emitted by `<link rel="canonical">` and the sitemap.
  */
 
-import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_LOCATION, SITE_TITLE, SOCIAL } from '../consts';
+import { PDW, SITE_AUTHOR, SITE_DESCRIPTION, SITE_LOCATION, SITE_TITLE, SOCIAL } from '../consts';
 
 /**
  * Where the studio takes work. Based on Vancouver Island; the case studies
@@ -64,6 +64,11 @@ export function personSchema(site: URL | undefined, jobTitle: string) {
 			'@type': 'Organization',
 			name: 'Roga Digital',
 			url: abs('/', site),
+		},
+		affiliation: {
+			'@type': 'NGO',
+			name: PDW.name,
+			url: PDW.url,
 		},
 		sameAs: [SOCIAL.github, SOCIAL.linkedin],
 	};

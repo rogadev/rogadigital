@@ -89,6 +89,8 @@ const experience = [
 			"Awarded the follow-on contract for Summit — overhauling TELUS's training, mentorship, and credential-certification system from the ground up. Launching 2027.",
 			'Forward-deployed lead product developer for CarEvo since 2023 — built and maintain the multi-lot used-vehicle operations platform that runs their vehicles, vendors, lots, and deliveries.',
 			'Designed and shipped LLM-backed features in production (retrieval, structured output, evaluation pipelines) for client tools.',
+			'Built and run Roga Dispatch, a multi-tenant dispatch and billing product for medical and assisted-transport companies.',
+			'Publish open-source tooling for Claude Code, including orc-pack (an autonomous build-and-review orchestrator), paceline, and glance.',
 		],
 	},
 	{
@@ -157,11 +159,14 @@ const projects = [
 		links: [{ label: 'Case study', url: '/work/carevo-logistics/' }],
 	},
 	{
-		name: 'EzTripr',
+		name: 'Roga Dispatch',
 		summary:
-			'Capstone project — trip-planning tool for a senior-transport service. Multi-passenger routing with live ETAs and driver UI.',
-		tech: ['Nuxt 3', 'Supabase', 'Prisma', 'Mapbox', 'Google Maps API', 'OpenAI', 'TypeScript'],
-		links: [{ label: 'Repo', url: 'https://github.com/rogadev/capstone' }],
+			'Multi-tenant dispatch, driver, and billing software for medical and assisted-transport companies. My own product, in use since 2025.',
+		tech: ['SvelteKit', 'Svelte 5', 'Neon Postgres', 'Drizzle', 'Multi-tenant'],
+		links: [
+			{ label: 'Case study', url: '/work/roga-dispatch/' },
+			{ label: 'Live', url: 'https://trips.roga.dev' },
+		],
 	},
 ];
 
