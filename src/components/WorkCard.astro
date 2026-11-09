@@ -34,20 +34,18 @@ const { data } = entry;
 		)}
 	</div>
 
-	<p class="mt-5 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+	<p class="mt-5 truncate font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
 		{data.client.split(' · ')[0]} · {data.industry}
 	</p>
-	<div class="mt-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-		<Heading class="text-2xl font-medium tracking-tight text-fg underline-offset-4 group-hover:underline">
-			{data.name}
-		</Heading>
-		{data.metric && (
-			<p class="text-sm text-fg-muted">
-				<span class="font-medium text-fg tabular-nums">{data.metric.value}</span>{' '}
-				{data.metric.label}
-			</p>
-		)}
-	</div>
+	{/* Name and metric each take their own line, so cards in a row line up whatever the name's length. */}
+	<Heading class="mt-2 text-2xl font-medium tracking-tight text-fg underline-offset-4 group-hover:underline">
+		{data.name}
+	</Heading>
+	{data.metric && (
+		<p class="mt-1 text-sm text-fg-muted">
+			<span class="font-medium text-fg tabular-nums">{data.metric.value}</span> {data.metric.label}
+		</p>
+	)}
 	<p class="mt-2 max-w-xl text-sm text-fg-muted text-pretty">{data.headline}</p>
 </a>
 
