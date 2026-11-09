@@ -40,7 +40,8 @@ Skill directory (call it `$SKILL`): the folder containing this file, `.claude/sk
 | --- | --- |
 | none (default) | none: a feature branch is compared with `origin/dev`, `dev` with `origin/main`; uncommitted and untracked files are included |
 | `working` | `--working` (uncommitted changes only) |
-| a ref such as `main` or `HEAD~3` | `--base <ref>` |
+| `dev` | on `dev`, none (the default; `--base dev` would compare `dev` with itself and find nothing); on another branch, `--range $(git merge-base origin/main origin/dev)..origin/dev` |
+| any other ref, such as `main` or `HEAD~3` | `--base <ref>` |
 | `a..b` | `--range a..b` |
 | `#123` or `pr 123` | `--pr 123` |
 
