@@ -94,8 +94,9 @@ function footnote(t: Tool): string {
 									rel={dest?.external ? 'noopener noreferrer' : undefined}
 									class="group flex h-full flex-col"
 								>
-									{t.image && (
-										<div class="mb-5 overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors group-hover:border-border-strong">
+									{/* Every card gets the 16:10 frame, so text lines up across a row whether or not the tool has a screenshot. */}
+									<div class="mb-5 overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors group-hover:border-border-strong">
+										{t.image ? (
 											<Image
 												src={t.image}
 												alt=""
@@ -103,8 +104,17 @@ function footnote(t: Tool): string {
 												sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
 												class="block aspect-[16/10] h-auto w-full object-cover object-left-top"
 											/>
-										</div>
-									)}
+										) : (
+											<div
+												class="pending flex aspect-[16/10] items-center justify-center"
+												aria-hidden="true"
+											>
+												<span class="rounded-sm border border-border bg-bg-soft px-3 py-1.5 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+													{t.unreleased ? 'Not released yet' : 'Screenshot pending'}
+												</span>
+											</div>
+										)}
+									</div>
 									<p class="font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
 										{t.tag}
 									</p>
@@ -161,3 +171,10 @@ function footnote(t: Tool): string {
 		</div>
 	</section>
 </Base>
+
+<style>
+	.pending {
+		background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
+		background-size: 20px 20px;
+	}
+</style>
