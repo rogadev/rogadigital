@@ -1,57 +1,117 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import dispatchBoard from '../../assets/work/roga-dispatch/01-board.png';
 import { SITE_LOCATION } from '../../consts';
+
+const work = (await getCollection('work')).filter((entry) => entry.data.status !== 'draft');
+const liveCount = work.filter((entry) => entry.data.status === 'live').length;
+
+// Every figure here is stated in a case study: TechCentral's user count, the
+// number of entries marked live, and the year CarEvo's system went into use.
+const proof = [
+	{ value: '2,500+', label: 'TELUS field staff use TechCentral', href: '/work/telus-techcentral/' },
+	{ value: String(liveCount), label: 'systems live in production today', href: '/work/' },
+	{
+		value: '2023',
+		label: 'the year the CarEvo lot system went live. Still maintained.',
+		href: '/work/carevo-logistics/',
+	},
+];
 ---
 
-<section class="relative overflow-hidden border-b border-border">
+<section class="border-b border-border">
 	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-		<div class="pt-20 pb-24 sm:pt-28 sm:pb-32">
-			<p class="flex items-center gap-3 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
-				<span class="relative flex h-1.5 w-1.5">
-					<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75"></span>
-					<span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-positive"></span>
-				</span>
-				Taking on new projects · {SITE_LOCATION}
-			</p>
-
-			<h1 class="mt-10 max-w-4xl text-5xl font-medium tracking-tight text-balance sm:mt-12 sm:text-6xl lg:text-7xl">
-				Internal Tools
-				<br />
-				<span class="text-fg-muted">&amp; Business Software</span>
-			</h1>
-
-			<p class="mt-8 max-w-2xl text-lg text-fg-muted text-pretty sm:text-xl">
-				<span class="text-fg">Roga Digital</span> is a software studio that designs, builds, ships,
-				and maintains the software businesses depend on — internal tools, dashboards, integrations,
-				and AI features your team and clients use every day.
-			</p>
-
-			<div class="mt-10 flex flex-wrap items-center gap-3">
-				<a
-					href="/contact/"
-					class="inline-flex items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
-				>
-					Get in touch
-					<svg
-						width="14"
-						height="14"
-						viewBox="0 0 16 16"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.5"
-						stroke-linecap="round"
-						stroke-linejoin="round"
+		<div class="grid gap-12 pt-16 pb-16 sm:pt-20 sm:pb-20 lg:grid-cols-12 lg:items-center lg:gap-10">
+			<div class="lg:col-span-5">
+				<p class="flex items-center gap-2.5 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
+					<span
+						class="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-positive"
 						aria-hidden="true"
+					></span>
+					Taking on new projects · {SITE_LOCATION.replace(', Canada', '')}
+				</p>
+
+				<h1 class="mt-8 text-3xl font-medium tracking-tight text-balance sm:text-4xl">
+					I build the internal tools your business runs on.
+				</h1>
+
+				<p class="mt-6 max-w-xl text-lg text-fg-muted text-pretty">
+					<span class="text-fg">Roga Digital</span> is Ryan Roga&rsquo;s software studio. I design,
+					build, and maintain dashboards, operations software, integrations, and AI features for
+					businesses that have outgrown spreadsheets and off-the-shelf tools.
+				</p>
+
+				<div class="mt-8 flex flex-wrap items-center gap-3">
+					<a
+						href="/contact/"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
-						<path d="M3 8h10M9 4l4 4-4 4"></path>
-					</svg>
-				</a>
-				<a
-					href="/work/"
-					class="inline-flex items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm text-fg transition-colors hover:border-fg-subtle"
-				>
-					See our work
-				</a>
+						Tell me about your project
+						<svg
+							width="14"
+							height="14"
+							viewBox="0 0 16 16"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<path d="M3 8h10M9 4l4 4-4 4"></path>
+						</svg>
+					</a>
+					<a
+						href="/work/"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm text-fg transition-colors hover:border-fg-subtle"
+					>
+						See the work
+					</a>
+				</div>
+
+				<ul class="mt-12 grid grid-cols-1 border-t border-border sm:grid-cols-3" role="list">
+					{proof.map((p) => (
+						<li class="border-b border-border sm:border-b-0 sm:pr-6">
+							<a href={p.href} class="group block py-4">
+								<span class="block text-2xl font-medium tracking-tight text-fg tabular-nums">
+									{p.value}
+								</span>
+								<span class="mt-1 block text-sm text-fg-muted transition-colors group-hover:text-fg">
+									{p.label}
+								</span>
+							</a>
+						</li>
+					))}
+				</ul>
 			</div>
+
+			<figure class="lg:col-span-7">
+				<a
+					href="/work/roga-dispatch/"
+					class="block overflow-hidden rounded-lg border border-border-strong bg-bg-soft"
+					aria-label="Roga Dispatch case study"
+				>
+					<Image
+						src={dispatchBoard}
+						alt="The Roga Dispatch board: today's trips grouped by what needs attention, with late pickups, drivers out of service, and unassigned trips at the top."
+						widths={[640, 960, 1280]}
+						sizes="(min-width: 1024px) 680px, 100vw"
+						loading="eager"
+						fetchpriority="high"
+						class="block h-auto w-full"
+					/>
+				</a>
+				<figcaption class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-2xs tracking-[0.14em] text-fg-subtle uppercase">
+					<span>Roga Dispatch · dispatcher&rsquo;s board · sample data</span>
+					<a
+						href="/work/roga-dispatch/"
+						class="inline-flex min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+					>
+						Try the live demo →
+					</a>
+				</figcaption>
+			</figure>
 		</div>
 	</div>
 </section>

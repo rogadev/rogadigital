@@ -1,0 +1,32 @@
+---
+import { SERVICES, serviceHref } from '../../data/services';
+import Section from '../Section.astro';
+---
+
+<Section
+	id="services"
+	eyebrow="Services"
+	heading="What I build."
+	dek="When spreadsheets and off-the-shelf software stop fitting the way you work, I build what does, and I keep it running."
+>
+	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+		<ul class="border-t border-border md:columns-2 md:gap-x-12" role="list">
+			{SERVICES.map((s) => (
+				<li class="break-inside-avoid border-b border-border">
+					<a href={serviceHref(s)} class="group flex min-h-11 items-baseline gap-4 py-4">
+						<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle">{s.number}</span>
+						<span class="flex-1">
+							<span class="block font-medium tracking-tight text-fg underline-offset-4 group-hover:underline">
+								{s.title}
+							</span>
+							<span class="mt-0.5 block text-sm text-fg-muted">{s.summary}</span>
+						</span>
+						<span class="text-fg-subtle transition-colors group-hover:text-fg" aria-hidden="true">
+							→
+						</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	</div>
+</Section>

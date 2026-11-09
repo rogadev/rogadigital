@@ -1,11 +1,16 @@
 ---
+import { Image } from 'astro:assets';
+import ryan from '../assets/ryan.jpg';
 import Section from '../components/Section.astro';
-import { SITE_LOCATION, SOCIAL } from '../consts';
+import { SITE_AUTHOR, SITE_LOCATION, SOCIAL } from '../consts';
 import Base from '../layouts/Base.astro';
+import { personSchema } from '../lib/schema';
 
-const title = 'About · Roga Digital';
+const title = 'About Ryan Roga · Roga Digital';
 const description =
-	'Roga Digital is a software studio in Vancouver Island, BC, Canada that designs, builds, and maintains the internal tools, dashboards, integrations, and AI features businesses depend on.';
+	'Roga Digital is the software studio of Ryan Roga, a developer on Vancouver Island, BC, who ran a business before building internal tools, dashboards, and integrations for them.';
+
+const jsonLd = personSchema(Astro.site, 'Lead Full-Stack Product Developer');
 
 const stack = [
 	'TypeScript',
@@ -25,118 +30,121 @@ const stack = [
 const principles = [
 	{
 		n: '01',
-		h: 'Discovery before discovery decks.',
-		b: "You tell us what you're working on; we send back a written summary of what we think you should and shouldn't build. No deck, no padding. If we move forward, that summary becomes the starting scope.",
+		h: 'A written read before any proposal.',
+		b: "You tell me what you're working on. I send back a written summary of what I think you should and shouldn't build. If we go ahead, that summary becomes the starting scope.",
 	},
 	{
 		n: '02',
-		h: 'Weekly working previews.',
-		b: "You see real, deployed progress every week. Feedback shapes the build directly — not a project manager's interpretation of it.",
+		h: 'Working previews every week.',
+		b: 'You see real, deployed progress every week, and your feedback shapes the build directly. Nobody sits between you and the person writing the code.',
 	},
 	{
 		n: '03',
 		h: 'Built to be inherited.',
-		b: 'Every project ships with documentation, runbooks, and monitors. If you ever bring on internal devs, they should be able to read the code and ship the next feature without a call.',
+		b: 'Every project ships with documentation, runbooks, and monitors. If you bring on your own developers later, they can read the code and ship the next feature without calling me.',
 	},
 	{
 		n: '04',
-		h: 'Long after launch.',
-		b: 'Software ages. A 30-day post-launch period is included by default. Many clients keep us on as a fractional partner — audits, gradual rebuilds, on-call for the things that matter.',
+		h: 'Support after launch.',
+		b: 'A 30-day post-launch period is included by default. Many clients keep me on afterwards for audits, gradual rebuilds, and on-call for the things that matter.',
 	},
 ];
 ---
 
-<Base title={title} description={description}>
+<Base {title} {description} {jsonLd}>
 	<!-- Hero -->
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-			<div class="pt-20 pb-20 sm:pt-28 sm:pb-24">
-				<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">About</p>
-				<h1 class="mt-6 max-w-4xl text-4xl font-medium tracking-tight text-balance sm:text-5xl">
-					We build the software your business runs on.
-				</h1>
-				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty sm:text-xl">
-					Roga Digital is a software studio based in {SITE_LOCATION}. We design, build, and maintain
-					internal tools, dashboards, integrations, and AI features — the systems companies depend
-					on every day but rarely get the attention they deserve.
-				</p>
-				<div class="mt-8 flex flex-wrap items-center gap-3">
-					<a
-						href="/contact/"
-						class="inline-flex items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
-					>
-						Start a conversation
-						<svg
-							width="14"
-							height="14"
-							viewBox="0 0 16 16"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="1.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							aria-hidden="true"
+			<div class="grid gap-10 pt-16 pb-16 sm:pt-20 sm:pb-20 lg:grid-cols-12 lg:gap-16">
+				<div class="lg:col-span-8">
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">About</p>
+					<h1 class="mt-6 text-4xl font-medium tracking-tight text-balance sm:text-5xl">
+						I ran a business before I built software for them.
+					</h1>
+					<div class="mt-6 max-w-2xl space-y-4 text-lg text-fg-muted text-pretty">
+						<p>
+							I&rsquo;m {SITE_AUTHOR}. Roga Digital is my software studio, based on {SITE_LOCATION}.
+							I design, build, and maintain internal tools, dashboards, integrations, and AI
+							features: the systems a company depends on every day and rarely has time to fix.
+						</p>
+						<p>
+							Before this I spent years running a home-services business in Victoria, BC. The
+							software I built in-house drove 100% of its leads and helped partner companies close
+							30% more jobs. I know what it costs when a tool breaks at 5 pm on a Friday, so I build
+							for the people who use the software, not only the people who asked for it.
+						</p>
+						<p>
+							I founded Roga Digital in 2021, graduated top of class from Vancouver Island
+							University&rsquo;s Web &amp; Mobile Application Development program in 2023, and have
+							built full-time for clients in telecom, healthcare, education, and logistics since.
+						</p>
+					</div>
+					<div class="mt-8 flex flex-wrap items-center gap-3">
+						<a
+							href="/contact/"
+							class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 						>
-							<path d="M3 8h10M9 4l4 4-4 4"></path>
-						</svg>
-					</a>
-					<a
-						href="/work/"
-						class="inline-flex items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm text-fg transition-colors hover:border-fg-subtle"
-					>
-						See our work
-					</a>
+							Start a conversation
+						</a>
+						<a
+							href="/work/"
+							class="inline-flex min-h-11 items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm text-fg transition-colors hover:border-fg-subtle"
+						>
+							See the work
+						</a>
+					</div>
 				</div>
+
+				<figure class="lg:col-span-4">
+					<Image
+						src={ryan}
+						alt="Ryan Roga, founder of Roga Digital"
+						width={306}
+						height={306}
+						loading="eager"
+						class="h-auto w-full max-w-[17rem] rounded-lg border border-border"
+					/>
+					<figcaption class="mt-4 text-sm">
+						<span class="block font-medium text-fg">{SITE_AUTHOR}</span>
+						<span class="block text-fg-muted">Founder &amp; lead developer</span>
+						<span class="mt-3 flex gap-4 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+							<a
+								href={SOCIAL.github}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center hover:text-fg"
+							>
+								GitHub
+							</a>
+							<a
+								href={SOCIAL.linkedin}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center hover:text-fg"
+							>
+								LinkedIn
+							</a>
+							<a href="/resume/" class="inline-flex min-h-11 items-center hover:text-fg">
+								Resume
+							</a>
+						</span>
+					</figcaption>
+				</figure>
 			</div>
 		</div>
 	</section>
 
-	<!-- Why Roga Digital -->
-	<Section
-		eyebrow="Why us"
-		heading="Operator perspective, built in."
-		dek="Roga Digital was founded by someone who ran a business before building software for them. That changes what gets built — and how it holds up."
-	>
-		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-			<div class="grid gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-3">
-				<div class="flex flex-col gap-3 bg-bg p-8">
-					<h3 class="text-lg font-medium tracking-tight text-fg">We've sat at the desk.</h3>
-					<p class="text-sm text-fg-muted text-pretty">
-						We know what it costs when a tool breaks at 5 pm on a Friday. Every project is built
-						with the people who use it in mind — not just the people who requested it.
-					</p>
-				</div>
-				<div class="flex flex-col gap-3 bg-bg p-8">
-					<h3 class="text-lg font-medium tracking-tight text-fg">We ship to stay.</h3>
-					<p class="text-sm text-fg-muted text-pretty">
-						Our work is not a handoff and a wave. We build systems that earn their keep three years
-						from now — documented, monitored, and ready for whoever maintains them next.
-					</p>
-				</div>
-				<div class="flex flex-col gap-3 bg-bg p-8">
-					<h3 class="text-lg font-medium tracking-tight text-fg">We grow with you.</h3>
-					<p class="text-sm text-fg-muted text-pretty">
-						From a two-week dashboard to a year-long platform build, the engagement scales to fit.
-						Many clients keep us on as a fractional technical partner long after launch.
-					</p>
-				</div>
-			</div>
-		</div>
-	</Section>
-
 	<!-- Principles -->
 	<Section
-		eyebrow="How we work"
-		heading="A short list of strong defaults."
-		dek="The same principles guide every engagement, regardless of scope."
+		eyebrow="How I work"
+		heading="Four defaults on every project."
+		dek="These hold whether the job is a two-week dashboard or a year-long platform build."
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<ol class="grid gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-2">
 				{principles.map((p) => (
 					<li class="flex flex-col gap-3 bg-bg p-8">
-						<span class="font-mono text-2xs tracking-[0.18em] text-[var(--color-accent)] uppercase">
-							{p.n}
-						</span>
+						<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">{p.n}</span>
 						<h3 class="text-xl font-medium tracking-tight text-balance text-fg">{p.h}</h3>
 						<p class="text-sm text-fg-muted text-pretty">{p.b}</p>
 					</li>
@@ -148,13 +156,14 @@ const principles = [
 	<!-- Stack -->
 	<Section
 		eyebrow="Stack"
-		heading="What we build with."
-		dek="Sharp opinions, loosely held. The stack evolves when something genuinely better shows up — not on hype."
+		heading="What I build with."
+		dek="The stack changes when something clearly better shows up, and not before."
+		dense
 	>
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<ul class="flex flex-wrap gap-2 font-mono text-2xs" role="list">
 				{stack.map((s) => (
-					<li class="rounded-full border border-border bg-bg-soft px-3 py-1.5 tracking-[0.12em] text-fg-muted uppercase">
+					<li class="rounded-sm border border-border bg-bg-soft px-3 py-1.5 tracking-[0.12em] text-fg-muted uppercase">
 						{s}
 					</li>
 				))}
@@ -162,53 +171,27 @@ const principles = [
 		</div>
 	</Section>
 
-	<!-- About the founder -->
-	<Section eyebrow="Founder" heading="Ryan Roga" dense>
-		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-			<p class="max-w-3xl text-base text-fg-muted text-pretty">
-				Ryan founded Roga Digital in 2021 after years running a home-services business in Victoria,
-				BC, where the software he built in-house drove 100% of leads and helped partner companies
-				close 30% more jobs. He graduated top of class from Vancouver Island University's Web &amp;
-				Mobile Application Development program in 2023 and has been building full-time for clients
-				across telecom, healthcare, education, and logistics ever since.
-			</p>
-		</div>
-	</Section>
-
 	<!-- CTA -->
 	<section class="border-t border-border bg-bg-soft">
-		<div class="mx-auto w-full max-w-page px-6 py-20 sm:px-8 sm:py-24">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
 			<div class="grid gap-8 lg:grid-cols-12 lg:items-end">
 				<div class="lg:col-span-8">
-					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Let's talk</p>
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Next step</p>
 					<h2 class="mt-3 text-3xl font-medium tracking-tight text-balance sm:text-4xl">
-						Have something you'd like Roga Digital to build?
+						Have something you&rsquo;d like built?
 					</h2>
 					<p class="mt-4 max-w-2xl text-lg text-fg-muted text-pretty">
-						Tell us what you're working on. Send a message — no sales pitch, just a candid read on
-						whether we're the right fit, with a real reply inside 48 hours.
+						Tell me what you&rsquo;re working on. You get a candid read on whether I&rsquo;m the
+						right fit, in writing, within 48 hours.
 					</p>
 				</div>
-				<div class="flex flex-col gap-3 text-sm lg:col-span-4 lg:items-end">
+				<div class="flex lg:col-span-4 lg:justify-end">
 					<a
 						href="/contact/"
-						class="inline-flex items-center justify-center gap-2 rounded-md bg-fg px-5 py-3 font-medium text-bg transition-opacity hover:opacity-90"
+						class="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-fg px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Get in touch
 					</a>
-					<div class="flex gap-4 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
-						<a href={SOCIAL.github} target="_blank" rel="noopener noreferrer" class="hover:text-fg">
-							GitHub
-						</a>
-						<a
-							href={SOCIAL.linkedin}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:text-fg"
-						>
-							LinkedIn
-						</a>
-					</div>
 				</div>
 			</div>
 		</div>

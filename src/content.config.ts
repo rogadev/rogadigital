@@ -22,6 +22,10 @@ const work = defineCollection({
 	schema: ({ image }) =>
 		z.object({
 			id: z.string(),
+			/** Short system name: the title on cards, the /work table, and the case study. */
+			name: z.string(),
+			/** One fact that sizes the project. Must be stated in a case study body. */
+			metric: z.object({ value: z.string(), label: z.string() }).optional(),
 			client: z.string(),
 			industry: z.string(),
 			headline: z.string(),

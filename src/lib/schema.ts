@@ -11,6 +11,12 @@
 
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_LOCATION, SITE_TITLE, SOCIAL } from '../consts';
 
+/**
+ * Where the studio takes work. Based on Vancouver Island; the case studies
+ * cover clients across BC and the rest of Canada.
+ */
+const AREA_SERVED = [SITE_LOCATION, 'British Columbia', 'Canada'];
+
 /** Canonical absolute URL for a path, always trailing-slashed. */
 export function abs(path: string, site: URL | undefined): string {
 	const base = site ?? new URL('https://rogadigital.com');
@@ -36,7 +42,7 @@ export function organizationSchema(site: URL | undefined) {
 			name: SITE_AUTHOR,
 			url: abs('/about', site),
 		},
-		areaServed: SITE_LOCATION,
+		areaServed: AREA_SERVED,
 		sameAs: [SOCIAL.github, SOCIAL.linkedin],
 	};
 }
@@ -115,5 +121,59 @@ export function breadcrumbSchema(
 			name: crumb.name,
 			item: abs(crumb.path, site),
 		})),
+	};
+}
+
+/** One service offering, for a dedicated /services/<slug>/ page. */
+export function serviceSchema(opts: {
+	site: URL | undefined;
+	path: string;
+	name: string;
+	description: string;
+}) {
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'Service',
+		name: opts.name,
+		serviceType: opts.name,
+		description: opts.description,
+		url: abs(opts.path, opts.site),
+		provider: {
+			'@type': 'ProfessionalService',
+			'@id': `${abs('/', opts.site)}#organization`,
+			name: 'Roga Digital',
+			url: abs('/', opts.site),
+		},
+		areaServed: AREA_SERVED,
+	};
+}
+
+/** A case study: a piece of shipped work, credited to the studio. */
+export function caseStudySchema(opts: {
+	site: URL | undefined;
+	path: string;
+	name: string;
+	headline: string;
+	description: string;
+	keywords: string[];
+	imageUrl?: string;
+}) {
+	const url = abs(opts.path, opts.site);
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'CreativeWork',
+		name: opts.name,
+		headline: opts.headline,
+		description: opts.description,
+		url,
+		mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+		keywords: opts.keywords.join(', '),
+		creator: {
+			'@type': 'ProfessionalService',
+			'@id': `${abs('/', opts.site)}#organization`,
+			name: 'Roga Digital',
+			url: abs('/', opts.site),
+		},
+		...(opts.imageUrl ? { image: opts.imageUrl } : {}),
 	};
 }

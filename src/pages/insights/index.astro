@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 
 const title = 'Insights · Roga Digital';
 const description =
-	'Writing from Roga Digital — opinions on tooling and technology, takes on where AI is headed, industry shifts, and notes from the work.';
+	'Writing from Roga Digital: opinions on tooling and technology, takes on where AI is headed, industry shifts, and notes from building software for businesses.';
 
 const posts = (await getCollection('insights', ({ data }) => !data.draft)).toSorted(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -38,12 +38,11 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 				<div class="lg:col-span-8">
 					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Insights</p>
 					<h1 class="mt-6 text-4xl font-medium tracking-tight text-balance sm:text-5xl lg:text-6xl">
-						Professional <span class="text-fg-muted">notes, opinions, and forecasts.</span>
+						Notes <span class="text-fg-muted">from the work.</span>
 					</h1>
 					<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty sm:text-xl">
-						Opinions on tooling and technology, honest takes on where AI is actually headed, and
-						notes from the work itself — written for people who build and run software, not the hype
-						cycle. Everything from Roga Digital, in one place.
+						Opinions on tooling and technology, where AI is headed, and what I learn building and
+						running software for clients. Written for people who build and run software.
 					</p>
 				</div>
 				<div class="lg:col-span-4">
@@ -93,16 +92,11 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 		<section class="border-b border-border bg-bg-soft">
 			<div class="mx-auto w-full max-w-page px-6 py-6 sm:px-8">
 				<div class="flex flex-wrap items-center gap-x-6 gap-y-3">
-					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Tags</p>
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Topics</p>
 					<ul class="flex flex-wrap gap-2 font-mono text-2xs" role="list">
 						{tags.map((t) => (
-							<li>
-								<a
-									href={`#tag-${t}`}
-									class="rounded-full border border-border bg-bg px-3 py-1 tracking-[0.12em] text-fg-muted uppercase transition-colors hover:border-fg-subtle hover:text-fg"
-								>
-									#{t}
-								</a>
+							<li class="rounded-sm border border-border bg-bg px-2.5 py-1 tracking-[0.12em] text-fg-muted uppercase">
+								#{t}
 							</li>
 						))}
 					</ul>

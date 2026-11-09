@@ -1,27 +1,24 @@
 ---
-import Approach from '../components/home/Approach.astro';
-import Capabilities from '../components/home/Capabilities.astro';
 // Awaiting a real TELUS quote — see ClientQuote.astro for launch steps.
 // import ClientQuote from '../components/home/ClientQuote.astro';
 import EndCTA from '../components/home/EndCTA.astro';
-import FeaturedDemo from '../components/home/FeaturedDemo.astro';
 import Hero from '../components/home/Hero.astro';
 import RecentWriting from '../components/home/RecentWriting.astro';
 import SelectedWork from '../components/home/SelectedWork.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import ServicesList from '../components/home/ServicesList.astro';
+import { SITE_DESCRIPTION } from '../consts';
 import Base from '../layouts/Base.astro';
 import { organizationSchema } from '../lib/schema';
 
+const title = 'Custom internal tools & business software · Roga Digital';
 const jsonLd = organizationSchema(Astro.site);
 ---
 
-<Base title={SITE_TITLE} description={SITE_DESCRIPTION} {jsonLd}>
+<Base {title} description={SITE_DESCRIPTION} {jsonLd}>
 	<Hero />
-	<FeaturedDemo />
-	<Capabilities />
 	<SelectedWork />
 	{/* <ClientQuote /> */}
-	<Approach />
+	<ServicesList />
 	<RecentWriting />
 	<EndCTA />
 </Base>
