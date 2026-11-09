@@ -5,9 +5,8 @@ import { TOOLS } from '../../data/tools';
 
 const tool = TOOLS.find((t) => t.name === 'CopyCleanse')!;
 
-const title = 'copy-cleanse · Tools · Roga Digital';
-const description =
-	'copy-cleanse cleans AI-written text in your browser: it removes em dashes, curly quotes, invisible characters, citation leftovers, and tracking links, and shows you exactly what it changed.';
+const title = `${tool.name} · Tools · Roga Digital`;
+const description = `${tool.name} cleans AI-written text in your browser: it removes em dashes, curly quotes, invisible characters, citation leftovers, and tracking links, and shows you exactly what it changed.`;
 
 const catches = [
 	{
@@ -52,7 +51,7 @@ const limits = [
 				</h1>
 				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
 					Text from an AI chat carries baggage you cannot see: em dashes, curly quotes, hidden
-					characters, even tracking links. Paste it into copy-cleanse and get it back clean, with
+					characters, even tracking links. Paste it into {tool.name} and get it back clean, with
 					every change highlighted so you can see what was caught.
 				</p>
 				<div class="mt-8 flex flex-wrap items-center gap-3">
@@ -76,8 +75,8 @@ const limits = [
 			What is hiding in a paragraph
 		</h2>
 		<p class="mt-4 mb-10 max-w-2xl text-fg-muted text-pretty">
-			This sample looks like ordinary text. Every highlight below is something copy-cleanse finds
-			and fixes. Pick a category to isolate it, or switch to the cleaned version.
+			This sample looks like ordinary text. Every highlight below is something {tool.name} finds and
+			fixes. Pick a category to isolate it, or switch to the cleaned version.
 		</p>
 		<CopyCleanseDemo />
 	</section>
