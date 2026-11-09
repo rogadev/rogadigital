@@ -17,15 +17,17 @@ interface Props {
 	sizes: string;
 	/** Classes for each `<img>`. Include `block`: the swap toggles between `block` and `none`. */
 	class?: string;
-	/** Load eagerly at high priority, for an image that is the page's LCP element. */
+	/** Load eagerly, for an image that is the page's LCP element. */
 	priority?: boolean;
 }
 
 const { src, darkSrc, alt, widths, sizes, class: className, priority = false } = Astro.props;
 
-// Only the dark image can be eager: a lazy image under display: none is never
-// fetched, so keeping the light one lazy spares dark visitors the download.
-const eager = priority ? ({ loading: 'eager', fetchpriority: 'high' } as const) : {};
+// With two captures, both load eagerly when the image is the LCP element, so
+// light-theme visitors are not left waiting on a lazy image. Neither gets
+// fetchpriority="high": the hidden one would compete with the visible one.
+const eager = priority ? ({ loading: 'eager' } as const) : {};
+const single = priority ? ({ loading: 'eager', fetchpriority: 'high' } as const) : {};
 ---
 
 {darkSrc ? (
@@ -38,8 +40,15 @@ const eager = priority ? ({ loading: 'eager', fetchpriority: 'high' } as const) 
 			{...eager}
 			class:list={['themed-dark', className]}
 		/>
-		<Image {src} {alt} {widths} {sizes} loading="lazy" class:list={['themed-light', className]} />
+		<Image
+			{src}
+			{alt}
+			{widths}
+			{sizes}
+			loading={priority ? 'eager' : 'lazy'}
+			class:list={['themed-light', className]}
+		/>
 	</>
 ) : (
-	<Image {src} {alt} {widths} {sizes} {...eager} class={className} />
+	<Image {src} {alt} {widths} {sizes} {...single} class={className} />
 )}
