@@ -82,7 +82,7 @@ export const TOOLS: Tool[] = [
 		href: '/tools/orc-pack/',
 		repo: 'https://github.com/rogadev/orc-pack',
 		description:
-			'An autonomous orchestrator for Claude Code. Hand it an issue or a sentence, and a team of specialist agents plans, builds, reviews, and commits the work.',
+			'Works your GitHub issues end to end in one Claude Code session, then a bench of specialist reviewers checks the result. 23% cheaper and 37% faster per issue than 1.x.',
 		image: orcPackShot,
 	},
 	{
