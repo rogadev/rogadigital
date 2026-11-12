@@ -1,39 +1,68 @@
 ---
+import { Image } from 'astro:assets';
 import ArrowIcon from '../../components/ArrowIcon.astro';
 import EmbeddedPage from '../../components/EmbeddedPage.astro';
 import Base from '../../layouts/Base.astro';
 import { TOOLS } from '../../data/tools';
+import resultsChart from '../../assets/tools/orc-pack.png';
 
 const tool = TOOLS.find((t) => t.name === 'orc-pack')!;
 
 const title = 'orc-pack · Tools · Roga Digital';
 const description =
-	'orc-pack is an autonomous orchestrator for Claude Code: it splits big coding jobs across specialist agents, then reviews, verifies, and commits the result.';
+	'orc-pack works your GitHub issues end to end in one Claude Code session, then a bench of specialist reviewer agents checks the result. Version 2.0.0 cut the cost per issue by 23% and the time by 37%.';
 
 const modes = [
 	{
-		command: '/orc',
-		title: 'Pick something and go',
-		body: 'A scout agent reads your GitHub issue board and picks the most valuable issue that is ready to build, then orc carries it through to done.',
-	},
-	{
 		command: '/orc 123',
 		title: 'Do this issue',
-		body: 'Point it at a specific issue or epic. It skips the scouting and goes straight to planning and building.',
+		body: 'Point it at an issue, or a list of them. It reads the issue and the code, plans the change, and builds it.',
+	},
+	{
+		command: '/orc 350-360',
+		title: 'Work a batch',
+		body: 'Give it a range and it plans every issue in one message, waits for one go-ahead, then builds them in order, one commit each.',
+	},
+	{
+		command: '/orc next 10',
+		title: 'Pick from the board',
+		body: 'It ranks your open issues by urgency, priority, and what unblocks other work, then takes the top ten.',
 	},
 	{
 		command: '/orc fix the Safari date picker',
 		title: 'Here is what I want',
-		body: 'Describe the work in a sentence. Orc reads the code, turns your sentence into a testable definition of done, and builds it.',
+		body: 'Describe the work in a sentence. Orc turns it into a scoped brief with testable acceptance criteria and builds it.',
 	},
 ];
 
-const team = [
-	{ role: 'Scout', body: 'Surveys the issue board and picks the next piece of work.' },
-	{ role: 'Implementer', body: 'Writes the code and its tests for one scoped task.' },
+const v1Team = [
+	{ role: 'Scout', body: 'Surveyed the issue board and picked the next piece of work.' },
+	{ role: 'Implementer', body: 'Wrote the code and its tests for one scoped task.' },
 	{
 		role: 'Reviewers',
-		body: 'Security, architecture, quality, UI, comments, and test coverage. Only the ones a diff needs are called in.',
+		body: 'Security, architecture, quality, UI, comments, and test coverage. Only the ones a diff needed were called in.',
+	},
+	{
+		role: 'Verifier',
+		body: 'Checked every finding against the real code and dropped the false positives.',
+	},
+	{
+		role: 'Runners',
+		body: 'Lint, type checks, tests, and diff stats, reported raw so nothing was glossed over.',
+	},
+];
+
+const v2Stats = [
+	{ value: '23%', label: 'lower cost per issue', detail: '$35.63 down to $27.33' },
+	{ value: '39%', label: 'fewer uncached tokens', detail: '2.23M down to 1.36M' },
+	{ value: '37%', label: 'less active time', detail: '68 minutes down to 43' },
+	{ value: '71%', label: 'faster build', detail: '63 minutes down to 18' },
+];
+
+const reviewers = [
+	{
+		role: 'Reviewers',
+		body: 'Security, architecture, quality, UI, comments, and test coverage. Only the ones a change needs are called in.',
 	},
 	{
 		role: 'Verifier',
@@ -41,7 +70,11 @@ const team = [
 	},
 	{
 		role: 'Runners',
-		body: 'Lint, type checks, tests, and diff stats, reported raw so nothing is glossed over.',
+		body: 'Lint, type checks, and tests, reported raw so nothing is glossed over.',
+	},
+	{
+		role: 'Your profile',
+		body: 'One setup run records your stack, risk areas, and known non-issues, so each review knows your project.',
 	},
 ];
 ---
@@ -61,9 +94,9 @@ const team = [
 					{tool.name}
 				</h1>
 				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
-					An autonomous orchestrator for Claude Code. You hand it an issue or a sentence, walk away,
-					and come back to reviewed, tested, committed code with a written summary of what it did
-					and why.
+					Works your GitHub issues end to end in Claude Code. For each one it plans the change, pins
+					the behavior in tests, builds it, screenshots any UI change, updates the docs, and
+					commits. Then a bench of specialist reviewers checks the result.
 				</p>
 				<div class="mt-8 flex flex-wrap items-center gap-3">
 					<a
@@ -86,31 +119,105 @@ const team = [
 		</div>
 	</section>
 
-	<!-- Why an orchestrator -->
-	<section class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="why">
-		<h2 id="why" class="max-w-3xl text-2xl font-medium tracking-tight text-balance sm:text-3xl">
-			Why one agent struggles with big jobs
+	<!-- Version 1 -->
+	<section class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="v1">
+		<h2 id="v1" class="max-w-3xl text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+			Version 1: why one agent struggles with big jobs
 		</h2>
 		<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
 			An AI coding assistant can only hold so much in its head at once. On a small task that is
-			plenty. On a sprawling one it runs short of room and starts cutting corners. This animation
-			shows the difference a team lead makes. Switch between the plain and technical explanations,
-			or pick any scene.
+			plenty. On a sprawling one it runs short of room and starts cutting corners. So the first
+			orc-pack was built as a team lead: an orchestrator that kept its own context small and handed
+			each piece of work to a specialist with a fresh, focused window. This animation shows the
+			difference a team lead makes. Switch between the plain and technical explanations, or pick any
+			scene.
 		</p>
 		<EmbeddedPage
 			src="/embeds/orc-pack/one-agent-vs-a-team.html"
 			title="Animation: one AI agent versus an orchestrated team on the same coding job"
 			class="-mx-6 mt-10 rounded-none border-x-0 sm:mx-0 sm:rounded-lg sm:border-x"
 		/>
+		<div class="mt-16 grid gap-10 lg:grid-cols-[2fr_3fr]">
+			<div>
+				<h3 class="text-xl font-medium tracking-tight sm:text-2xl">Who was on the team</h3>
+				<p class="mt-4 text-fg-muted text-pretty">
+					Orc sized each task first, so a one-line copy fix got one reviewer while a new upload
+					handler woke the security reviewer. Review and fix looped until only nitpicks were left.
+					You could hand it an issue, walk away, and come back to one clear line:{' '}
+					<code class="font-mono text-fg">FINISHED</code> when the work landed, green and pushed, or{' '}
+					<code class="font-mono text-fg">NOT FINISHED</code> with exactly what a human needed to do
+					to unblock it.
+				</p>
+			</div>
+			<dl class="divide-y divide-border border-y border-border">
+				{v1Team.map((t) => (
+					<div class="grid gap-1 py-4 sm:grid-cols-[9rem_1fr] sm:gap-6">
+						<dt class="font-medium">{t.role}</dt>
+						<dd class="text-sm text-fg-muted text-pretty">{t.body}</dd>
+					</div>
+				))}
+			</dl>
+		</div>
+	</section>
+
+	<!-- Version 2 -->
+	<section class="border-t border-border" aria-labelledby="v2">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2
+				id="v2"
+				class="mt-3 max-w-3xl text-2xl font-medium tracking-tight text-balance sm:text-3xl"
+			>
+				Version 2: we measured it, and rebuilt it around one session
+			</h2>
+			<div class="mt-4 max-w-2xl space-y-4 text-fg-muted text-pretty">
+				<p>
+					The team worked, but it had a cost. Every builder and reviewer subagent started cold, so
+					each one re-read code and context the main session already held, and every task paid for
+					its own review panel and fix rounds. For a week we ran a leaner workflow side by side with
+					the old one: the session that already holds the context does the building, one issue at a
+					time, and the specialist review runs once at the end, in a fresh session.
+				</p>
+				<p>
+					The specialists didn&rsquo;t go away. They moved to where a fresh pair of eyes pays off:
+					review. Building stays with the session that knows the code. Measured per closed issue
+					across the three projects that used both versions, with every follow-up review and fix
+					included, version 2 came out cheaper and faster with the same review quality.
+				</p>
+			</div>
+			<dl class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{v2Stats.map((s) => (
+					<div class="flex flex-col rounded-lg border border-border bg-bg-soft p-6">
+						<dt class="order-2 mt-2 text-sm font-medium">{s.label}</dt>
+						<dd class="order-1 font-mono text-3xl font-medium tracking-tight">{s.value}</dd>
+						<dd class="order-3 mt-1 text-sm text-fg-muted">{s.detail}</dd>
+					</div>
+				))}
+			</dl>
+			<a
+				href={resultsChart.src}
+				class="mt-10 block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4"
+			>
+				<Image
+					src={resultsChart}
+					alt="Chart: per closed issue, 1.x against 2.0.0. Cost $35.63 against $27.33, 23% lower. Uncached tokens 2.23 million against 1.36 million, 39% fewer. Active time 68 against 43 minutes, 37% faster. Build time 63 against 18 minutes, 71% faster. First-review findings 0.14 Blockers and 7.0 Warnings against 0.12 and 5.6, on par."
+					width={1136}
+					class="h-auto w-full rounded-lg border border-border"
+				/>
+			</a>
+			<p class="mt-6 max-w-2xl text-sm text-fg-muted text-pretty">
+				The trial&rsquo;s one gap, commits that failed a repo&rsquo;s own checks, is closed in
+				2.0.0: orc now runs the format check, type check, and covering tests before every commit.
+			</p>
+		</div>
 	</section>
 
 	<!-- How you run it -->
 	<section class="border-t border-border" aria-labelledby="modes">
 		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
 			<h2 id="modes" class="text-2xl font-medium tracking-tight sm:text-3xl">
-				Three ways to run it
+				Ways to run it
 			</h2>
-			<ul class="mt-8 grid gap-4 md:grid-cols-3">
+			<ul class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
 				{modes.map((m) => (
 					<li class="flex flex-col rounded-lg border border-border bg-bg-soft p-6">
 						<code class="font-mono text-sm break-words text-fg">{m.command}</code>
@@ -120,37 +227,37 @@ const team = [
 				))}
 			</ul>
 			<p class="mt-6 max-w-2xl text-sm text-fg-muted text-pretty">
-				Every run ends with one clear line: <code class="font-mono text-fg">FINISHED</code> when the
-				work landed, green and pushed, or <code class="font-mono text-fg">NOT FINISHED</code> with
-				exactly what a human needs to do to unblock it.
+				When the batch is done, orc asks before it pushes, then closes each issue with a comment
+				saying where it landed. <code class="font-mono text-fg">/do</code> is the same skill under
+				another name.
 			</p>
 			<p class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
 				Want to watch a run without reading the transcript? Install{' '}
 				<a href="/tools/paceline/" class="text-fg underline underline-offset-4 hover:no-underline">
 					paceline
 				</a>
-				, and orc shows its progress as a bar in your Claude Code status line, one cell per task:{' '}
-				<code class="font-mono break-words text-fg">orc #42 ▰▰▰▰▱▱ t2 upload limit review 62%</code>
-				.
+				, and orc shows its progress as a bar in your Claude Code status line, one cell per issue:{' '}
+				<code class="font-mono break-words text-fg">orc ▰▰▰▰▱▱ #356 upload limit build 62%</code>.
 			</p>
 		</div>
 	</section>
 
-	<!-- The team -->
+	<!-- The review -->
 	<section class="border-t border-border" aria-labelledby="team">
 		<div class="mx-auto grid w-full max-w-page gap-10 px-6 py-16 sm:px-8 sm:py-20 lg:grid-cols-[2fr_3fr]">
 			<div>
 				<h2 id="team" class="text-2xl font-medium tracking-tight sm:text-3xl">
-					Who is on the team
+					Who reviews the work
 				</h2>
 				<p class="mt-4 text-fg-muted text-pretty">
-					Orc keeps its own context small and hands the real work to specialists. It sizes each task
-					first, so a one-line copy fix gets one reviewer while a new upload handler wakes the
-					security reviewer. Review and fix loop until only nitpicks are left.
+					Run <code class="font-mono text-fg">/orc-review</code> in a fresh session over what orc
+					committed. It sizes the review to the change, so a copy fix gets one reviewer while a new
+					upload handler wakes the security reviewer, and it ends with a clear verdict. Then{' '}
+					<code class="font-mono text-fg">/orc warnings and nits</code> fixes what it found.
 				</p>
 			</div>
 			<dl class="divide-y divide-border border-y border-border">
-				{team.map((t) => (
+				{reviewers.map((t) => (
 					<div class="grid gap-1 py-4 sm:grid-cols-[9rem_1fr] sm:gap-6">
 						<dt class="font-medium">{t.role}</dt>
 						<dd class="text-sm text-fg-muted text-pretty">{t.body}</dd>
