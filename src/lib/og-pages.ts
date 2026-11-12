@@ -54,8 +54,8 @@ export const OG_PAGES: Record<string, OgPageConfig> = {
 	},
 	insights: {
 		eyebrow: 'Insights',
-		title: 'Notes from the work.',
-		footnote: 'Studio updates · tooling · AI takes',
+		title: 'Thinking out loud.',
+		footnote: 'Essays · opinions · research',
 	},
 	media: {
 		eyebrow: 'Media',
