@@ -210,10 +210,11 @@ const Wrapper = href ? 'a' : 'div';
 		width: 2.25rem;
 		height: 2.25rem;
 		translate: 35% -35%;
-		border: 1px solid var(--color-border-strong);
+		/* Inverted against the site theme so the badge stands out on either capture. */
+		border: 1px solid var(--color-fg);
 		border-radius: 9999px;
-		background: var(--color-bg-elevated);
-		color: var(--color-fg);
+		background: var(--color-fg);
+		color: var(--color-bg);
 		box-shadow: 0 4px 14px rgb(0 0 0 / 0.25);
 		cursor: pointer;
 		transition:
@@ -230,7 +231,7 @@ const Wrapper = href ? 'a' : 'div';
 
 	.theme-flip__toggle:hover {
 		transform: rotate(-12deg) scale(1.06);
-		border-color: var(--color-fg-subtle);
+		border-color: var(--color-fg-muted);
 	}
 
 	.theme-flip__toggle:focus-visible {
