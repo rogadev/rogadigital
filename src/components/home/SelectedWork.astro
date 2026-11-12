@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import ArrowIcon from '../ArrowIcon.astro';
 import Section from '../Section.astro';
 import WorkCard from '../WorkCard.astro';
 
@@ -33,19 +34,7 @@ const work = (await getCollection('work'))
 				class="inline-flex min-h-11 items-center gap-2 font-mono text-xs tracking-[0.16em] text-fg-muted uppercase transition-colors hover:text-fg"
 			>
 				All work
-				<svg
-					width="12"
-					height="12"
-					viewBox="0 0 16 16"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="1.5"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					aria-hidden="true"
-				>
-					<path d="M3 8h10M9 4l4 4-4 4"></path>
-				</svg>
+				<ArrowIcon />
 			</a>
 		</div>
 	</div>

@@ -19,7 +19,6 @@ export interface ServicePage {
 export interface Service {
 	/** Anchor id on /services. */
 	id: string;
-	number: string;
 	title: string;
 	/** One line for lists. */
 	summary: string;
@@ -34,7 +33,6 @@ export interface Service {
 export const SERVICES: Service[] = [
 	{
 		id: 'internal-tools',
-		number: '01',
 		title: 'Internal tools & dashboards',
 		summary: 'Operations panels, reporting dashboards, and queue managers your team uses all day.',
 		lead: 'The interfaces your team uses every day: operations panels, reporting dashboards, queue managers, content tooling. Fast, dense, and kind to power users. Built to save time, not to look impressive in a pitch deck.',
@@ -66,7 +64,6 @@ export const SERVICES: Service[] = [
 	},
 	{
 		id: 'fullstack',
-		number: '02',
 		title: 'Custom software development',
 		summary: 'Production web applications, from first design through deploy and long-term support.',
 		lead: "Production web applications, front to back, from design through deploy. TypeScript by default, Svelte or Astro for the front end, Node or Python for the back end, Postgres for state. I pick tools because they suit the job, not because they're trending.",
@@ -98,7 +95,6 @@ export const SERVICES: Service[] = [
 	},
 	{
 		id: 'ai',
-		number: '03',
 		title: 'AI integration & consulting',
 		summary: 'LLM features, retrieval, and agents, with a clear read on where AI helps.',
 		lead: "LLM features, retrieval, agents, and evaluation. I help you work out what AI changes for your product, where it's worth building, and where it isn't. No vendor lock-in by default, and no AI features for the sake of having AI features.",
@@ -130,7 +126,6 @@ export const SERVICES: Service[] = [
 	},
 	{
 		id: 'integrations',
-		number: '04',
 		title: 'Integrations & workflow automation',
 		summary: 'APIs, data pipelines, and scheduled jobs that keep your systems in sync.',
 		lead: 'Third-party APIs, ETL pipelines, webhooks, scheduled jobs, and queues. The plumbing between systems that keeps a business running. Less visible than a new product, and often higher leverage.',
@@ -162,7 +157,6 @@ export const SERVICES: Service[] = [
 	},
 	{
 		id: 'forward-deployed',
-		number: '05',
 		title: 'Embedded discovery & build',
 		summary: 'I work inside the team that has the problem, then build the fix with them.',
 		lead: "I embed with the team that lives the problem, learn the work by being in it, and design the fix alongside the people who'll use it. Then I build it, front to back. Discovery happens inside your real operation instead of in a spec written at a distance, which is why what ships fits how the work gets done.",
@@ -182,7 +176,6 @@ export const SERVICES: Service[] = [
 	},
 	{
 		id: 'product',
-		number: '06',
 		title: 'Product strategy & scoping',
 		summary: 'Discovery, scope, and roadmaps: deciding what to build and what to leave out.',
 		lead: 'Most software fails before the first commit. Discovery, scope shaping, and roadmapping is where we work out what to build and, more importantly, what to leave out. I come in early, ask the uncomfortable questions, and write the brief we both work from.',
@@ -202,7 +195,6 @@ export const SERVICES: Service[] = [
 	},
 	{
 		id: 'architecture',
-		number: '07',
 		title: 'Systems architecture',
 		summary: 'Data models, API contracts, and access control that hold up for years.',
 		lead: 'Database design, API contracts, service boundaries, identity, role-based access control, and audit logging. The decisions made in the first two weeks of a project are the ones you live with for years, so they should be made deliberately.',
@@ -222,7 +214,6 @@ export const SERVICES: Service[] = [
 	},
 	{
 		id: 'maintenance',
-		number: '08',
 		title: 'Maintenance & ongoing partnership',
 		summary: 'Long-term support, audits, and gradual rebuilds of software you already own.',
 		lead: 'Long-term support of software you already own, whether I built it or someone else did. Audits, gradual rebuilds, and on-call for the things that matter. Many engagements start as a project and become this.',
@@ -241,7 +232,6 @@ export const SERVICES: Service[] = [
 	},
 	{
 		id: 'advisory',
-		number: '09',
 		title: 'Technical advisory',
 		summary: 'Architecture reviews, code reviews, and second opinions before a big decision.',
 		lead: "Architecture reviews, code review, hiring decisions, vendor evaluations, and second opinions. A senior pair of eyes when the stakes are high and you don't need a full engagement. You need a read.",

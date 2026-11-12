@@ -1,7 +1,9 @@
 ---
 /**
- * ServiceIcon: a 24px line icon for one service, keyed by the service `id`
- * in src/data/services.ts. Drawn in the same stroke style as the site's arrows.
+ * Renders a 20px line icon for one service, keyed by the service `id` in
+ * src/data/services.ts. Drawn in the same stroke style as the site's arrows.
+ *
+ * An `id` with no icon fails the build, so a new service can't ship without one.
  */
 interface Props {
 	id: string;
@@ -45,7 +47,8 @@ const PATHS: Record<string, string[]> = {
 	],
 };
 
-const paths = PATHS[id] ?? [];
+const paths = PATHS[id];
+if (!paths) throw new Error(`ServiceIcon: no icon for service "${id}"`);
 ---
 
 <svg

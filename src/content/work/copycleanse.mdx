@@ -8,7 +8,7 @@ heroImage: '../../assets/work/copycleanse/01-hero.png'
 heroImageDark: '../../assets/work/copycleanse/01-hero-dark.png'
 client: Roga Digital · CopyCleanse
 industry: Browser tool · AI text cleanup
-headline: A free, browser-only tool that strips the invisible AI fingerprints (hidden Unicode, leftover Markdown, smart quotes, em dashes, tracking links) out of any pasted text.
+headline: A free, browser-only tool that strips the invisible AI fingerprints (hidden Unicode, smart quotes, em dashes, tracking links) out of any pasted text.
 outcome: Paste, copy. The cleaned text is on your clipboard before you let go of Ctrl+V. No upload, no storage, no sign-up. The whole tool ships as static assets and runs in your tab.
 tags:
   - SvelteKit
@@ -29,7 +29,7 @@ import heroLight from '../../assets/work/copycleanse/01-hero.png';
 
 ## Context
 
-LLM-generated text comes with a quiet trail. Em-dashes where a writer would have used a comma. Curly quotes where an HTML form would have produced straight ones. Zero-width spaces and non-breaking spaces hidden between letters. Soft hyphens. Unicode ellipses where three periods would have done. Tracking URL parameters from the model's chat surface (`?utm_source=chatgpt`) glued onto the end of every link.
+LLM-generated text comes with a quiet trail. Em dashes where a writer would have used a comma. Curly quotes where an HTML form would have produced straight ones. Zero-width spaces and non-breaking spaces hidden between letters. Soft hyphens. Unicode ellipses where three periods would have done. Tracking URL parameters from the model's chat surface (`?utm_source=chatgpt`) glued onto the end of every link.
 
 None of it shows up visually. All of it shows up to anything that looks closely: a recruiter, a teacher, a copy editor, a CMS that strips invisibles, a search engine that hashes the bytes. The fingerprint isn't the prose; it's the bytes between the prose.
 
@@ -54,7 +54,7 @@ The rule list is the product. Everything CopyCleanse does in the current release
 
 - **Hidden whitespace**: zero-width spaces (U+200B), zero-width joiners and non-joiners, non-breaking spaces, and other invisible separators that survive a copy-paste.
 - **Smart quotes and curly apostrophes** → straight `"` and `'`.
-- **Em-dashes and en-dashes** (`—`, `–`) → regular hyphens. The most notorious AI tell, and the one most people are pattern-matching against without realising it.
+- **Em dashes and en dashes** (`—`, `–`) → regular hyphens. The most notorious AI tell, and the one most people are pattern-matching against without realising it.
 - **Unicode ellipses** (`…`) → three plain periods.
 - **Soft hyphens** and other invisible formatting characters that mess with CMS imports and search.
 - **Leftover Markdown**: bold and italic markers, headings, and link syntax that chat apps leave behind. A "Keep Markdown formatting" option leaves it in for Markdown editors, and "Copy with formatting" pastes real bold, headings, lists, and tables into Google Docs, Word, or email.

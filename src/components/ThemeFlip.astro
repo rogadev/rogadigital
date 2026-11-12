@@ -3,8 +3,8 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 /**
- * ThemeFlip: a light and a dark capture of the same screen, stacked like two
- * cards. The capture for the site's current theme sits in front; the other
+ * Stacks a light and a dark capture of the same screen like two cards. The
+ * capture for the site's current theme sits in front; the other
  * peeks out behind its top-right corner. A sun-and-moon badge on that corner
  * shuffles them, so a visitor can see the app supports both themes.
  *
@@ -48,7 +48,8 @@ const Wrapper = href ? 'a' : 'div';
 		<span class="theme-flip__card theme-flip__card--dark" data-card="dark">
 			<Image src={dark} alt={alt} {widths} {sizes} loading={loading} class="block h-auto w-full" />
 		</span>
-		<span class="theme-flip__card theme-flip__card--light" data-card="light">
+		{/* Dark leads by default, so the light card starts hidden from assistive tech; the script re-syncs both. */}
+		<span class="theme-flip__card theme-flip__card--light" data-card="light" aria-hidden="true">
 			<Image src={light} alt={alt} {widths} {sizes} loading={loading} class="block h-auto w-full" />
 		</span>
 	</Wrapper>
@@ -171,26 +172,18 @@ const Wrapper = href ? 'a' : 'div';
 	}
 	.theme-flip__card--light,
 	:global(html.light) .theme-flip:not([data-front]) .theme-flip__card--dark,
-	.theme-flip[data-front='light'] .theme-flip__card--dark {
+	.theme-flip[data-front='light'] .theme-flip__card--dark,
+	.theme-flip[data-front='dark'] .theme-flip__card--light {
 		z-index: 1;
 		transform: translate(var(--peek), calc(var(--peek) * -1)) scale(0.97);
 		filter: brightness(0.75) saturate(0.9);
 	}
 	:global(html.light) .theme-flip:not([data-front]) .theme-flip__card--light,
-	.theme-flip[data-front='light'] .theme-flip__card--light {
-		z-index: 2;
-		transform: none;
-		filter: none;
-	}
+	.theme-flip[data-front='light'] .theme-flip__card--light,
 	.theme-flip[data-front='dark'] .theme-flip__card--dark {
 		z-index: 2;
 		transform: none;
 		filter: none;
-	}
-	.theme-flip[data-front='dark'] .theme-flip__card--light {
-		z-index: 1;
-		transform: translate(var(--peek), calc(var(--peek) * -1)) scale(0.97);
-		filter: brightness(0.75) saturate(0.9);
 	}
 
 	/* A hint on hover: the back card slides out a little further. */
@@ -215,7 +208,6 @@ const Wrapper = href ? 'a' : 'div';
 		border-radius: 9999px;
 		background: var(--color-fg);
 		color: var(--color-bg);
-		box-shadow: 0 4px 14px rgb(0 0 0 / 0.25);
 		cursor: pointer;
 		transition:
 			transform 200ms ease,

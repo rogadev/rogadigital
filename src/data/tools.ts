@@ -7,7 +7,8 @@
 import type { ImageMetadata } from 'astro';
 import copyCleanseShot from '../assets/work/copycleanse/01-hero.png';
 import copyCleanseShotDark from '../assets/work/copycleanse/01-hero-dark.png';
-import blobbiesShot from '../assets/tools/blobbies.svg';
+import blobbiesShot from '../assets/tools/blobbies.png';
+import blobbiesMotion from '../assets/tools/blobbies.svg';
 import campcastShot from '../assets/tools/campcast.png';
 import converterShot from '../assets/tools/converter.png';
 import glanceShot from '../assets/tools/glance/four.png';
@@ -40,6 +41,11 @@ export interface Tool {
 	image?: ImageMetadata;
 	/** The dark capture, for a tool that has both themes. The card shows the one matching the site theme. */
 	imageDark?: ImageMetadata;
+	/**
+	 * An animated version of `image`. The card plays it only while hovered, and only for
+	 * visitors who allow motion, so nothing on the page moves on its own.
+	 */
+	imageMotion?: ImageMetadata;
 	/** True while the tool is unreleased: no public repository or download yet. */
 	unreleased?: boolean;
 }
@@ -86,6 +92,7 @@ export const TOOLS: Tool[] = [
 		description:
 			'Turns a pane into a lava lamp. A blob rises while Claude works and buds off a smaller one for every subagent, so you can see how much is running without reading the stream.',
 		image: blobbiesShot,
+		imageMotion: blobbiesMotion,
 		unreleased: true,
 	},
 	{

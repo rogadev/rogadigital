@@ -3,7 +3,11 @@ import ArrowIcon from '../components/ArrowIcon.astro';
 import Section from '../components/Section.astro';
 import { SITE_LOCATION, SOCIAL } from '../consts';
 import Base from '../layouts/Base.astro';
+import { demoPage, demoSite, publicUrl } from '../lib/demos';
 import { personSchema } from '../lib/schema';
+
+const dispatch = demoSite('dispatch');
+const dispatchDemo = publicUrl(dispatch, demoPage(dispatch, 'dispatch-board'));
 
 const jsonLd = personSchema(Astro.site, 'Lead Full-Stack Product Developer');
 
@@ -90,7 +94,7 @@ const experience = [
 			"Awarded the follow-on contract for Summit, overhauling TELUS's training, mentorship, and credential-certification system from the ground up. Launched summer 2026.",
 			'Forward-deployed lead product developer for CarEvo since 2023 — built and maintain the multi-lot used-vehicle operations platform that runs their vehicles, vendors, lots, and deliveries.',
 			'Designed and shipped LLM-backed features in production (retrieval, structured output, evaluation pipelines) for client tools.',
-			'Building Roga Dispatch, dispatch, driver, and billing software for medical and assisted-transport companies, grown from a 2023 driver app.',
+			'Building Roga Dispatch: dispatch, driver, and billing software for medical and assisted-transport companies, grown from a 2023 driver app.',
 			'Publish open-source tooling for Claude Code, including orc-pack (an autonomous build-and-review orchestrator), paceline, and glance.',
 		],
 	},
@@ -166,7 +170,7 @@ const projects = [
 		tech: ['SvelteKit', 'Svelte 5', 'Neon Postgres', 'Drizzle'],
 		links: [
 			{ label: 'Case study', url: '/work/roga-dispatch/' },
-			{ label: 'Demo', url: 'https://trips.roga.dev/demo' },
+			{ label: 'Demo', url: dispatchDemo },
 		],
 	},
 ];
