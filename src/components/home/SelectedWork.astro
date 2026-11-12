@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import ArrowIcon from '../ArrowIcon.astro';
 import Section from '../Section.astro';
 import WorkCard from '../WorkCard.astro';
 
@@ -13,38 +14,27 @@ const work = (await getCollection('work'))
 
 <Section
 	id="work"
-	eyebrow="Selected work"
+	wide
 	heading="Built to be used every day."
-	dek="Software that businesses depend on. I design it, build it, ship it, and maintain it after launch."
+	dek="Software that businesses depend on. I design it, build it, ship it and maintain it after launch."
 >
 	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 		<ul class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2" role="list">
+			{/* In the single-column layout, a rule between cards marks where one project ends. */}
 			{work.map((w) => (
-				<li>
+				<li class="max-md:not-first:border-t max-md:not-first:border-border max-md:not-first:pt-12">
 					<WorkCard entry={w} />
 				</li>
 			))}
 		</ul>
 
-		<div class="mt-12">
+		<div class="mt-12 flex justify-end">
 			<a
 				href="/work/"
 				class="inline-flex min-h-11 items-center gap-2 font-mono text-xs tracking-[0.16em] text-fg-muted uppercase transition-colors hover:text-fg"
 			>
 				All work
-				<svg
-					width="12"
-					height="12"
-					viewBox="0 0 16 16"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="1.5"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					aria-hidden="true"
-				>
-					<path d="M3 8h10M9 4l4 4-4 4"></path>
-				</svg>
+				<ArrowIcon />
 			</a>
 		</div>
 	</div>

@@ -10,7 +10,7 @@ import {
 	transformerMetaHighlight,
 } from '@shikijs/transformers';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import demoSnapshots from './src/integrations/demo-snapshots';
@@ -49,9 +49,55 @@ function insightLastmods() {
 
 const LASTMODS = insightLastmods();
 
+// Unicode range of Fontsource's latin subset, the only one the site's copy needs.
+const LATIN =
+	'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';
+
+/**
+ * A variable Geist family served from the Fontsource package files.
+ *
+ * Astro preloads these and generates a metric-matched fallback face, so text
+ * keeps its line breaks when the web font replaces the system font on load.
+ *
+ * @param {string} name The `font-family` name.
+ * @param {string} cssVariable The CSS variable the family is exposed on.
+ * @param {string} file The Fontsource file prefix, such as `geist/files/geist`.
+ * @param {string[]} fallbacks Fallback families; the last generic one is metric-matched.
+ */
+function geistFamily(name, cssVariable, file, fallbacks) {
+	const variant = (/** @type {string} */ subset, /** @type {string} */ range) => ({
+		src: /** @type {[string]} */ ([`@fontsource-variable/${file}-${subset}-wght-normal.woff2`]),
+		weight: '100 900',
+		style: /** @type {const} */ ('normal'),
+		unicodeRange: /** @type {[string]} */ ([range]),
+	});
+	return {
+		provider: fontProviders.local(),
+		name,
+		cssVariable,
+		fallbacks,
+		options: {
+			variants: /** @type {[ReturnType<typeof variant>]} */ ([variant('latin', LATIN)]),
+		},
+	};
+}
+
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://rogadigital.com',
+	fonts: [
+		geistFamily('Geist Variable', '--font-geist', 'geist/files/geist', [
+			'ui-sans-serif',
+			'system-ui',
+			'sans-serif',
+		]),
+		geistFamily('Geist Mono Variable', '--font-geist-mono', 'geist-mono/files/geist-mono', [
+			'ui-monospace',
+			'SFMono-Regular',
+			'Menlo',
+			'monospace',
+		]),
+	],
 	integrations: [
 		mdx(),
 		sitemap({

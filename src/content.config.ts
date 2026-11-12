@@ -40,6 +40,8 @@ const work = defineCollection({
 			/** Dark-theme capture of `heroImage`, shown when the site is in dark mode. */
 			heroImageDark: z.optional(image()),
 			liveUrl: z.url().optional(),
+			/** Public demo with sample data, for projects whose live app needs a login. */
+			demoUrl: z.url().optional(),
 			repoUrl: z.url().optional(),
 			highlight: z.string().optional(),
 		}),

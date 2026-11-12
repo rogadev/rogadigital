@@ -58,9 +58,9 @@ const { src, title, initialHeight = 1400, class: className = '' } = Astro.props;
 html, body { overflow: hidden; }
 body { background: transparent; }
 :root {
-	--display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-	--body: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-	--mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+	--display: var(--site-sans);
+	--body: var(--site-sans);
+	--mono: var(--site-mono);
 }
 :root[data-theme='light'] {
 	--bg: #fafafa; --surface: #ffffff; --surface-2: #f4f4f5;
@@ -126,7 +126,10 @@ h1, h2 { font-weight: 600; }
 		iframe.dataset.attached = 'true';
 
 		const style = doc.createElement('style');
-		style.textContent = `${fontFaces()}\n${EMBED_CSS}`;
+		// Astro gives the Geist families hashed names, so pass the site's resolved stacks through.
+		const site = getComputedStyle(document.documentElement);
+		const stacks = `:root { --site-sans: ${site.getPropertyValue('--font-geist')}; --site-mono: ${site.getPropertyValue('--font-geist-mono')}; }`;
+		style.textContent = `${fontFaces()}\n${stacks}\n${EMBED_CSS}`;
 		// The embed keeps its own stylesheet in <body>; appending after it lets
 		// these rules win at equal specificity.
 		doc.body.append(style);

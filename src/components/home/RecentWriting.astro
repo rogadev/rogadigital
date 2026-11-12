@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import ArrowIcon from '../ArrowIcon.astro';
 import Section from '../Section.astro';
 
 type PostEntry = Awaited<ReturnType<typeof getCollection<'insights'>>>[number];
@@ -17,9 +18,8 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 
 <Section
 	id="insights"
-	eyebrow="Insights"
-	heading="Notes from the work."
-	dek="Opinions on tooling, where AI is headed, and what I learn building and running software for clients."
+	heading="Thinking out loud."
+	dek="Essays, opinions, and the odd research paper on software, AI, and whatever else I can't stop thinking about."
 >
 	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 		<ul class="divide-y divide-border border-y border-border" role="list">
@@ -51,25 +51,13 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 			)}
 		</ul>
 
-		<div class="mt-10">
+		<div class="mt-10 flex justify-end">
 			<a
 				href="/insights/"
 				class="inline-flex min-h-11 items-center gap-2 font-mono text-xs tracking-[0.16em] text-fg-muted uppercase transition-colors hover:text-fg"
 			>
 				All insights
-				<svg
-					width="12"
-					height="12"
-					viewBox="0 0 16 16"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="1.5"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					aria-hidden="true"
-				>
-					<path d="M3 8h10M9 4l4 4-4 4"></path>
-				</svg>
+				<ArrowIcon />
 			</a>
 		</div>
 	</div>

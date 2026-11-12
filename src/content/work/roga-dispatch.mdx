@@ -2,14 +2,14 @@
 id: RD-008
 name: Roga Dispatch
 metric:
-  value: Multi-tenant
-  label: one plan, unlimited trips and clients
+  value: Office and road
+  label: dispatch board and driver app in one system
 heroImage: '../../assets/work/roga-dispatch/01-board.png'
 heroImageDark: '../../assets/work/roga-dispatch/01-board-dark.png'
 client: Roga Digital · Roga Dispatch
 industry: Medical & assisted transport
-headline: Dispatch, driver, and billing software for medical and assisted-transport companies — one calm system for the whole office.
-outcome: Roga Dispatch replaces the whiteboard, the spreadsheet, and the phone tree with a live dispatch board, a driver app built for the road, automatic driver standing, and payor billing — sold to transport companies as one plan with unlimited trips and clients.
+headline: Dispatch, driver, and billing software for medical and assisted-transport companies. One calm system for the whole office.
+outcome: Roga Dispatch replaces the whiteboard, the spreadsheet, and the phone tree with a live dispatch board, a driver app built for the road, automatic driver standing, and payor billing.
 tags:
   - SvelteKit
   - Svelte 5
@@ -17,13 +17,12 @@ tags:
   - Neon Postgres
   - Drizzle
   - Vercel
-  - Multi-tenant
-period: 2025 — Present
+period: 2023 — Present
 role: Product, design & development
-status: live
-featured: false
+status: in-development
+featured: true
 order: 0
-liveUrl: https://trips.roga.dev
+demoUrl: https://trips.roga.dev/demo
 highlight: The previews on this page are the real app, rendered with sample data. The live demo is a working transport company you can run for yourself.
 ---
 
@@ -38,11 +37,11 @@ export const driver = demoPage(site, 'dispatch-driver');
 
 In medical and assisted transport, a late ride isn't an inconvenience. It's a missed dialysis appointment, or someone stranded at a clinic door. Most small transport offices still hold the day together with a whiteboard, a spreadsheet, a group chat, and one dispatcher's memory. Then billing week comes, and someone rebuilds every trip by hand to invoice each payor.
 
-Roga Dispatch started in 2025 as a trip tracker for a single local medical-transport company. Running it day to day showed which parts every transport office needs, so we rebuilt it in 2026 as a multi-tenant product that any transport company can sign up for and run.
+Roga Dispatch started in 2023 as a driver app, designed and built for a medical-transport company in Nanaimo, BC: a way for its drivers to track their trips and organize their day. It has since grown into a full system for the whole office, with dispatch, billing, and driver standing built around the driver app, and a ground-up redesign is underway.
 
 ## The product
 
-This is the real application, rendered with sample data: the same components and layout dispatchers and drivers use every day. Select a preview to open the live demo in a new tab.
+This is the real application, rendered with sample data: the same components and layout dispatchers and drivers work in. Select a preview to open the live demo in a new tab.
 
 <DemoFrame
 	src={demoUrl(site, board)}
@@ -96,10 +95,10 @@ The [live demo](https://trips.roga.dev/demo) is a working transport company, alr
 
 The previews above come from dedicated `/preview/*` routes on trips.roga.dev: the production UI backed by frozen sample data, with headers that let this site embed it. If trips.roga.dev is ever unreachable, the previews fall back to a cached snapshot captured at build time.
 
-## Outcome
+## Where it stands
 
-- **Live and selling** at [trips.roga.dev](https://trips.roga.dev), with one plan that includes everything: unlimited trips and clients, the board, the driver app, standing, and billing.
-- **Grown from real operations.** The product started as a tool for one transport office and grew from what that office needed every day.
-- **Built and run end to end by us:** product, design, development, hosting, and support from one place.
+- **In active development.** The redesign is underway, and the live demo shows the current build.
+- **Grown from a real operation.** The first version was the driver app for a transport company in Nanaimo; the dispatch board, billing, and standing grew around it.
+- **Built in-house, end to end:** product, design, development, hosting, and support from one place.
 
 Run a transport company and want to see it with your own trips? [Ask for a walkthrough](/contact/).

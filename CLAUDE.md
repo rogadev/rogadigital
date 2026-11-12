@@ -32,7 +32,7 @@ The `/support` contact form is the one server-side piece: a Vercel function at `
 - **Interactivity** — Svelte 5 islands via `@astrojs/svelte`. `svelte.config.js` uses `vitePreprocess`. Default to `.astro` components; reach for `.svelte` only when state, events, or browser APIs are actually required.
 - **Styling** — Tailwind CSS v4 via `@tailwindcss/vite`. **No `@astrojs/tailwind`, no `tailwind.config.js`, no PostCSS config** — design tokens live in `src/styles/global.css` using the v4 `@theme` directive. Stylesheet is imported once in `src/components/BaseHead.astro`.
 - **Content** — Astro content collections (`src/content.config.ts`). Prefer MDX for posts that embed components; plain `.md` is fine otherwise. Site-wide constants (title, tagline, description, social, contact, roles) live in `src/consts.ts` — import from there rather than hard-coding.
-- **Fonts** — in flux during Phase 1. `@fontsource-variable/geist` and `@fontsource-variable/geist-mono` are installed in deps but not yet imported; font wiring is part of the design-system phase.
+- **Fonts** — Geist and Geist Mono are registered in `astro.config.mjs` `fonts` (the local provider over the `@fontsource-variable` package files, latin subset only) and emitted with preloads by `<Font>` in `src/components/BaseHead.astro`. `src/styles/global.css` maps the font tokens to the generated `--font-geist` / `--font-geist-mono` variables, which `EmbeddedPage.astro` also reads. Don't `@import` the Fontsource CSS.
 
 ## Page composition
 

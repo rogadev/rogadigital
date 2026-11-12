@@ -1,11 +1,12 @@
 ---
+import ArrowIcon from '../../components/ArrowIcon.astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 
 const title = 'Insights · Roga Digital';
 const description =
-	'Writing from Roga Digital: opinions on tooling and technology, takes on where AI is headed, industry shifts, and notes from building software for businesses.';
+	'Writing from Ryan Roga: essays, opinions, and research on software, AI, and the wider tech world.';
 
 const posts = (await getCollection('insights', ({ data }) => !data.draft)).toSorted(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -27,19 +28,19 @@ const meta = 'font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase';
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<div class="pt-16 pb-12 sm:pt-20 sm:pb-14">
-				<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Insights</p>
-				<h1 class="mt-6 text-3xl font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl">
-					Notes from the work.
+				<h1 class="text-3xl font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl">
+					Thinking out loud.
 				</h1>
 				<p class="mt-5 max-w-2xl text-lg text-fg-muted text-pretty">
-					Opinions on tooling and technology, where AI is headed, and what I learn building and
-					running software for clients.
+					Essays, opinions, and the odd research paper on software, AI, and whatever else I
+					can&rsquo;t stop thinking about.
 				</p>
 				<a
 					href="/rss.xml"
-					class="mt-2 inline-flex min-h-11 items-center font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase underline-offset-4 hover:text-fg hover:underline"
+					class="mt-2 inline-flex gap-1.5 min-h-11 items-center font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase underline-offset-4 hover:text-fg hover:underline"
 				>
-					Subscribe by RSS →
+					Subscribe by RSS
+					<ArrowIcon />
 				</a>
 			</div>
 		</div>
@@ -78,8 +79,9 @@ const meta = 'font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase';
 								{latest.data.title}
 							</h2>
 							<p class="mt-4 text-fg-muted text-pretty">{latest.data.description}</p>
-							<p class="mt-4 inline-flex min-h-11 items-center font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors group-hover:text-fg">
-								Read the post →
+							<p class="mt-4 inline-flex gap-1.5 min-h-11 items-center font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors group-hover:text-fg">
+								Read the post
+								<ArrowIcon />
 							</p>
 						</div>
 					</a>

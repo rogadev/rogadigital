@@ -1,0 +1,69 @@
+---
+/**
+ * Renders a 20px line icon for one service, keyed by the service `id` in
+ * src/data/services.ts. Drawn in the same stroke style as the site's arrows.
+ *
+ * An `id` with no icon fails the build, so a new service can't ship without one.
+ */
+interface Props {
+	id: string;
+	class?: string;
+}
+
+const { id, class: className = '' } = Astro.props;
+
+const PATHS: Record<string, string[]> = {
+	// A dashboard layout.
+	'internal-tools': ['M3 3h7v9H3z', 'M14 3h7v5h-7z', 'M14 12h7v9h-7z', 'M3 16h7v5H3z'],
+	// Code brackets.
+	fullstack: ['M16 18l6-6-6-6', 'M8 6l-6 6 6 6'],
+	// Sparkles.
+	ai: ['M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z', 'M19 16v5', 'M16.5 18.5h5'],
+	// Two arrows passing data back and forth.
+	integrations: [
+		'M17 2l4 4-4 4',
+		'M3 11V9a3 3 0 0 1 3-3h15',
+		'M7 22l-4-4 4-4',
+		'M21 13v2a3 3 0 0 1-3 3H3',
+	],
+	// People working together.
+	'forward-deployed': [
+		'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+		'M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1',
+		'M16 3.1a4 4 0 0 1 0 7.8',
+		'M22 21v-1a6 6 0 0 0-4-5.6',
+	],
+	// A compass.
+	product: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z', 'M16 8l-2 6-6 2 2-6z'],
+	// Stacked layers.
+	architecture: ['M12 2l10 5-10 5L2 7z', 'M2 12l10 5 10-5', 'M2 17l10 5 10-5'],
+	// A shield with a check mark.
+	maintenance: ['M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', 'M9 12l2 2 4-4'],
+	// A light bulb.
+	advisory: [
+		'M9 18h6',
+		'M10 22h4',
+		'M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z',
+	],
+};
+
+const paths = PATHS[id];
+if (!paths) throw new Error(`ServiceIcon: no icon for service "${id}"`);
+---
+
+<svg
+	width="20"
+	height="20"
+	viewBox="0 0 24 24"
+	fill="none"
+	stroke="currentColor"
+	stroke-width="1.5"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	aria-hidden="true"
+	class={className}
+>
+	{paths.map((d) => (
+		<path d={d} />
+	))}
+</svg>

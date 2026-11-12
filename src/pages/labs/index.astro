@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '../../components/ArrowIcon.astro';
 import Base from '../../layouts/Base.astro';
 import { LAB_APPS } from '../../data/apps';
 
@@ -55,8 +56,8 @@ const sections = [
 							<span class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
 								{s.eyebrow}
 							</span>
-							<span class="text-fg-subtle transition-colors group-hover:text-fg" aria-hidden="true">
-								→
+							<span class="flex h-[1lh] items-center text-fg-subtle transition-colors group-hover:text-fg">
+								<ArrowIcon size={14} />
 							</span>
 						</div>
 						<h2 class="mt-4 text-xl font-medium tracking-tight text-fg">{s.title}</h2>

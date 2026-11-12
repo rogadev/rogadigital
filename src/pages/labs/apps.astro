@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '../../components/ArrowIcon.astro';
 import Base from '../../layouts/Base.astro';
 import { LAB_APPS } from '../../data/apps';
 
@@ -19,7 +20,7 @@ const domain = (url: string) => url.replace(/^https?:\/\//, '').replace(/\/$/, '
 					href="/labs/"
 					class="inline-flex items-center gap-1.5 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase transition-colors hover:text-fg"
 				>
-					<span aria-hidden="true">←</span> Labs
+					<ArrowIcon direction="left" /> Labs
 				</a>
 				<h1 class="mt-6 max-w-3xl text-4xl font-medium tracking-tight text-balance sm:text-5xl">
 					Things I’ve built

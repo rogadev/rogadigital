@@ -1,7 +1,8 @@
 ---
-import { Image } from 'astro:assets';
 import type { Tool } from '../../data/tools';
 import { TOOLS } from '../../data/tools';
+import { Image } from 'astro:assets';
+import ThemedImage from '../../components/ThemedImage.astro';
 import Base from '../../layouts/Base.astro';
 
 const title = 'Tools: Claude Code mods and free web tools · Roga Digital';
@@ -48,8 +49,7 @@ function footnote(t: Tool): string {
 	<section class="border-b border-border">
 		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 			<div class="pt-16 pb-12 sm:pt-20 sm:pb-14">
-				<p class="font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">Tools</p>
-				<h1 class="mt-6 max-w-3xl text-3xl font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl">
+				<h1 class="max-w-3xl text-3xl font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl">
 					Built for my own work, shared for yours.
 				</h1>
 				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
@@ -95,10 +95,11 @@ function footnote(t: Tool): string {
 									class="group flex h-full flex-col"
 								>
 									{/* Every card gets the 16:10 frame, so text lines up across a row whether or not the tool has a screenshot. */}
-									<div class="mb-5 overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors group-hover:border-border-strong">
+									<div class="relative mb-5 overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors group-hover:border-border-strong">
 										{t.image ? (
-											<Image
+											<ThemedImage
 												src={t.image}
+												darkSrc={t.imageDark}
 												alt=""
 												widths={[400, 800]}
 												sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
@@ -113,6 +114,14 @@ function footnote(t: Tool): string {
 													{t.unreleased ? 'Not released yet' : 'Screenshot pending'}
 												</span>
 											</div>
+										)}
+										{t.imageMotion && (
+											<Image
+												src={t.imageMotion}
+												alt=""
+												loading="lazy"
+												class="absolute inset-0 hidden h-full w-full object-cover object-left-top motion-safe:group-hover:block"
+											/>
 										)}
 									</div>
 									<p class="font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">

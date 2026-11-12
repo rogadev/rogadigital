@@ -1,8 +1,13 @@
 ---
+import ArrowIcon from '../components/ArrowIcon.astro';
 import Section from '../components/Section.astro';
 import { SITE_LOCATION, SOCIAL } from '../consts';
 import Base from '../layouts/Base.astro';
+import { demoPage, demoSite, publicUrl } from '../lib/demos';
 import { personSchema } from '../lib/schema';
+
+const dispatch = demoSite('dispatch');
+const dispatchDemo = publicUrl(dispatch, demoPage(dispatch, 'dispatch-board'));
 
 const jsonLd = personSchema(Astro.site, 'Lead Full-Stack Product Developer');
 
@@ -86,10 +91,10 @@ const experience = [
 		bullets: [
 			'Lead product developer on TELUS TechCentral — bilingual operations platform launched April 2026, now with 2,500+ active users and hundreds of daily actives.',
 			'Lead developer on TC Tools — an AI-assisted pre-publish and content-ops toolkit for the editors behind TechCentral.',
-			"Awarded the follow-on contract for Summit — overhauling TELUS's training, mentorship, and credential-certification system from the ground up. Launching 2027.",
+			"Awarded the follow-on contract for Summit, overhauling TELUS's training, mentorship, and credential-certification system from the ground up. Launched summer 2026.",
 			'Forward-deployed lead product developer for CarEvo since 2023 — built and maintain the multi-lot used-vehicle operations platform that runs their vehicles, vendors, lots, and deliveries.',
 			'Designed and shipped LLM-backed features in production (retrieval, structured output, evaluation pipelines) for client tools.',
-			'Built and run Roga Dispatch, a multi-tenant dispatch and billing product for medical and assisted-transport companies.',
+			'Building Roga Dispatch: dispatch, driver, and billing software for medical and assisted-transport companies, grown from a 2023 driver app.',
 			'Publish open-source tooling for Claude Code, including orc-pack (an autonomous build-and-review orchestrator), paceline, and glance.',
 		],
 	},
@@ -137,7 +142,7 @@ const projects = [
 	{
 		name: 'Summit · TELUS',
 		summary:
-			'Credentialing and exam platform for TELUS technicians and partner contractors, replacing two legacy systems. In development, launching 2027.',
+			'Credentialing and exam platform for TELUS technicians and partner contractors, replacing two legacy systems. Launched summer 2026.',
 		tech: ['Certification', 'Exam platform', 'FuelIx (AI)', 'Kong', 'Workforce learning'],
 		links: [{ label: 'Case study', url: '/work/telus-summit/' }],
 	},
@@ -161,11 +166,11 @@ const projects = [
 	{
 		name: 'Roga Dispatch',
 		summary:
-			'Multi-tenant dispatch, driver, and billing software for medical and assisted-transport companies. My own product, in use since 2025.',
-		tech: ['SvelteKit', 'Svelte 5', 'Neon Postgres', 'Drizzle', 'Multi-tenant'],
+			'Dispatch, driver, and billing software for medical and assisted-transport companies. My own product: first built in 2023 as a driver app, now in a full redesign.',
+		tech: ['SvelteKit', 'Svelte 5', 'Neon Postgres', 'Drizzle'],
 		links: [
 			{ label: 'Case study', url: '/work/roga-dispatch/' },
-			{ label: 'Live', url: 'https://trips.roga.dev' },
+			{ label: 'Demo', url: dispatchDemo },
 		],
 	},
 ];
@@ -331,9 +336,10 @@ const education = {
 											href={l.url}
 											target={l.url.startsWith('/') ? undefined : '_blank'}
 											rel={l.url.startsWith('/') ? undefined : 'noopener noreferrer'}
-											class="inline-flex min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+											class="inline-flex gap-1.5 min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
 										>
-											{l.label} →
+											{l.label}
+											<ArrowIcon />
 											{!l.url.startsWith('/') && <span class="sr-only"> (opens in a new tab)</span>}
 										</a>
 									</li>

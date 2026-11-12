@@ -8,7 +8,7 @@ heroImage: '../../assets/work/telus-techcentral/dashboard.png'
 client: TELUS · TechCentral
 industry: Telecommunications · Field operations
 headline: Bilingual operations and reference platform for 2,500+ TELUS field technicians and contractors across Western Canada.
-outcome: Replaced a patchwork of intranet pages, shared drives, and Slack threads with a single role-aware, EN ↔ FR platform. Launched April 2026 — now serving 2,500+ active users with hundreds daily.
+outcome: Replaced a patchwork of intranet pages, shared drives, and Slack threads with a single role-aware, EN ↔ FR platform. Launched April 2026. Now serving 2,500+ active users with hundreds daily.
 tags:
   - Next.js
   - dotCMS
@@ -18,7 +18,7 @@ tags:
 period: 2024 — Present
 role: Lead architect & full‑stack developer
 status: live
-featured: true
+featured: false
 order: 3
 ---
 
@@ -27,36 +27,36 @@ import dashboard from '../../assets/work/telus-techcentral/dashboard.png';
 
 <Screenshot
 	src={dashboard}
-	alt="TechCentral dashboard — bilingual operations and reference platform for TELUS field technicians, with role-aware navigation, search, and content surfaces."
-	caption="TechCentral — the daily-driver dashboard for field technicians and contractors."
+	alt="TechCentral dashboard: bilingual operations and reference platform for TELUS field technicians, with role-aware navigation, search, and content surfaces."
+	caption="TechCentral, the daily-driver dashboard for field technicians and contractors."
 />
 
 ## Context
 
-TELUS's field-services workforce — over 2,500 technicians and contractors across Western Canada — runs on a constant flow of operational information: dispatch, equipment, training, certifications, internal procedures, and the small daily details that make a regional service operation work. For years, that information lived everywhere. Bookmarks. Shared drives. Half-deprecated intranet pages. Internal Slack threads that became canonical because no one had a better place for them.
+TELUS's field-services workforce, over 2,500 technicians and contractors across Western Canada, runs on a constant flow of operational information: dispatch, equipment, training, certifications, internal procedures, and the small daily details that make a regional service operation work. For years, that information lived everywhere. Bookmarks. Shared drives. Half-deprecated intranet pages. Internal Slack threads that became canonical because no one had a better place for them.
 
-The cost wasn't dramatic on any one day. It was a slow tax on every shift — minutes lost looking for the right form, the right contact, the right version of a procedure. Multiplied across 2,500 people and a few hundred working days, that tax adds up to a real number.
+The cost wasn't dramatic on any one day. It was a slow tax on every shift: minutes lost looking for the right form, the right contact, the right version of a procedure. Multiplied across 2,500 people and a few hundred working days, that tax adds up to a real number.
 
 ## The brief
 
 The brief from TELUS was simple to state and demanding to execute:
 
-- **One platform** that field technicians, contractors, content creators, and operations staff each see appropriately — without parallel admin tools.
+- **One platform** that field technicians, contractors, content creators, and operations staff each see appropriately, without parallel admin tools.
 - **Bilingual by default.** English (Canada) and French (Canada) as first-class languages, not a translation afterthought.
-- **Role-aware access** with a clear permissions model — the right people see the right things, content authoring stays in the hands of the people who own the content.
+- **Role-aware access** with a clear permissions model: the right people see the right things; content authoring stays in the hands of the people who own the content.
 - **A foundation that could grow** into adjacent surfaces (training, certification, content tooling) without a rebuild.
 
 The success bar was not "ship a CMS." It was: _replace the patchwork outright, on day one, without giving anyone a reason to fall back to the old bookmarks._
 
 ## Discovery
 
-Before any code, the work was understanding the workflow that already existed — because the patchwork wasn't lazy, it was adaptive. People had built it because the official tools didn't fit the job.
+Before any code, the work was understanding the workflow that already existed, because the patchwork wasn't lazy. It was adaptive. People had built it because the official tools didn't fit the job.
 
 What that surfaced:
 
-- **Information lived where the work happened.** A procedure that mattered was wherever it was last referenced — a Slack pin, a drive folder, an email forward. Anything that asked technicians to migrate to a new "system of record" was going to lose to whatever was already in their phone.
+- **Information lived where the work happened.** A procedure that mattered was wherever it was last referenced: a Slack pin, a drive folder, an email forward. Anything that asked technicians to migrate to a new "system of record" was going to lose to whatever was already in their phone.
 - **Authoring authority was distributed.** Content creators across regions and specialties were already maintaining material informally. The platform had to give them real tools without forcing a centralized publishing bottleneck.
-- **Search was the actual product.** The technician who needs the right page at 9:47 on a Tuesday morning doesn't navigate a sitemap — they search. If search didn't work, nothing else mattered.
+- **Search was the actual product.** The technician who needs the right page at 9:47 on a Tuesday morning doesn't navigate a sitemap. They search. If search didn't work, nothing else mattered.
 
 These shaped the architecture more than any feature list.
 
@@ -64,32 +64,32 @@ These shaped the architecture more than any feature list.
 
 I led the architecture and delivery from blank repo to production. A few decisions earned their keep:
 
-- **Headless CMS, custom front end.** Content authoring runs in **dotCMS**, where editors already have the workflow they understand — drafts, versions, scheduled publishing, language variants. The technician-facing experience is a fully custom **Next.js 15 / React 19** application that pulls from dotCMS and shapes the content into role-aware views. Editors get a CMS; technicians get a product.
-- **Bilingual at the data layer.** EN-CA and FR-CA are not toggled in the UI — they're modeled in the content, the routing, and the search index. A French-speaking technician in Quebec gets the same experience as an English-speaking technician in BC, including search results in their language.
+- **Headless CMS, custom front end.** Content authoring runs in **dotCMS**, where editors already have the workflow they understand: drafts, versions, scheduled publishing, language variants. The technician-facing experience is a fully custom **Next.js 15 / React 19** application that pulls from dotCMS and shapes the content into role-aware views. Editors get a CMS; technicians get a product.
+- **Bilingual at the data layer.** EN-CA and FR-CA are not toggled in the UI. They're modeled in the content, the routing, and the search index. A French-speaking technician in Quebec gets the same experience as an English-speaking technician in BC, including search results in their language.
 - **Role-aware data, not role-aware apps.** One application; access is enforced server-side against a custom permissions endpoint. Adding a role is a configuration change, not a new deploy target.
-- **Search as a first-class surface.** Built on a typed index with relevance tuned to how technicians actually phrase questions, not how content is filed. Search-rank previewing is a real tool inside the editor experience — see [TC Tools](/work/telus-tc-tools/).
+- **Search as a first-class surface.** Built on a typed index with relevance tuned to how technicians actually phrase questions, not how content is filed. Search-rank previewing is a real tool inside the editor experience (see [TC Tools](/work/telus-tc-tools/)).
 - **Density without overwhelm.** Field staff use the platform on phones, in vehicles, between jobs. The interface is built for thumbs and dim screens, not for screenshots.
-- **Built to grow.** The architecture made room for the LMS and certification system that became a separate engagement — see [Summit](/work/telus-summit/).
+- **Built to grow.** The architecture made room for the LMS and certification system that became a separate engagement (see [Summit](/work/telus-summit/)).
 
 ## How it's built
 
 The technical surface, briefly:
 
-- **Front end** — Next.js 15 (App Router) on React 19, TypeScript end-to-end, TailwindCSS for layout. Server components where they earn it, client components where interaction demands it.
-- **Content** — dotCMS as the headless source of truth, with a typed content layer between the CMS and the application so a content-model change can't silently break a page.
-- **Persistence** — PostgreSQL via Prisma for the things that aren't content: user preferences, favourites, audit events, anything the application owns rather than the CMS.
-- **Auth and permissions** — iron-session for the cookie layer, a custom permissions endpoint as the source of truth for _who can see what_. Decisions are made server-side and surfaced as visibility rules in the UI.
-- **Search** — a tuned index built for the way technicians phrase questions, with bilingual handling at the query and result layers.
-- **Quality gates** — Playwright for end-to-end smoke and user-flow coverage, Vitest for unit and integration. Tests are scoped to what actually breaks; coverage is a side effect, not the goal.
-- **Deploy** — containerized, infrastructure managed in Terraform, deployed to TELUS-controlled cloud infrastructure.
+- **Front end.** Next.js 15 (App Router) on React 19, TypeScript end-to-end, TailwindCSS for layout. Server components where they earn it, client components where interaction demands it.
+- **Content.** dotCMS as the headless source of truth, with a typed content layer between the CMS and the application so a content-model change can't silently break a page.
+- **Persistence.** PostgreSQL via Prisma for the things that aren't content: user preferences, favourites, audit events, anything the application owns rather than the CMS.
+- **Auth and permissions.** iron-session for the cookie layer, a custom permissions endpoint as the source of truth for _who can see what_. Decisions are made server-side and surfaced as visibility rules in the UI.
+- **Search.** A tuned index built for the way technicians phrase questions, with bilingual handling at the query and result layers.
+- **Quality gates.** Playwright for end-to-end smoke and user-flow coverage, Vitest for unit and integration. Tests are scoped to what actually breaks; coverage is a side effect, not the goal.
+- **Deploy.** Containerized, infrastructure managed in Terraform, deployed to TELUS-controlled cloud infrastructure.
 
 ## Outcome
 
 The platform launched in **April 2026** and replaced the previous patchwork outright. Adoption was immediate:
 
 - **2,500+ active users** across technicians, contractors, content creators, and operations.
-- **Hundreds of daily actives** — the platform is part of the working day, not an occasional reference.
-- **A single source of truth** for procedures, references, and operational content — bilingual, role-aware, and searchable. Which was the original brief.
+- **Hundreds of daily actives**: the platform is part of the working day, not an occasional reference.
+- **A single source of truth** for procedures, references, and operational content: bilingual, role-aware, and searchable. Which was the original brief.
 
 What didn't happen is also worth saying. There was no fall-back to the old bookmarks. No parallel "but the real source is on the drive." The platform absorbed the workflow on day one because the workflow had been the design input from the start.
 
@@ -97,7 +97,7 @@ What didn't happen is also worth saying. There was no fall-back to the old bookm
 
 TechCentral is the foundation; the work continues.
 
-- **[Summit](/work/telus-summit/)** — TELUS's full overhaul of training, mentorship, and credential certification — runs on top of this platform and is in active development for a 2027 launch.
-- **[TC Tools](/work/telus-tc-tools/)** — an AI-assisted toolkit for content creators inside TechCentral — is shipping in stages.
+- **[Summit](/work/telus-summit/)**, TELUS's full overhaul of training, mentorship, and credential certification, runs on top of this platform. It launched in summer 2026.
+- **[TC Tools](/work/telus-tc-tools/)**, an AI-assisted toolkit for content creators inside TechCentral, is shipping in stages.
 
-For details on the architecture, the role and permissions model, the bilingual content layer, or what running a production platform of this size actually looks like — [get in touch](/contact/).
+For details on the architecture, the role and permissions model, the bilingual content layer, or what running a production platform of this size actually looks like, [get in touch](/contact/).
