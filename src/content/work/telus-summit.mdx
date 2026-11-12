@@ -2,12 +2,12 @@
 id: S-001
 name: Summit
 metric:
-  value: '2027'
-  label: planned launch
+  value: Summer 2026
+  label: launched, replacing two legacy systems
 client: TELUS · Summit
 industry: Workforce learning · Certification
-headline: A modern credentialing and exam platform for TELUS trades technicians and partner contractors — replacing two parallel in-house legacy systems.
-outcome: One platform for the whole field workforce. Question repository, parameter-driven exam assembly, flexible invigilation, and credentials exposed as structured data — replacing manual scheduling, copy-paste authoring, and out-of-band exam passwords.
+headline: A modern credentialing and exam platform for TELUS trades technicians and partner contractors, replacing two parallel in-house legacy systems.
+outcome: One platform for the whole field workforce. Question repository, parameter-driven exam assembly, flexible invigilation, and credentials exposed as structured data. It replaces manual scheduling, copy-paste authoring, and out-of-band exam passwords.
 tags:
   - Certification
   - Exam platform
@@ -16,59 +16,59 @@ tags:
   - Workforce learning
 period: 2026 — Present
 role: Lead architect & full‑stack developer
-status: in-development
-featured: true
+status: live
+featured: false
 order: 2
 ---
 
 ## Context
 
-TELUS field technicians and partner contractors qualify for, and maintain standing in, trades work — copper and fiber installations, troubleshooting, HSIA, and adjacent disciplines — through exam-based certification. Today that runs on two parallel in-house tools: one for partner contractors, one historically for the home team. Both are functionally similar, both are out of date, and both are heavy with manual effort that the people running them shouldn't still be doing in 2026.
+TELUS field technicians and partner contractors earn and keep their standing in trades work, such as copper and fiber installations, troubleshooting, and HSIA, through exam-based certification. Before Summit, that ran on two parallel in-house tools: one for partner contractors, one historically for the home team. Both were functionally similar, both were out of date, and both were heavy with manual effort that the people running them shouldn't still have been doing in 2026.
 
 Summit is the replacement: a single credentialing and exam platform serving both populations, designed around the assessment formats trades work actually needs and around credentials that other TELUS systems can consume.
 
 ## The brief
 
-The brief is the follow-on engagement to [TechCentral](/work/telus-techcentral/). Where TechCentral solved _"where does the operational information live,"_ Summit solves _"how do we know — and prove — what each technician is qualified to do."_
+The brief was the follow-on engagement to [TechCentral](/work/telus-techcentral/). Where TechCentral solved _"where does the operational information live,"_ Summit solves _"how do we know, and prove, what each technician is qualified to do."_
 
 Five principles shape it:
 
 - **One platform for the whole workforce.** Home-team and partner contractors are first-class users of the same system. No parallel tools.
-- **Remove the manual effort.** Today's workflow involves manual learner registration, case-sensitive exam passwords distributed out-of-band, and questions copy-pasted from spreadsheets one at a time. None of that survives.
-- **Richer assessment formats.** Single-select, multi-select with configurable partial credit, and long-form scenario answers. The current generation can't ask the most useful questions.
-- **AI as an option, never a requirement.** Optional AI-assisted question drafting, variant generation, long-form grading, and AI-use detection — all per-exam choices, with traditional authoring and human grading remaining the default supported path.
+- **Remove the manual effort.** The old workflow involved manual learner registration, case-sensitive exam passwords distributed out-of-band, and questions copy-pasted from spreadsheets one at a time. None of that survives.
+- **Richer assessment formats.** Single-select, multi-select with configurable partial credit, and long-form scenario answers. The old tools couldn't ask the most useful questions.
+- **AI as an option, never a requirement.** Optional AI-assisted question drafting, variant generation, long-form grading, and AI-use detection. Each is a per-exam choice, and traditional authoring and human grading remain the default supported path.
 - **Credentials as structured data.** Earned certifications are first-class records attached to the learner's identity, exposed through TELUS's Kong API gateway so future consumers (work assignment, dispatch, workforce management) can integrate without bespoke work inside Summit.
 
 ## Discovery
 
-The discovery phase ran across two stakeholder sessions and a written follow-up — ten topics that needed an explicit decision before the data model got locked in. A few of the answers shape the architecture more than the rest:
+Discovery ran across two stakeholder sessions and a written follow-up, covering ten topics that needed an explicit decision before the data model got locked in. A few of the answers shape the architecture more than the rest:
 
-- **Open standards: deferred.** The W3C Verifiable Credentials / Open Badges 3.0 standard is technically a good fit and would let Summit accept credentials issued by external programs. The decision for v1 was to keep credentials internal and revisit when there's a concrete reason to open the boundary. The data model is being designed so that decision can be reversed without a rebuild.
-- **Skills and competencies are a structured framework, not loose tags.** Skills (copper, fiber, HSIA, …) belong to one team; competencies _within_ each skill (fiber splicing, fiber termination, fiber troubleshooting) belong to another. Summit treats both as first-class entities so questions, exams, and credentials can all reference them — and so a "targeted recertification exam covering one weak competency" is a real workflow, not a workaround.
-- **Expiry and recertification: light by default, with optional shorter targeted exams.** Most trades certifications don't expire today. Where they do (safety), the platform handles expiry natively. The more interesting capability — short, targeted exams used as a diagnostic before deeper coaching — was a stakeholder request and is in scope.
+- **Open standards: deferred.** The W3C Verifiable Credentials / Open Badges 3.0 standard is technically a good fit and would let Summit accept credentials issued by external programs. The decision for v1 was to keep credentials internal and revisit when there's a concrete reason to open the boundary. The data model is designed so that decision can be reversed without a rebuild.
+- **Skills and competencies are a structured framework, not loose tags.** Skills (copper, fiber, HSIA, …) belong to one team; competencies _within_ each skill (fiber splicing, fiber termination, fiber troubleshooting) belong to another. Summit treats both as first-class entities so questions, exams, and credentials can all reference them, and so a "targeted recertification exam covering one weak competency" is a real workflow, not a workaround.
+- **Expiry and recertification: light by default, with optional shorter targeted exams.** Most trades certifications don't expire. Where they do (safety), the platform handles expiry natively. The more interesting capability came from a stakeholder: short, targeted exams used as a diagnostic before deeper coaching.
 - **Rich media in questions: essential.** Trades questions about a connector, a splice, or a wiring configuration aren't meaningful in text alone. Image support is in the question data model from day one; short-form video is supported but called out as effort-heavy and used selectively.
-- **Exam policies: standard controls, sensible defaults.** Attempt limits (typically two, with a process for a third), availability windows, randomized question and answer order by default. The defaults match the way the existing exams are actually run.
-- **Open-reference posture, configurable per exam.** Most exams allow access to TechCentral and other reference materials during the test, because the assessment is whether a technician can _find and apply_ the right information — not whether they've memorized it. Administrators can tighten this per-exam where it matters.
-- **Reporting is a top-line requirement, not an afterthought.** Exam scores, attempt counts, per-question breakdowns, performance over time. Stakeholder asked for it explicitly; it lands as a v1 surface, not a Phase 2 retrofit.
+- **Exam policies: standard controls, sensible defaults.** Attempt limits (typically two, with a process for a third), availability windows, randomized question and answer order by default. The defaults match the way the existing exams were actually run.
+- **Open-reference posture, configurable per exam.** Most exams allow access to TechCentral and other reference materials during the test, because the assessment is whether a technician can _find and apply_ the right information, not whether they've memorized it. Administrators can tighten this per exam where it matters.
+- **Reporting is a top-line requirement, not an afterthought.** Exam scores, attempt counts, per-question breakdowns, performance over time. The stakeholder asked for it explicitly, so it's a v1 surface, not a Phase 2 retrofit.
 
-A few items — formal item analysis (question-quality metrics), credential stacking, full appeals/re-grade workflow — are in the data model from the start but are sequenced into later phases. The brief is intentionally phased so the most important workflow (one platform that runs exams cleanly and issues credentials cleanly) can land before the more elaborate capabilities layer on.
+Some items are in the data model from the start but sequenced into later phases: formal item analysis (question-quality metrics), credential stacking, and a full appeals and re-grade workflow. The brief was phased on purpose, so the most important workflow (one platform that runs exams cleanly and issues credentials cleanly) could land before the more elaborate capabilities layer on.
 
 ## Approach
 
-The first release will land the spine: question repository with bulk import, parameter-driven exam assembly, flexible invigilation, automated objective grading with configurable result release, role-based admin, and credentials attached to identity. Optional AI features and the long-form grading pipeline are scoped for sequenced phases — partly to keep the first release small enough to ship on a useful timeline, partly because some downstream workflows (notably long-form human grading) need resourcing decisions on the TELUS side before the platform-side surfaces are worth lighting up.
+The first release, launched in summer 2026, landed the spine: question repository with bulk import, parameter-driven exam assembly, flexible invigilation, automated objective grading with configurable result release, role-based admin, and credentials attached to identity. Optional AI features and the long-form grading pipeline are scoped for later phases. Partly that kept the first release small enough to ship on a useful timeline, and partly some downstream workflows (notably long-form human grading) need resourcing decisions on the TELUS side before the platform-side surfaces are worth lighting up.
 
-The design phase was unusually collaborative. The product owner brought AI-generated design explorations into working sessions — sketching screens, layouts, and flows themselves and walking me through them, which meant mockup review was a real two-way conversation rather than a one-way deliverable cycle. The design artifact that came out of it was less a finished spec to react to and more a synthesis of what we'd already converged on together.
+The design phase was unusually collaborative. The product owner brought AI-generated design explorations into working sessions, sketching screens, layouts, and flows themselves and walking me through them. That made mockup review a real two-way conversation rather than a one-way deliverable cycle. The design artifact that came out of it was less a finished spec to react to and more a synthesis of what we'd already converged on together.
 
-## How it'll be built
+## How it's built
 
-Some technical decisions are already locked by the TELUS environment, ahead of the wider stack choice:
+Some technical decisions were set by the TELUS environment before the wider stack was chosen:
 
-- **AI services through FuelIx.** Every AI call — question drafting, variant generation, long-form grading, AI-use detection — routes through TELUS's internal AI gateway. Same pattern as [TC Tools](/work/telus-tc-tools/); secrets, audit, and provider strategy stay with the people whose job it is to own them.
-- **Outbound APIs through Kong.** Credential and certification data is published through TELUS's Kong API gateway, in line with existing TELUS practice. That's how downstream consumers — work assignment, dispatch, workforce management — will get the data when they're ready to integrate.
+- **AI services through FuelIx.** Every AI call (question drafting, variant generation, long-form grading, AI-use detection) routes through TELUS's internal AI gateway. Same pattern as [TC Tools](/work/telus-tc-tools/); secrets, audit, and provider strategy stay with the people whose job it is to own them.
+- **Outbound APIs through Kong.** Credential and certification data is published through TELUS's Kong API gateway, in line with existing TELUS practice. That's how downstream consumers such as work assignment, dispatch, and workforce management get the data when they're ready to integrate.
 - **Application-level authorization.** General sign-in is solved at the TELUS layer. Summit's internal role hierarchy (learner, author, proctor, grader, administrator) is enforced inside the application, in middleware, against scoped permissions.
 - **Credentials as first-class records.** Attached to the learner's user identifier, structured rather than denormalized, designed so a future shift to Open Badges 3.0 / Verifiable Credentials is a schema extension and not a rewrite.
-- **Audit and security event logging as a first-class concern.** Authentication, permission changes, grade changes, exam configuration changes — every sensitive action is attributable and reviewable after the fact.
+- **Audit and security event logging as a first-class concern.** Every sensitive action, from sign-ins and permission changes to grade and exam configuration changes, is attributable and reviewable after the fact.
 
 Application stack and hosting were finalized during the design phase.
 
-If your organization is solving a similar problem — credentialing at scale, exam workflows, or internal tools that legacy systems have outgrown — [get in touch](/contact/).
+If your organization is solving a similar problem, such as credentialing at scale, exam workflows, or internal tools that legacy systems have outgrown, [get in touch](/contact/).

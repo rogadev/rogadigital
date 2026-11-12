@@ -97,11 +97,21 @@
 							: 'text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]'}"
 					>
 						{item.label}
-						<span
-							class="font-mono text-2xs tracking-[0.16em] text-[var(--color-fg-subtle)] uppercase"
+						<!-- The site's ArrowIcon, inlined: a typed arrow sits low in the line. -->
+						<svg
+							width="12"
+							height="12"
+							viewBox="0 0 16 16"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+							class="shrink-0 text-[var(--color-fg-subtle)]"
 						>
-							→
-						</span>
+							<path d="M3 8h10M9 4l4 4-4 4"></path>
+						</svg>
 					</a>
 				</li>
 			{/each}

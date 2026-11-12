@@ -1,0 +1,33 @@
+---
+/**
+ * ArrowIcon: the site's line arrow for links and buttons.
+ *
+ * Use it instead of a typed "→" or "←". Those glyphs sit low in Geist Mono's
+ * line box, so they never center against the text beside them; this icon is
+ * a box that `items-center` centers exactly.
+ */
+interface Props {
+	/** Which way the arrow points. */
+	direction?: 'right' | 'left';
+	/** Width and height in px. */
+	size?: number;
+	class?: string;
+}
+
+const { direction = 'right', size = 12, class: className = '' } = Astro.props;
+---
+
+<svg
+	width={size}
+	height={size}
+	viewBox="0 0 16 16"
+	fill="none"
+	stroke="currentColor"
+	stroke-width="1.5"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	aria-hidden="true"
+	class:list={['shrink-0', className]}
+>
+	<path d={direction === 'right' ? 'M3 8h10M9 4l4 4-4 4' : 'M13 8H3M7 4L3 8l4 4'}></path>
+</svg>

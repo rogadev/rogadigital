@@ -2,13 +2,13 @@
 id: PTR-007
 name: Puntledge Tube Report
 metric:
-  value: Since 2026
-  label: live on Cloudflare's edge
+  value: Crowdsourced
+  label: river conditions from today's floaters
 heroImage: '../../assets/work/puntledge/01-home.png'
 client: Public Data Works Society · Puntledge.ca
 industry: Recreation · Community
-headline: A crowdsourced river-conditions site for Comox Valley tubers — live gauge data, weather, tides, and anonymous float reports.
-outcome: puntledge.ca answers one question — is the river worth floating today? — by blending public data feeds with reports from people who just got off the water. No accounts, no app, no ads. Live on Cloudflare's edge since summer 2026.
+headline: 'A crowdsourced river-conditions site for Comox Valley tubers: live gauge data, weather, tides, and anonymous float reports.'
+outcome: 'puntledge.ca answers one question: is the river worth floating today? It blends public data feeds with reports from people who just got off the water. No accounts, no app, no ads.'
 tags:
   - SvelteKit
   - Svelte 5
@@ -19,7 +19,7 @@ tags:
 period: 2026 — Present
 role: Product, design & development
 status: live
-featured: false
+featured: true
 order: 1
 liveUrl: https://puntledge.ca
 highlight: The live site is embedded in this case study in demo mode — go ahead and poke it.
@@ -35,19 +35,19 @@ export const report = demoPage(site, 'puntledge-report');
 
 ## Context
 
-Every summer, the Puntledge River fills up with people on inner tubes drifting from the hatchery down into Courtenay. Whether that float is great, mediocre, or a bad idea changes day to day: the river is dam-controlled, flow and water level move around, weather shifts, and the last stretch is tidal. The information existed — a hydrometric gauge, weather feeds, tide tables, word of mouth — but scattered, and none of it written for someone standing in a parking lot holding a tube.
+Every summer, the Puntledge River fills up with people on inner tubes drifting from the hatchery down into Courtenay. Whether that float is great, mediocre, or a bad idea changes day to day: the river is dam-controlled, flow and water level move around, weather shifts, and the last stretch is tidal. The information existed (a hydrometric gauge, weather feeds, tide tables, word of mouth), but scattered, and none of it written for someone standing in a parking lot holding a tube.
 
 Puntledge Tube Report is a Public Data Works Society product built to close that gap: one page that says **"Good to float"** or tells you why not, backed by data and by the people who floated an hour ago.
 
 ## The product
 
-This is the real application, embedded in demo mode — same components and layout as production, with simulated conditions regenerated on every load. Click any embed to open the live site in a new tab.
+This is the real application, embedded in demo mode: same components and layout as production, with simulated conditions regenerated on every load. Click any embed to open the live site in a new tab.
 
 <DemoFrame
 	src={demoUrl(site, home)}
 	snapshot={snapshotPath(home)}
 	label={home.label}
-	title="Puntledge Tube Report — today's conditions (desktop demo)"
+	title="Puntledge Tube Report: today's conditions (desktop demo)"
 	href={publicUrl(site, home)}
 	hrefLabel="Open puntledge.ca in a new tab"
 	external
@@ -56,21 +56,21 @@ This is the real application, embedded in demo mode — same components and layo
 
 The home page leads with a plain-language verdict, then backs it up:
 
-- **A per-stretch status line.** The river isn't the same the whole way down — Hatchery, Park, Condensory, and Lewis each get their own rating, and closures (like fisheries work at the hatchery put-in) show right on the diagram.
+- **A per-stretch status line.** The river isn't the same the whole way down. Hatchery, Park, Condensory, and Lewis each get their own rating, and closures (like fisheries work at the hatchery put-in) show right on the diagram.
 - **Water level from crowd reports.** Recent floaters rate the level from "way too low" to "way too high"; the site aggregates that into a too-low → ideal → too-high scale with honest, practical copy ("expect bum-scraper shallows").
 - **Live public data.** Gauge flow in m³/s, current weather, a five-day outlook, sunrise/sunset, and the tides that make the final leg past Condensory Bridge slow when they roll in.
 - **Safety framing throughout.** A standing "sirens mean exit the water immediately" notice for the dam, alert banners for closures, and a disclaimer that the report is generated from unverified reports and public feeds — a decision aid, not a safety call.
 
 ## Reports without accounts
 
-The data flywheel only works if reporting takes seconds, so there is no sign-up, no login, and no identity. A short anonymous flow asks about the float — which stretches, how the water was — with big tap-target answers designed for someone still standing in the river parking lot.
+The data flywheel only works if reporting takes seconds, so there is no sign-up, no login, and no identity. A short anonymous flow asks about the float (which stretches, how the water was) with big tap-target answers designed for someone still standing in the river parking lot.
 
 <div class="not-prose my-8 grid gap-6 sm:grid-cols-2">
 	<DemoFrame
 		kind="phone"
 		src={demoUrl(site, report)}
 		snapshot={snapshotPath(report)}
-		title="Puntledge Tube Report — report your float (mobile demo)"
+		title="Puntledge Tube Report: report your float (mobile demo)"
 		href={publicUrl(site, report)}
 		hrefLabel="Open the report flow on puntledge.ca in a new tab"
 		external
@@ -79,7 +79,7 @@ The data flywheel only works if reporting takes seconds, so there is no sign-up,
 		kind="phone"
 		src={demoUrl(site, map)}
 		snapshot={snapshotPath(map)}
-		title="Puntledge Tube Report — float map (mobile demo)"
+		title="Puntledge Tube Report: float map (mobile demo)"
 		href={publicUrl(site, map)}
 		hrefLabel="Open the float map on puntledge.ca in a new tab"
 		external
@@ -90,27 +90,27 @@ Anonymous input needs guardrails instead of trust:
 
 - **Cloudflare Turnstile** keeps bots out of the report flow without making humans solve puzzles.
 - **Profanity filtering** scrubs free-text before it can reach anyone else's screen.
-- **Recency over history.** The verdict is built from _recent_ reports, and stale data is purged on a schedule — the site cares about today's river, not last month's.
+- **Recency over history.** The verdict is built from _recent_ reports, and stale data is purged on a schedule. The site cares about today's river, not last month's.
 
 The float map serves first-timers: put-ins, take-outs, parking, hazards, the danger zone above the hatchery, and a save-for-offline nudge because reception on the river is spotty.
 
 ## How it's built
 
-- **Front end** — SvelteKit 2 with Svelte 5 (runes), TypeScript throughout. Server-rendered pages, so conditions load fast on a phone in a parking lot.
-- **Hosting** — Cloudflare Workers via the SvelteKit Cloudflare adapter. Pushes to `main` deploy automatically through GitHub Actions and wrangler.
-- **Data** — Neon serverless Postgres with Drizzle ORM and drizzle-kit migrations. Scheduled purges keep expired report data out of the database entirely.
-- **Abuse resistance** — Turnstile on the report flow, profanity filtering on text, and no accounts to steal.
-- **Observability** — Sentry for errors and performance.
-- **Sharing** — social/OG images generated on the edge, so a shared link carries the day's conditions.
-- **Quality gates** — Prettier, ESLint, svelte-check, and Vitest behind a `ready` script; CI must pass before `dev` merges to `main`.
+- **Front end.** SvelteKit 2 with Svelte 5 (runes), TypeScript throughout. Server-rendered pages, so conditions load fast on a phone in a parking lot.
+- **Hosting.** Cloudflare Workers via the SvelteKit Cloudflare adapter. Pushes to `main` deploy automatically through GitHub Actions and wrangler.
+- **Data.** Neon serverless Postgres with Drizzle ORM and drizzle-kit migrations. Scheduled purges keep expired report data out of the database entirely.
+- **Abuse resistance.** Turnstile on the report flow, profanity filtering on text, and no accounts to steal.
+- **Observability.** Sentry for errors and performance.
+- **Sharing.** Social/OG images generated on the edge, so a shared link carries the day's conditions.
+- **Quality gates.** Prettier, ESLint, svelte-check, and Vitest behind a `ready` script; CI must pass before `dev` merges to `main`.
 
 ## About these embeds
 
-The demos above come from dedicated `/demo/*` routes on puntledge.ca: the production UI backed by simulated data, with embed-friendly headers so the site can run inside this page at desktop and mobile widths. If puntledge.ca is ever unreachable, the embeds fall back to a cached snapshot captured at build time — the same answer-the-question-first thinking the site itself is built on.
+The demos above come from dedicated `/demo/*` routes on puntledge.ca: the production UI backed by simulated data, with embed-friendly headers so the site can run inside this page at desktop and mobile widths. If puntledge.ca is ever unreachable, the embeds fall back to a cached snapshot captured at build time. It's the same answer-the-question-first thinking the site itself is built on.
 
 ## Outcome
 
 - **Live and public** at [puntledge.ca](https://puntledge.ca), serving the Comox Valley float season in real time.
-- **Self-sustaining by design** — anonymous crowd reports keep the data fresh without moderation overhead; public feeds fill in the rest.
+- **Self-sustaining by design.** Anonymous crowd reports keep the data fresh without moderation overhead; public feeds fill in the rest.
 - **Ad-free and community-funded**, with a buy-us-a-coffee model instead of tracking or banners.
-- **A studio showcase** — the same end-to-end scope we bring to client work: product thinking, design, build, deployment, and operations from one place.
+- **A studio showcase.** The same end-to-end scope we bring to client work: product thinking, design, build, deployment, and operations from one place.

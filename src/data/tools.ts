@@ -5,7 +5,7 @@
  */
 
 import type { ImageMetadata } from 'astro';
-import copyCleanseShot from '../assets/work/copycleanse/01-hero.png';
+import copyCleanseShot from '../assets/work/copycleanse/01-hero-dark.png';
 import blobbiesShot from '../assets/tools/blobbies.png';
 import campcastShot from '../assets/tools/campcast.png';
 import converterShot from '../assets/tools/converter.png';

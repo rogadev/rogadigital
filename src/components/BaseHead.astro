@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import '../styles/global.css';
 import { SITE_AUTHOR, SITE_TITLE } from '../consts';
 import { deriveOgPath } from '../lib/og-path';
@@ -43,6 +44,10 @@ const ogImageUrl = new URL(ogPath ?? deriveOgPath(Astro.url.pathname), Astro.sit
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
+
+<!-- Fonts: preloaded, with metric-matched fallbacks so text doesn't reflow on swap -->
+<Font cssVariable="--font-geist" preload />
+<Font cssVariable="--font-geist-mono" preload />
 <meta name="color-scheme" content="dark light" />
 <meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />

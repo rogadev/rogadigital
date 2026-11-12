@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '../../components/ArrowIcon.astro';
 import CopyCleanseDemo from '../../components/tools/CopyCleanseDemo.astro';
 import Base from '../../layouts/Base.astro';
 import { TOOLS } from '../../data/tools';
@@ -44,7 +45,7 @@ const limits = [
 					href="/tools/"
 					class="inline-flex min-h-11 items-center gap-1.5 font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors hover:text-fg"
 				>
-					<span aria-hidden="true">←</span> Tools
+					<ArrowIcon direction="left" /> Tools
 				</a>
 				<h1 class="mt-4 max-w-3xl font-mono text-4xl font-medium tracking-tight sm:text-5xl">
 					{tool.name}

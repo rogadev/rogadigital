@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import ArrowIcon from '../components/ArrowIcon.astro';
 import StatusIndicator from '../components/StatusIndicator.astro';
 import { deriveOgPath } from '../lib/og-path';
 import { breadcrumbSchema, caseStudySchema } from '../lib/schema';
@@ -11,13 +12,6 @@ interface Props {
 
 const { entry } = Astro.props;
 const { data } = entry;
-
-const statusLabel = {
-	live: 'Live · in production',
-	'in-development': 'In development',
-	archived: 'Archived',
-	draft: 'Draft',
-}[data.status];
 
 // "TechCentral case study · TELUS · Roga Digital". Studio products drop the
 // client segment so the studio name is not repeated.
@@ -77,11 +71,6 @@ const jsonLd = [
 							<span>{data.id}</span>
 							<span class="text-border-strong">·</span>
 							<span>{data.industry}</span>
-							<span class="text-border-strong">·</span>
-							<span class="inline-flex items-center gap-1.5">
-								<StatusIndicator status={data.status} />
-								{statusLabel}
-							</span>
 						</div>
 						<p class="mt-6 font-mono text-2xs tracking-[0.16em] text-[var(--color-accent)] uppercase">
 							{data.client}
@@ -125,16 +114,29 @@ const jsonLd = [
 									))}
 								</dd>
 							</div>
-							{(data.liveUrl || data.repoUrl) && (
-								<div class="col-span-2 flex items-center gap-4 bg-bg-soft px-4 py-1 font-mono text-2xs tracking-[0.18em] uppercase">
+							{(data.liveUrl || data.demoUrl || data.repoUrl) && (
+								<div class="col-span-2 flex flex-wrap items-center justify-end gap-x-6 bg-bg-soft px-4 py-1 font-mono text-2xs tracking-[0.18em] uppercase">
+									{data.demoUrl && (
+										<a
+											href={data.demoUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="inline-flex min-h-11 items-center gap-1.5 text-fg underline-offset-4 hover:underline"
+										>
+											Try the demo
+											<ArrowIcon />
+										</a>
+									)}
 									{data.liveUrl && (
 										<a
 											href={data.liveUrl}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="inline-flex min-h-11 items-center text-fg underline-offset-4 hover:underline"
+											class="inline-flex min-h-11 items-center gap-1.5 text-fg underline-offset-4 hover:underline"
 										>
-											Live →
+											{data.status === 'live' && <StatusIndicator status="live" />}
+											Live
+											<ArrowIcon />
 										</a>
 									)}
 									{data.repoUrl && (
@@ -142,9 +144,10 @@ const jsonLd = [
 											href={data.repoUrl}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="inline-flex min-h-11 items-center text-fg underline-offset-4 hover:underline"
+											class="inline-flex min-h-11 items-center gap-1.5 text-fg underline-offset-4 hover:underline"
 										>
-											Repo →
+											Repo
+											<ArrowIcon />
 										</a>
 									)}
 								</div>
@@ -302,5 +305,12 @@ const jsonLd = [
 		margin: 2rem 0;
 		border: 1px solid var(--color-border);
 		border-radius: 0.5rem;
+	}
+
+	/* ThemeFlip cards draw their own frame around each capture. */
+	.prose-case .theme-flip img {
+		margin: 0;
+		border: 0;
+		border-radius: 0;
 	}
 </style>

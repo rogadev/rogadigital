@@ -1,40 +1,16 @@
 ---
-import { getCollection } from 'astro:content';
+import ArrowIcon from '../ArrowIcon.astro';
 import dispatchBoard from '../../assets/work/roga-dispatch/01-board.png';
 import dispatchBoardDark from '../../assets/work/roga-dispatch/01-board-dark.png';
-import ThemedImage from '../ThemedImage.astro';
-import { SITE_LOCATION } from '../../consts';
-
-const work = (await getCollection('work')).filter((entry) => entry.data.status !== 'draft');
-const liveCount = work.filter((entry) => entry.data.status === 'live').length;
-
-// Every figure here is stated in a case study: TechCentral's user count, the
-// number of entries marked live, and the year CarEvo's system went into use.
-const proof = [
-	{ value: '2,500+', label: 'TELUS field staff use TechCentral', href: '/work/telus-techcentral/' },
-	{ value: String(liveCount), label: 'systems live in production today', href: '/work/' },
-	{
-		value: '2023',
-		label: 'the year the CarEvo lot system went live. Still maintained.',
-		href: '/work/carevo-logistics/',
-	},
-];
+import ThemeFlip from '../ThemeFlip.astro';
 ---
 
 <section class="border-b border-border">
 	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
 		<div class="grid gap-12 pt-16 pb-16 sm:pt-20 sm:pb-20 lg:grid-cols-12 lg:items-center lg:gap-10">
 			<div class="lg:col-span-5">
-				<p class="flex items-center gap-2.5 font-mono text-2xs tracking-[0.18em] text-fg-subtle uppercase">
-					<span
-						class="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-positive"
-						aria-hidden="true"
-					></span>
-					Taking on new projects · {SITE_LOCATION.replace(', Canada', '')}
-				</p>
-
-				<h1 class="mt-8 text-3xl font-medium tracking-tight text-balance sm:text-4xl xl:text-5xl">
-					I build the internal tools your business runs on.
+				<h1 class="text-3xl font-medium tracking-tight text-balance sm:text-4xl xl:text-5xl">
+					I build the tools your business runs on.
 				</h1>
 
 				<p class="mt-6 max-w-xl text-lg text-fg-muted text-pretty">
@@ -43,10 +19,10 @@ const proof = [
 					businesses that have outgrown spreadsheets and off-the-shelf tools.
 				</p>
 
-				<div class="mt-8 flex flex-wrap items-center gap-3">
+				<div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
 					<a
 						href="/contact/"
-						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+						class="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-fg px-4 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
 						Tell me about your project
 						<svg
@@ -65,54 +41,35 @@ const proof = [
 					</a>
 					<a
 						href="/work/"
-						class="inline-flex min-h-11 items-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm text-fg transition-colors hover:border-fg-subtle"
+						class="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm text-fg transition-colors hover:border-fg-subtle"
 					>
-						See the work
+						View case studies
 					</a>
 				</div>
 			</div>
 
 			<figure class="lg:col-span-7">
-				<a
+				<ThemeFlip
+					light={dispatchBoard}
+					dark={dispatchBoardDark}
+					alt="The Roga Dispatch board: today's trips grouped by what needs attention, with late pickups, drivers out of service, and unassigned trips at the top."
+					widths={[640, 960, 1280]}
+					sizes="(min-width: 1024px) 680px, 100vw"
 					href="/work/roga-dispatch/"
-					class="block overflow-hidden rounded-lg border border-border-strong bg-bg-soft"
-					aria-label="Roga Dispatch case study"
-				>
-					<ThemedImage
-						src={dispatchBoard}
-						darkSrc={dispatchBoardDark}
-						alt="The Roga Dispatch board: today's trips grouped by what needs attention, with late pickups, drivers out of service, and unassigned trips at the top."
-						widths={[640, 960, 1280]}
-						sizes="(min-width: 1024px) 680px, 100vw"
-						priority
-						class="block h-auto w-full"
-					/>
-				</a>
-				<figcaption class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-2xs tracking-[0.14em] text-fg-subtle uppercase">
-					<span>Roga Dispatch · dispatcher&rsquo;s board · sample data</span>
+					hrefLabel="Roga Dispatch case study"
+					priority
+				/>
+				<figcaption class="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 font-mono text-2xs tracking-[0.14em] text-fg-subtle uppercase">
+					<span>Driving service dispatch dashboard</span>
 					<a
 						href="/work/roga-dispatch/"
-						class="inline-flex min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+						class="ml-auto inline-flex gap-1.5 min-h-11 items-center text-fg-muted underline-offset-4 hover:text-fg hover:underline"
 					>
-						Try the live demo →
+						Try the live demo
+						<ArrowIcon />
 					</a>
 				</figcaption>
 			</figure>
-
-			<ul class="grid grid-cols-1 border-t border-border sm:grid-cols-3 lg:col-span-12" role="list">
-				{proof.map((p) => (
-					<li class="border-b border-border sm:border-b-0 sm:pr-6">
-						<a href={p.href} class="group block py-4">
-							<span class="block text-2xl font-medium tracking-tight text-fg tabular-nums">
-								{p.value}
-							</span>
-							<span class="mt-1 block text-sm text-fg-muted transition-colors group-hover:text-fg">
-								{p.label}
-							</span>
-						</a>
-					</li>
-				))}
-			</ul>
 		</div>
 	</div>
 </section>

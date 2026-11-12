@@ -1,6 +1,4 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/geist';
-@import '@fontsource-variable/geist-mono';
 
 /* ---------------------------------------------------------------------------
    Design tokens — Tailwind v4 `@theme` block.
@@ -8,8 +6,9 @@
    --------------------------------------------------------------------------- */
 @theme {
 	/* Type */
-	--font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-	--font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+	/* Geist is registered in astro.config.mjs and injected by <Font> in BaseHead. */
+	--font-sans: var(--font-geist);
+	--font-mono: var(--font-geist-mono);
 
 	--text-2xs: 0.6875rem; /* 11px */
 	--text-2xs--line-height: 1rem;

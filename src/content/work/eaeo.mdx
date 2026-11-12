@@ -8,7 +8,7 @@ heroImage: '../../assets/work/eaeo/01-homepage.png'
 client: Public Data Works Society · E&EO
 industry: Public site · Education · Labour-market data
 headline: A free, bilingual platform that connects Canadian credentials to the careers and labour-market outlooks that actually follow them.
-outcome: Programs from institutions across Canada are live now, more than 17,000 in all, and the careers each one leads to are rolling out province by province after B.C. Built around the question prospective students actually ask — "what does this lead to?" — and answered with real Job Bank, NOC, and StatsCan data.
+outcome: Programs from institutions across Canada are live now, more than 17,000 in all, and the careers each one leads to are rolling out province by province after B.C. Built around the question prospective students actually ask ("what does this lead to?") and answered with real Job Bank, NOC, and StatsCan data.
 tags:
   - SvelteKit
   - Postgres
@@ -32,28 +32,28 @@ import searchCareers from '../../assets/work/eaeo/05-search-careers.png';
 
 ## Context
 
-Picking a credential is a high-stakes decision made with surprisingly bad information. Program pages tell you what you'll _learn_. Job sites tell you what's _hiring today_. Government data tells you what the labour market _projects_. Almost nothing connects the three — and the people who need them connected most are eighteen-year-olds, mid-career changers, and the counsellors trying to help them.
+Picking a credential is a high-stakes decision made with surprisingly bad information. Program pages tell you what you'll _learn_. Job sites tell you what's _hiring today_. Government data tells you what the labour market _projects_. Almost nothing connects the three, and the people who need them connected most are eighteen-year-olds, mid-career changers, and the counsellors trying to help them.
 
 E&EO ("Education & Employment Outlooks") is a free, bilingual public platform built to answer the question those people actually ask: _what does this credential lead to, in the region I'd live in, against the labour market I'd be entering?_
 
 <Screenshot
 	src={homepage}
 	alt="E&EO homepage with the headline 'Make an educated decision about your future' and a subhead about exploring employment outlooks, discovering career paths, and connecting education to opportunity across Canada."
-	caption="eaeo.ca — make an educated decision about your future."
+	caption="eaeo.ca: make an educated decision about your future."
 />
 
 ## The brief
 
 E&EO is a Public Data Works Society product. The brief I set for it:
 
-- **Free at the point of use.** No paywall, no sign-up gate to look up a credential. The audience includes people who can't afford to pay for career advice — that has to be a non-negotiable.
+- **Free at the point of use.** No paywall, no sign-up gate to look up a credential. The audience includes people who can't afford to pay for career advice. That has to be a non-negotiable.
 - **Bilingual by default.** EN-CA and FR-CA as first-class experiences, not English with a translation overlay.
-- **Real public data, kept current.** Job Bank outlooks, the National Occupational Classification (NOC), Statistics Canada wage data, and curated institution/credential records — refreshed against federal release cadence, not scraped once and forgotten.
-- **Bidirectional search.** _I have a job in mind, what programs lead there?_ and _I have a program in mind, where does it lead?_ are the same question from opposite sides — both have to feel native.
+- **Real public data, kept current.** Job Bank outlooks, the National Occupational Classification (NOC), Statistics Canada wage data, and curated institution/credential records. All of it is refreshed against federal release cadence, not scraped once and forgotten.
+- **Bidirectional search.** _I have a job in mind, what programs lead there?_ and _I have a program in mind, where does it lead?_ are the same question from opposite sides. Both have to feel native.
 - **Regional, not national-by-default.** A "moderate" outlook in Vancouver and a "moderate" outlook in Prince George are different jobs. The platform is regional from the first interaction.
 - **Built to scale across provinces** without rewriting the data layer for each one.
 
-It descends from earlier work I did on the [VIU Career Outlooks](https://career-outlooks.viu.ca) tool during my co-op — same instinct, much narrower scope. E&EO is what that idea looks like when it's built for the country.
+It descends from earlier work I did on the [VIU Career Outlooks](https://career-outlooks.viu.ca) tool during my co-op: same instinct, much narrower scope. E&EO is what that idea looks like when it's built for the country.
 
 ## How it works
 
@@ -62,7 +62,7 @@ The product is built around a deliberate two-step flow: **pick the region, then 
 <Screenshot
 	src={selectRegion}
 	alt="E&EO region selector showing a map of Canada with tabs for All Canada, Province (map), Province (list), and Economic region. The current selection panel prompts the user to pick a region to continue."
-	caption="Region first — All Canada, province (map or list), or economic region."
+	caption="Region first: All Canada, province (map or list), or economic region."
 />
 
 The map view uses real geographic boundaries (TopoJSON via d3-geo), not a stylized illustration, so users recognize the country they're standing in. A list view and an economic-region view exist for accessibility and for the cases where someone knows their LMI catchment by name.
@@ -72,31 +72,31 @@ Once a region is locked, the product asks one of two questions:
 <Screenshot
 	src={searchOptions}
 	alt="E&EO search-options screen for British Columbia with two cards: 'Find by job title' (search a job and find programs that lead there) and 'Find programs' (search programs offered in British Columbia and see the careers they lead to)."
-	caption="Two ways in — by job title, or by program. Same data, different starting point."
+	caption="Two ways in: by job title, or by program. Same data, different starting point."
 />
 
 Both paths surface the same underlying graph: programs ↔ NOC occupations ↔ regional outlooks ↔ wage bands. The difference is just where the user enters.
 
 ### Search by program
 
-Type a program name and the result is a list of credentials offered in that region — the institution, the campus, the credential type — paired with what each program _actually leads to_ and how that career looks in the region.
+Type a program name and the result is a list of credentials offered in that region (the institution, the campus, the credential type) paired with what each program _actually leads to_ and how that career looks in the region.
 
 <Screenshot
 	src={searchPrograms}
 	alt="Program search results in British Columbia for the term 'nursing'. Each result shows the program name, institution and campus, the careers it leads to as tags, an outlook bar with a 'Moderate' label, and entry-level / typical / experienced hourly wages."
-	caption="Program search — credential, institution, careers it leads to, regional outlook, and wage band."
+	caption="Program search: credential, institution, careers it leads to, regional outlook, and wage band."
 />
 
-Three numbers per career — entry-level, typical, experienced — because "median wage" alone is a lie of omission. The outlook bar uses the federal Job Bank rating (Limited / Moderate / Good) so users see the same signal the government is publishing, not a re-scored derivative.
+Three numbers per career (entry-level, typical, experienced), because "median wage" alone is a lie of omission. The outlook bar uses the federal Job Bank rating (Limited / Moderate / Good) so users see the same signal the government is publishing, not a re-scored derivative.
 
 ### Search by career
 
-Coming in from the other side — start with a job — and the platform inverts the same data: which programs in this region lead here, what's the regional outlook, what's the wage band, and what's the NOC code if you want to dig deeper into federal data yourself.
+Coming in from the other side (start with a job), the platform inverts the same data: which programs in this region lead here, what's the regional outlook, what's the wage band, and what's the NOC code if you want to dig deeper into federal data yourself.
 
 <Screenshot
 	src={searchCareers}
 	alt="Career search results in British Columbia for the term 'nursing'. Each result shows the occupation title, NOC code, programs that lead there as tags, an outlook bar with a 'Good' rating, and entry-level / typical / experienced hourly wages."
-	caption="Career search — same graph from the other direction. NOC code surfaced for users who want to verify against the source."
+	caption="Career search: same graph from the other direction. NOC code surfaced for users who want to verify against the source."
 />
 
 NOC codes aren't decoration — they're the citation. A high-school student doesn't need them, but a counsellor or a journalist does, and surfacing them keeps the platform honest about where its claims come from.
@@ -105,14 +105,14 @@ NOC codes aren't decoration — they're the citation. A high-school student does
 
 The interesting part of E&EO is not the front end. It's the data plumbing that lets a search return _real_ answers instead of plausible-sounding ones.
 
-- **Front end** — SvelteKit (Svelte 5, runes), Tailwind v4, deployed on Vercel. The map is real geo data through d3-geo and TopoJSON, simplified at build time.
-- **i18n** — Paraglide JS, with EN-CA and FR-CA modeled at the message and route layer. There's a parity check in CI so a missing French string is a build failure, not a runtime fallback.
-- **Data layer** — Postgres (Neon, serverless) with Drizzle ORM. The schema models institutions, programs, credentials, NOC occupations, regions (province + economic region), outlooks, and wages as first-class entities — not denormalized blobs.
+- **Front end.** SvelteKit (Svelte 5, runes), Tailwind v4, deployed on Vercel. The map is real geo data through d3-geo and TopoJSON, simplified at build time.
+- **i18n.** Paraglide JS, with EN-CA and FR-CA modeled at the message and route layer. There's a parity check in CI so a missing French string is a build failure, not a runtime fallback.
+- **Data layer.** Postgres (Neon, serverless) with Drizzle ORM. The schema models institutions, programs, credentials, NOC occupations, regions (province + economic region), outlooks, and wages as first-class entities, not denormalized blobs.
 - **The hard part: CIP–NOC concordance.** Programs are classified by CIP (Classification of Instructional Programs); jobs are classified by NOC. The federal concordance between them is _one-to-many in both directions_ and is the actual product. Without it, "this credential leads to these careers" is wishful thinking. E&EO carries a maintained concordance and exposes it as the join that powers both search modes.
-- **Ingestion** — a set of typed import scripts pull the NOC structure, regions, Job Bank outlooks, institution and credential data, and a scrape pipeline for every province and territory. Each step is idempotent so a partial run doesn't poison the index.
-- **Search** — built and optimized offline against the database, served as a typed index so a query doesn't have to trigger a half-dozen joins on the request path.
-- **Observability** — Sentry for errors and performance, geoip for soft regional defaults so the first page already feels local.
-- **Quality gates** — Vitest for unit and integration, Playwright for E2E, an i18n parity check, and a custom test-pyramid preflight. If French strings drift or the test mix gets top-heavy, CI says so.
+- **Ingestion.** A set of typed import scripts pull the NOC structure, regions, Job Bank outlooks, institution and credential data, and a scrape pipeline for every province and territory. Each step is idempotent so a partial run doesn't poison the index.
+- **Search.** Built and optimized offline against the database, served as a typed index so a query doesn't have to trigger a half-dozen joins on the request path.
+- **Observability.** Sentry for errors and performance, geoip for soft regional defaults so the first page already feels local.
+- **Quality gates.** Vitest for unit and integration, Playwright for E2E, an i18n parity check, and a custom test-pyramid preflight. If French strings drift or the test mix gets top-heavy, CI says so.
 
 The architecture is built for scaling province-by-province. Adding a new province is a new scrape adapter and a new region row, not a rewrite.
 
@@ -120,7 +120,7 @@ The architecture is built for scaling province-by-province. Adding a new provinc
 
 - **Live across Canada**, with more than 17,000 programs from institutions in nearly every province and territory.
 - **Career links in B.C. today**, so B.C. programs show the careers they lead to. The same links are rolling out to the other provinces next.
-- **Bilingual** EN-CA / FR-CA from launch — not retrofitted later.
+- **Bilingual** EN-CA / FR-CA from launch, not retrofitted later.
 - **Free**, with no account required to search.
 
 ## What's next
@@ -129,7 +129,7 @@ The roadmap, in priority order:
 
 - **Career links nationwide.** Programs from across Canada are in; the next step is linking them to careers with the same checks B.C.'s links go through.
 - **Saved searches and shortlists for accounts.** The infrastructure for it is there; the value lands once a user has more than one province's data to compare across.
-- **Editorial layer** (the Blog / Regional sections in the nav) for the kind of context that data alone can't carry — what a "Moderate" outlook actually means, how to read NOC codes, what's changing in a given region.
+- **Editorial layer** (the Blog / Regional sections in the nav) for the kind of context that data alone can't carry: what a "Moderate" outlook actually means, how to read NOC codes, what's changing in a given region.
 - **Counsellor-facing surfaces** for the people who use this professionally rather than personally.
 
-For specifics on the data architecture, the CIP–NOC concordance, the bilingual content layer, or what running a public-facing platform against federal data feeds actually looks like — [get in touch](/contact/).
+For specifics on the data architecture, the CIP–NOC concordance, the bilingual content layer, or what running a public-facing platform against federal data feeds actually looks like, [get in touch](/contact/).

@@ -5,10 +5,11 @@ metric:
   value: Browser-only
   label: no upload, no storage, no sign-up
 heroImage: '../../assets/work/copycleanse/01-hero.png'
+heroImageDark: '../../assets/work/copycleanse/01-hero-dark.png'
 client: Roga Digital · CopyCleanse
 industry: Browser tool · AI text cleanup
-headline: A free, browser-only tool that strips the invisible AI fingerprints — zero-width chars, smart quotes, em-dashes, tracking URLs — out of any pasted text.
-outcome: Paste, copy. The cleaned text is on your clipboard before you let go of Ctrl+V. No upload, no storage, no sign-up — the whole tool ships as static assets and runs in your tab.
+headline: A free, browser-only tool that strips the invisible AI fingerprints (zero-width chars, smart quotes, em-dashes, tracking URLs) out of any pasted text.
+outcome: Paste, copy. The cleaned text is on your clipboard before you let go of Ctrl+V. No upload, no storage, no sign-up. The whole tool ships as static assets and runs in your tab.
 tags:
   - SvelteKit
   - Browser-only
@@ -22,33 +23,41 @@ order: 6
 liveUrl: https://copycleanse.com
 ---
 
-import Screenshot from '../../components/Screenshot.astro';
-import hero from '../../assets/work/copycleanse/01-hero.png';
+import ThemeFlip from '../../components/ThemeFlip.astro';
+import heroDark from '../../assets/work/copycleanse/01-hero-dark.png';
+import heroLight from '../../assets/work/copycleanse/01-hero.png';
 
 ## Context
 
 LLM-generated text comes with a quiet trail. Em-dashes where a writer would have used a comma. Curly quotes where an HTML form would have produced straight ones. Zero-width spaces and non-breaking spaces hidden between letters. Soft hyphens. Unicode ellipses where three periods would have done. Tracking URL parameters from the model's chat surface (`?utm_source=chatgpt`) glued onto the end of every link.
 
-None of it shows up visually. All of it shows up to anything that looks closely — a recruiter, a teacher, a copy editor, a CMS that strips invisibles, a search engine that hashes the bytes. The fingerprint isn't the prose; it's the bytes between the prose.
+None of it shows up visually. All of it shows up to anything that looks closely: a recruiter, a teacher, a copy editor, a CMS that strips invisibles, a search engine that hashes the bytes. The fingerprint isn't the prose; it's the bytes between the prose.
 
 CopyCleanse is the smallest possible fix: a browser-only tool that takes pasted text and returns it without the fingerprints, with the result on your clipboard before you've moved your hand.
 
-<Screenshot
-	src={hero}
-	alt="CopyCleanse landing page on a dark theme. Headline: 'Clean AI text, auto-magically' with 'auto-magically' in purple. Subhead: 'Remove hidden characters, smart quotes, tracking URLs, and other telltale signs that expose AI-generated content. Paste below — cleaned text is auto-copied to your clipboard.' Trust pills above the headline ('100% free · No sign-up · Browser-only') and below ('No data stored', 'Works with ChatGPT, Claude, Gemini & more'). A large paste box prompts 'Paste your AI generated text...'."
-	caption="copycleanse.com — paste, and the cleaned text is already on your clipboard."
-/>
+<figure class="not-prose my-8">
+	<ThemeFlip
+		light={heroLight}
+		dark={heroDark}
+		alt="CopyCleanse homepage in light and dark themes. Headline: 'Clean what's hiding in copied AI text.' with 'hiding' in teal. Subhead: 'Invisible Unicode, leftover Markdown, em dashes, and tracking links from ChatGPT, Claude, and Gemini. Paste your text to see every one, and get a clean copy back.' A large paste box reads 'Paste AI text here', with options to keep Markdown formatting, keep footnote markers, or scan only, a teal 'Paste and clean' button, and the note 'Your text never leaves your browser.'"
+		widths={[640, 960, 1280]}
+		sizes="(min-width: 768px) 720px, 100vw"
+	/>
+	<figcaption class="mt-3 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+		copycleanse.com: paste your text, see every hidden character, and get a clean copy back.
+	</figcaption>
+</figure>
 
 ## What it cleans
 
 The rule list is the product. Everything CopyCleanse does in the current release:
 
-- **Hidden whitespace** — zero-width spaces (U+200B), zero-width joiners and non-joiners, non-breaking spaces, and other invisible separators that survive a copy-paste.
+- **Hidden whitespace**: zero-width spaces (U+200B), zero-width joiners and non-joiners, non-breaking spaces, and other invisible separators that survive a copy-paste.
 - **Smart quotes and curly apostrophes** → straight `"` and `'`.
 - **Em-dashes and en-dashes** (`—`, `–`) → regular hyphens. The most notorious AI tell, and the one most people are pattern-matching against without realising it.
 - **Unicode ellipses** (`…`) → three plain periods.
 - **Soft hyphens** and other invisible formatting characters that mess with CMS imports and search.
-- **AI tracking URL parameters** — `utm_source=chatgpt`, `utm_source=claude`, and the rest of the family, stripped from any URLs in the pasted text.
+- **AI tracking URL parameters**: `utm_source=chatgpt`, `utm_source=claude`, and the rest of the family, stripped from any URLs in the pasted text.
 
 The rule list grows as new fingerprints surface in real-world LLM output.
 
@@ -60,19 +69,19 @@ The privacy claim isn't a tagline — it's the entire architecture.
 - **No storage.** Nothing is written to disk, nothing is logged, nothing is cached server-side.
 - **No sign-up.** There's no account because there's nothing to attach an account to.
 
-That's the point of a tool like this. The text someone is cleaning is often the text they care about most — a draft, a reply, a piece of writing they don't want sitting on a third party's logs. "Trust us" wouldn't be enough; "the bytes never leave your tab" is.
+That's the point of a tool like this. The text someone is cleaning is often the text they care about most: a draft, a reply, a piece of writing they don't want sitting on a third party's logs. "Trust us" wouldn't be enough; "the bytes never leave your tab" is.
 
 ## How it's built
 
 The tool is deliberately small.
 
-- **Framework** — SvelteKit 2 on Svelte 5 (runes mode), Tailwind v4 for the look. `@iconify/svelte` for icons.
-- **Build** — Vite, deployed on Vercel with `adapter-auto`. The output is fundamentally static — Vercel just serves the assets.
+- **Framework.** SvelteKit 2 on Svelte 5 (runes mode), Tailwind v4 for the look. `@iconify/svelte` for icons.
+- **Build.** Vite, deployed on Vercel with `adapter-auto`. The output is fundamentally static; Vercel just serves the assets.
 - **No backend.** No database, no API routes that touch user content. The cleaning logic is a small TypeScript module that runs in the browser; the diff highlighter is the same.
-- **Analytics** — Vercel Analytics for page-level traffic only. No event-level tracking of what users paste, because there is nothing to track — the text never leaves the tab.
-- **Quality gates** — Vitest with `@testing-library/svelte` for unit and component, Playwright + `@axe-core/playwright` for end-to-end and accessibility, Lighthouse CI for performance. The accessibility and performance bars are part of the pipeline, not a launch-day check.
-- **Content** — a small blog (mdsvex) for posts about the AI-fingerprint problem and what the cleaner is doing under the hood.
+- **Analytics.** Vercel Analytics for page-level traffic only. No event-level tracking of what users paste, because there is nothing to track: the text never leaves the tab.
+- **Quality gates.** Vitest with `@testing-library/svelte` for unit and component, Playwright + `@axe-core/playwright` for end-to-end and accessibility, Lighthouse CI for performance. The accessibility and performance bars are part of the pipeline, not a launch-day check.
+- **Content.** A small blog (mdsvex) for posts about the AI-fingerprint problem and what the cleaner is doing under the hood.
 
 ## Use it
 
-[copycleanse.com](https://copycleanse.com) — paste, copy, done. If you want to suggest a fingerprint the tool isn't catching yet, the rule list is open to additions.
+[copycleanse.com](https://copycleanse.com): paste, copy, done. If you want to suggest a fingerprint the tool isn't catching yet, the rule list is open to additions.

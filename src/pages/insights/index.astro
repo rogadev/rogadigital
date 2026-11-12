@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '../../components/ArrowIcon.astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
@@ -37,9 +38,10 @@ const meta = 'font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase';
 				</p>
 				<a
 					href="/rss.xml"
-					class="mt-2 inline-flex min-h-11 items-center font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase underline-offset-4 hover:text-fg hover:underline"
+					class="mt-2 inline-flex gap-1.5 min-h-11 items-center font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase underline-offset-4 hover:text-fg hover:underline"
 				>
-					Subscribe by RSS →
+					Subscribe by RSS
+					<ArrowIcon />
 				</a>
 			</div>
 		</div>
@@ -78,8 +80,9 @@ const meta = 'font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase';
 								{latest.data.title}
 							</h2>
 							<p class="mt-4 text-fg-muted text-pretty">{latest.data.description}</p>
-							<p class="mt-4 inline-flex min-h-11 items-center font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors group-hover:text-fg">
-								Read the post →
+							<p class="mt-4 inline-flex gap-1.5 min-h-11 items-center font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors group-hover:text-fg">
+								Read the post
+								<ArrowIcon />
 							</p>
 						</div>
 					</a>
