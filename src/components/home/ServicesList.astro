@@ -11,9 +11,9 @@ import ServiceIcon from '../ServiceIcon.astro';
 	dek="When spreadsheets and off-the-shelf software stop fitting the way you work, I build what does, and I keep it running."
 >
 	<div class="mx-auto w-full max-w-page px-6 sm:px-8">
-		<ul class="border-t border-border md:columns-2 md:gap-x-12" role="list">
+		<ul class="border-t border-border md:grid md:grid-cols-2 md:gap-x-12" role="list">
 			{SERVICES.map((s) => (
-				<li class="break-inside-avoid border-b border-border">
+				<li class="border-b border-border">
 					<a href={serviceHref(s)} class="group flex min-h-11 items-start gap-4 py-4">
 						<ServiceIcon
 							id={s.id}
