@@ -8,7 +8,7 @@ heroImage: '../../assets/work/copycleanse/01-hero.png'
 heroImageDark: '../../assets/work/copycleanse/01-hero-dark.png'
 client: Roga Digital · CopyCleanse
 industry: Browser tool · AI text cleanup
-headline: A free, browser-only tool that strips the invisible AI fingerprints (zero-width chars, smart quotes, em-dashes, tracking URLs) out of any pasted text.
+headline: A free, browser-only tool that strips the invisible AI fingerprints (hidden Unicode, leftover Markdown, smart quotes, em dashes, tracking links) out of any pasted text.
 outcome: Paste, copy. The cleaned text is on your clipboard before you let go of Ctrl+V. No upload, no storage, no sign-up. The whole tool ships as static assets and runs in your tab.
 tags:
   - SvelteKit
@@ -57,9 +57,14 @@ The rule list is the product. Everything CopyCleanse does in the current release
 - **Em-dashes and en-dashes** (`—`, `–`) → regular hyphens. The most notorious AI tell, and the one most people are pattern-matching against without realising it.
 - **Unicode ellipses** (`…`) → three plain periods.
 - **Soft hyphens** and other invisible formatting characters that mess with CMS imports and search.
-- **AI tracking URL parameters**: `utm_source=chatgpt`, `utm_source=claude`, and the rest of the family, stripped from any URLs in the pasted text.
+- **Leftover Markdown**: bold and italic markers, headings, and link syntax that chat apps leave behind. A "Keep Markdown formatting" option leaves it in for Markdown editors, and "Copy with formatting" pastes real bold, headings, lists, and tables into Google Docs, Word, or email.
+- **Footnote and citation markers** such as `[1][2]`, removed by default but never inside code. "Keep footnote markers" turns this off.
+- **Lookalike characters**: "fancy" bold, italic, and script Unicode letters become plain ones, and Cyrillic or Greek letters disguised as Latin ones are swapped back, but only inside mixed-script words.
+- **AI tracking URL parameters**: `utm_source=chatgpt`, `utm_source=claude`, and the rest of the family, plus common ad click IDs (`fbclid`, `gclid`, `msclkid`), stripped from any URLs in the pasted text.
 
-The rule list grows as new fingerprints surface in real-world LLM output.
+Every change is highlighted, so you can see exactly what was hidden. **Scan only** shows all of it without changing the text or touching the clipboard. CopyCleanse also installs as an app, works offline, and accepts text shared from other apps on a phone.
+
+It removes character-level and formatting artifacts, not statistical ones: watermarks such as Google's SynthID live in word choice, so no character cleaner can remove them, and CopyCleanse doesn't claim to. The rule list grows as new fingerprints surface in real-world LLM output.
 
 ## Why browser-only
 
