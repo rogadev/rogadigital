@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import type { Tool } from '../../data/tools';
 import { TOOLS } from '../../data/tools';
+import ThemedImage from '../../components/ThemedImage.astro';
 import Base from '../../layouts/Base.astro';
 
 const title = 'Tools: Claude Code mods and free web tools · Roga Digital';
@@ -97,8 +97,9 @@ function footnote(t: Tool): string {
 									{/* Every card gets the 16:10 frame, so text lines up across a row whether or not the tool has a screenshot. */}
 									<div class="mb-5 overflow-hidden rounded-lg border border-border bg-bg-soft transition-colors group-hover:border-border-strong">
 										{t.image ? (
-											<Image
+											<ThemedImage
 												src={t.image}
+												darkSrc={t.imageDark}
 												alt=""
 												widths={[400, 800]}
 												sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"

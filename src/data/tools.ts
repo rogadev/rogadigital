@@ -5,8 +5,9 @@
  */
 
 import type { ImageMetadata } from 'astro';
-import copyCleanseShot from '../assets/work/copycleanse/01-hero-dark.png';
-import blobbiesShot from '../assets/tools/blobbies.png';
+import copyCleanseShot from '../assets/work/copycleanse/01-hero.png';
+import copyCleanseShotDark from '../assets/work/copycleanse/01-hero-dark.png';
+import blobbiesShot from '../assets/tools/blobbies.svg';
 import campcastShot from '../assets/tools/campcast.png';
 import converterShot from '../assets/tools/converter.png';
 import glanceShot from '../assets/tools/glance/four.png';
@@ -35,8 +36,10 @@ export interface Tool {
 	repo?: string;
 	/** Live site, for tools that run as a hosted service. */
 	liveUrl?: string;
-	/** A real screenshot or the tool's own artwork. */
+	/** A real screenshot or the tool's own artwork. For a themed tool, the light capture. */
 	image?: ImageMetadata;
+	/** The dark capture, for a tool that has both themes. The card shows the one matching the site theme. */
+	imageDark?: ImageMetadata;
 	/** True while the tool is unreleased: no public repository or download yet. */
 	unreleased?: boolean;
 }
@@ -57,16 +60,6 @@ export const TOOLS: Tool[] = [
 		image: glanceShot,
 	},
 	{
-		name: 'orc-pack',
-		kind: 'mod',
-		tag: 'Claude Code skill pack',
-		href: '/tools/orc-pack/',
-		repo: 'https://github.com/rogadev/orc-pack',
-		description:
-			'An autonomous orchestrator for Claude Code. Hand it an issue or a sentence, and a team of specialist agents plans, builds, reviews, and commits the work.',
-		image: orcPackShot,
-	},
-	{
 		name: 'paceline',
 		kind: 'mod',
 		tag: 'Claude Code mod',
@@ -75,6 +68,16 @@ export const TOOLS: Tool[] = [
 		description:
 			'A Claude Code status line that turns your weekly usage limit into a daily budget, so you know whether to push or ease off, and tells your sessions apart at a glance.',
 		image: pacelineShot,
+	},
+	{
+		name: 'orc-pack',
+		kind: 'mod',
+		tag: 'Claude Code skill pack',
+		href: '/tools/orc-pack/',
+		repo: 'https://github.com/rogadev/orc-pack',
+		description:
+			'An autonomous orchestrator for Claude Code. Hand it an issue or a sentence, and a team of specialist agents plans, builds, reviews, and commits the work.',
+		image: orcPackShot,
 	},
 	{
 		name: 'Claude Blobbies',
@@ -110,6 +113,7 @@ export const TOOLS: Tool[] = [
 		description:
 			'Cleans your AI-written copy. It strips the em dashes, curly quotes, invisible characters, and tracking links that give machine-written copy away.',
 		image: copyCleanseShot,
+		imageDark: copyCleanseShotDark,
 	},
 	{
 		name: 'Campcast',
