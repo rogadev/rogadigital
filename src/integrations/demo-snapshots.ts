@@ -5,8 +5,9 @@
  * HTML snapshot into public/demos/: scripts and event handlers are stripped
  * (the demo pages are fully server-rendered), stylesheets are inlined,
  * same-origin assets (fonts, images) become data: URIs, and remaining
- * root-relative URLs are absolutized against the live origin. The result renders our own origin with zero requests
- * to the live site, so DemoFrame.astro can serve it when the live site is down.
+ * root-relative URLs are absolutized against the live origin. The result renders
+ * from our own origin with zero requests to the live site, so DemoFrame.astro
+ * can serve it when the live site is down or answering with an error.
  * A themed page (one that accepts ?theme=) gets a light and a dark snapshot,
  * listed by snapshotCaptures() in src/lib/demos.ts.
  *

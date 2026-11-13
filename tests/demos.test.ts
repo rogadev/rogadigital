@@ -87,6 +87,13 @@ describe('rendersDark', () => {
 		expect(rendersDark('<html class="darker">')).toBe(false);
 		expect(rendersDark('no html at all')).toBe(false);
 	});
+
+	it('reads the class list as whole tokens', () => {
+		expect(rendersDark('<html class="no-dark">')).toBe(false);
+		expect(rendersDark('<html class="dark-mode-off">')).toBe(false);
+		expect(rendersDark('<html class="light dark">')).toBe(true);
+		expect(rendersDark("<html class='dark'>")).toBe(true);
+	});
 });
 
 describe('frameSrc', () => {

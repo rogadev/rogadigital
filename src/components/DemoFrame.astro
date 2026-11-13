@@ -27,11 +27,14 @@ interface Props {
 	kind?: 'desktop' | 'phone';
 	/** URL of the live (embeddable) demo route. */
 	src: string;
-	/** Local fallback snapshot path, e.g. from snapshotPath() in src/lib/demos.ts. */
+	/** Local fallback snapshot path, for example from `snapshotPath()` in src/lib/demos.ts. */
 	snapshot?: string;
 	/** The live route accepts `?theme=light|dark`; see DemoPage.themed in src/lib/demos.ts. */
 	themed?: boolean;
-	/** Dark-theme fallback snapshot path, e.g. snapshotPath(page, 'dark'). */
+	/**
+	 * Dark-theme fallback snapshot path, for example from `snapshotPath(page, 'dark')`.
+	 * Used only when `themed` is set.
+	 */
 	snapshotDark?: string;
 	/** Accessible iframe title. */
 	title: string;

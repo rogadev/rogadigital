@@ -5,7 +5,8 @@
  * with simulated data and permissive `frame-ancestors`, so we can iframe them.
  * The demo-snapshots integration (src/integrations/demo-snapshots.ts) captures
  * a self-contained HTML snapshot of every page listed here into public/demos/,
- * and DemoFrame.astro falls back to that snapshot when the live site is down.
+ * and DemoFrame.astro falls back to that snapshot when the live site is down or
+ * answering with an error.
  */
 
 export interface DemoPage {
@@ -180,15 +181,18 @@ export async function probeDemo(url: string, fetchImpl: typeof fetch = fetch): P
 }
 
 /**
- * Id of the snapshot for `page` in `theme`, which is also its filename stem.
- * A themed page's dark snapshot gets a `-dark` suffix; every other snapshot,
- * including any page's light one, uses the page id.
+ * Gets the id of the snapshot for `page` in `theme`, which is also its filename
+ * stem. A themed page's dark snapshot gets a `-dark` suffix; every other
+ * snapshot, including any page's light one, uses the page id.
  */
-export function snapshotId(page: DemoPage, theme: DemoTheme = 'light'): string {
+function snapshotId(page: DemoPage, theme: DemoTheme = 'light'): string {
 	return page.themed && theme === 'dark' ? `${page.id}-dark` : page.id;
 }
 
-/** Public URL of the captured fallback snapshot for a demo page. */
+/**
+ * Gets the public URL of the fallback snapshot for `page` in `theme`. A page
+ * without `themed` has one snapshot for both themes.
+ */
 export function snapshotPath(page: DemoPage, theme: DemoTheme = 'light'): string {
 	return `/demos/${snapshotId(page, theme)}.html`;
 }
@@ -222,5 +226,7 @@ export function snapshotCaptures(site: DemoSite): SnapshotCapture[] {
  */
 export function rendersDark(html: string): boolean {
 	const root = /<html\b[^>]*>/i.exec(html)?.[0] ?? '';
-	return /\sclass=["'][^"']*\bdark\b/i.test(root);
+	const classes = /\sclass=(["'])(.*?)\1/i.exec(root)?.[2] ?? '';
+	// Compare whole tokens: `\bdark\b` would also match `no-dark`.
+	return classes.split(/\s+/).includes('dark');
 }
