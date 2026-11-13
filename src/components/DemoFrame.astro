@@ -63,7 +63,9 @@ const {
 const native = kind === 'desktop' ? { w: 1280, h: 800 } : { w: 390, h: 780 };
 const chromeLabel = label ?? new URL(src).hostname;
 // The site renders dark until its head script finds a light preference, so the
-// markup asks for dark and the script below corrects it before the lazy load.
+// markup asks for dark. For a light visitor, the inline script right after the
+// iframe switches it to light while the page parses, before the lazy load can
+// start; without JavaScript the frame stays dark and still works.
 const initialSrc = themed ? themedUrl(src, 'dark') : src;
 // A dark snapshot exists only once the live site has served ?theme=dark to a
 // capture; until then, dark mode falls back to the light snapshot.
@@ -116,6 +118,17 @@ const darkSnapshot =
 				sandbox={href ? 'allow-scripts allow-same-origin' : undefined}
 				class:list={[!href && 'demo-interactive']}
 			></iframe>
+			{themed && <script is:inline>
+				(() => {
+					// Runs during parse, after the head theme script, so it can read html.light.
+					const frame = document.currentScript?.previousElementSibling;
+					if (!(frame instanceof HTMLIFrameElement)) return;
+					if (!document.documentElement.classList.contains('light')) return;
+					const url = new URL(frame.src);
+					url.searchParams.set('theme', 'light');
+					frame.src = url.href;
+				})();
+			</script>}
 			{href && (
 				<a
 					href={href}
