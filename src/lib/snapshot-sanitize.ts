@@ -30,10 +30,18 @@ export function stripActiveContent(html: string): string {
 	return current;
 }
 
-/** Adds the snapshot CSP as the first child of `<head>`. */
+const HEAD_TAG = /<head\b[^>]*>/i;
+
+/**
+ * Adds the snapshot CSP as the first child of `<head>`.
+ *
+ * @throws {Error} If the page has no `<head>` tag, so the capture fails and
+ *     the previous snapshot is kept instead of one served without its CSP.
+ */
 export function injectSnapshotCsp(html: string): string {
+	if (!HEAD_TAG.test(html)) throw new Error('page has no <head> to carry the snapshot CSP');
 	return html.replace(
-		/<head\b[^>]*>/i,
+		HEAD_TAG,
 		(head) => `${head}\n<meta http-equiv="Content-Security-Policy" content="${SNAPSHOT_CSP}">`,
 	);
 }

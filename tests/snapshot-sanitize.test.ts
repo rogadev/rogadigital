@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
 	SNAPSHOT_CSP,
@@ -55,9 +56,28 @@ describe('injectSnapshotCsp', () => {
 		);
 	});
 
+	it('throws when the page has no head, so the old snapshot is kept', () => {
+		expect(() => injectSnapshotCsp('<html><body>no head</body></html>')).toThrow(/<head>/);
+	});
+
+	it('does not mistake a <header> element for the head', () => {
+		expect(() => injectSnapshotCsp('<html><body><header>x</header></body></html>')).toThrow();
+	});
+
 	it('forbids scripts by default', () => {
 		expect(SNAPSHOT_CSP).toContain("default-src 'none'");
 		expect(SNAPSHOT_CSP).not.toMatch(/script-src/);
+	});
+});
+
+describe('vercel.json /demos/ header', () => {
+	it('serves snapshots with the snapshot CSP plus sandbox', () => {
+		const config = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8')) as {
+			headers: { source: string; headers: { key: string; value: string }[] }[];
+		};
+		const demos = config.headers.find((h) => h.source === '/demos/(.*)');
+		const csp = demos?.headers.find((h) => h.key === 'Content-Security-Policy')?.value;
+		expect(csp).toBe(`sandbox; ${SNAPSHOT_CSP}`);
 	});
 });
 
