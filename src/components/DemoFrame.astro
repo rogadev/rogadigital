@@ -155,26 +155,34 @@ const chromeLabel = label ?? new URL(src).hostname;
 </style>
 
 <script>
-	// Reachability probe — one request per unique live URL. no-cors keeps the
-	// probe cross-origin-safe: it resolves (opaque) whenever the host answers
-	// and rejects on DNS/connection/timeout failures, which is the "site is
-	// down" case the snapshot exists for.
+	// Reachability probe, one per unique live URL. The demo sites let this origin
+	// read their demo responses (CORS), so a 404 or 500 counts as down, not only
+	// a network failure. When the CORS read itself fails, an opaque no-cors probe
+	// tells "host answered" from "host unreachable"; it cannot see the status,
+	// so a demo without the CORS grant is judged by reachability alone.
+	const PROBE: RequestInit = { method: 'HEAD', cache: 'no-store' };
+	const probe = async (url: string): Promise<boolean> => {
+		try {
+			const res = await fetch(url, { ...PROBE, mode: 'cors', signal: AbortSignal.timeout(5000) });
+			return res.ok;
+		} catch (err) {
+			if (err instanceof DOMException && err.name === 'TimeoutError') return false;
+			try {
+				await fetch(url, { ...PROBE, mode: 'no-cors', signal: AbortSignal.timeout(5000) });
+				return true;
+			} catch {
+				return false;
+			}
+		}
+	};
 	const probes = new Map<string, Promise<boolean>>();
 	const isUp = (url: string): Promise<boolean> => {
-		let probe = probes.get(url);
-		if (!probe) {
-			probe = fetch(url, {
-				method: 'HEAD',
-				mode: 'no-cors',
-				cache: 'no-store',
-				signal: AbortSignal.timeout(5000),
-			}).then(
-				() => true,
-				() => false,
-			);
-			probes.set(url, probe);
+		let result = probes.get(url);
+		if (!result) {
+			result = probe(url);
+			probes.set(url, result);
 		}
-		return probe;
+		return result;
 	};
 
 	for (const iframe of document.querySelectorAll<HTMLIFrameElement>('iframe[data-snapshot-src]')) {
