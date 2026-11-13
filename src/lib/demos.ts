@@ -102,6 +102,84 @@ export function themedUrl(url: string, theme: DemoTheme): string {
 }
 
 /**
+ * The data attributes DemoFrame.astro sets on its iframe, as `iframe.dataset`
+ * exposes them.
+ */
+export interface DemoFrameState {
+	/** URL of the live demo route, without a theme. */
+	liveSrc?: string;
+	/** Light (or only) fallback snapshot path. */
+	snapshotSrc?: string;
+	/** Dark fallback snapshot path, present once a dark snapshot exists. */
+	snapshotDarkSrc?: string;
+	/** Present, as an empty string, on a frame that follows the site theme. */
+	themed?: string;
+	/** `'snapshot'` once the frame has fallen back to its snapshot. */
+	showing?: string;
+}
+
+/** Returns `true` when the frame follows the site theme. */
+export function isThemedFrame(state: DemoFrameState): boolean {
+	// `data-themed=""` reads as an empty string, so test presence, not truthiness.
+	return state.themed !== undefined;
+}
+
+/**
+ * Gets the URL a frame should show in `theme`: its live page, or its snapshot
+ * once it has fallen back. A themed frame in dark mode shows the dark snapshot
+ * when one exists and the light one otherwise.
+ */
+export function frameSrc(state: DemoFrameState, theme: DemoTheme): string | undefined {
+	const themed = isThemedFrame(state);
+	if (state.showing === 'snapshot') {
+		return themed && theme === 'dark'
+			? (state.snapshotDarkSrc ?? state.snapshotSrc)
+			: state.snapshotSrc;
+	}
+	return state.liveSrc && themed ? themedUrl(state.liveSrc, theme) : state.liveSrc;
+}
+
+const PROBE_TIMEOUT_MS = 5000;
+const PROBE: RequestInit = { method: 'HEAD', cache: 'no-store' };
+
+/**
+ * Checks whether a live demo is up, for DemoFrame.astro's snapshot fallback.
+ *
+ * The demo sites let rogadigital.com read their demo responses (CORS), so a
+ * 404 or 500 counts as down, not only a network failure. When the CORS read
+ * itself fails, an opaque no-cors request tells "host answered" from "host
+ * unreachable"; it cannot see the status, so a demo without the CORS grant is
+ * judged by reachability alone. A timeout counts as down without a retry.
+ *
+ * @param url The live demo URL.
+ * @param fetchImpl The `fetch` to use; tests pass a stub.
+ * @returns `true` when the demo answered with a 2xx, or answered at all when
+ *     its status can't be read.
+ */
+export async function probeDemo(url: string, fetchImpl: typeof fetch = fetch): Promise<boolean> {
+	try {
+		const res = await fetchImpl(url, {
+			...PROBE,
+			mode: 'cors',
+			signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+		});
+		return res.ok;
+	} catch (err) {
+		if (err instanceof DOMException && err.name === 'TimeoutError') return false;
+		try {
+			await fetchImpl(url, {
+				...PROBE,
+				mode: 'no-cors',
+				signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+			});
+			return true;
+		} catch {
+			return false;
+		}
+	}
+}
+
+/**
  * Id of the snapshot for `page` in `theme`, which is also its filename stem.
  * A themed page's dark snapshot gets a `-dark` suffix; every other snapshot,
  * including any page's light one, uses the page id.

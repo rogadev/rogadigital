@@ -193,33 +193,14 @@ const darkSnapshot =
 </style>
 
 <script>
-	import { themedUrl, type DemoTheme } from '../lib/demos';
+	import { frameSrc, isThemedFrame, probeDemo, type DemoTheme } from '../lib/demos';
 
-	// Reachability probe, one per unique live URL. The demo sites let this origin
-	// read their demo responses (CORS), so a 404 or 500 counts as down, not only
-	// a network failure. When the CORS read itself fails, an opaque no-cors probe
-	// tells "host answered" from "host unreachable"; it cannot see the status,
-	// so a demo without the CORS grant is judged by reachability alone.
-	const PROBE: RequestInit = { method: 'HEAD', cache: 'no-store' };
-	const probe = async (url: string): Promise<boolean> => {
-		try {
-			const res = await fetch(url, { ...PROBE, mode: 'cors', signal: AbortSignal.timeout(5000) });
-			return res.ok;
-		} catch (err) {
-			if (err instanceof DOMException && err.name === 'TimeoutError') return false;
-			try {
-				await fetch(url, { ...PROBE, mode: 'no-cors', signal: AbortSignal.timeout(5000) });
-				return true;
-			} catch {
-				return false;
-			}
-		}
-	};
+	// One probe per unique live URL, shared by every frame that shows it.
 	const probes = new Map<string, Promise<boolean>>();
 	const isUp = (url: string): Promise<boolean> => {
 		let result = probes.get(url);
 		if (!result) {
-			result = probe(url);
+			result = probeDemo(url);
 			probes.set(url, result);
 		}
 		return result;
@@ -228,18 +209,8 @@ const darkSnapshot =
 	const siteTheme = (): DemoTheme =>
 		document.documentElement.classList.contains('light') ? 'light' : 'dark';
 
-	/** The URL a frame should show for the current site theme. */
-	const frameSrc = (iframe: HTMLIFrameElement, theme: DemoTheme): string | undefined => {
-		const { liveSrc, snapshotSrc, snapshotDarkSrc } = iframe.dataset;
-		const themed = iframe.dataset.themed !== undefined;
-		if (iframe.dataset.showing === 'snapshot') {
-			return themed && theme === 'dark' ? (snapshotDarkSrc ?? snapshotSrc) : snapshotSrc;
-		}
-		return liveSrc && themed ? themedUrl(liveSrc, theme) : liveSrc;
-	};
-
 	const show = (iframe: HTMLIFrameElement, theme: DemoTheme) => {
-		const next = frameSrc(iframe, theme);
+		const next = frameSrc(iframe.dataset, theme);
 		// Reassigning an unchanged src would reload the frame for nothing.
 		if (next && iframe.src !== new URL(next, location.href).href) iframe.src = next;
 	};
@@ -247,7 +218,7 @@ const darkSnapshot =
 	const frames = [...document.querySelectorAll<HTMLIFrameElement>('iframe[data-live-src]')];
 	let theme = siteTheme();
 	for (const iframe of frames) {
-		if (iframe.dataset.themed !== undefined) show(iframe, theme);
+		if (isThemedFrame(iframe.dataset)) show(iframe, theme);
 		const live = iframe.dataset.liveSrc;
 		if (!live || !iframe.dataset.snapshotSrc) continue;
 		void isUp(live).then((up) => {
@@ -264,7 +235,7 @@ const darkSnapshot =
 
 	// The theme toggle flips html.light; other class changes (the cross-fade)
 	// leave the theme alone and are skipped.
-	const themedFrames = frames.filter((iframe) => iframe.dataset.themed !== undefined);
+	const themedFrames = frames.filter((iframe) => isThemedFrame(iframe.dataset));
 	if (themedFrames.length > 0) {
 		new MutationObserver(() => {
 			const next = siteTheme();
