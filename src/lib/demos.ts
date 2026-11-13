@@ -17,7 +17,15 @@ export interface DemoPage {
 	publicPath: string;
 	/** URL shown in the browser-chrome bar of the frame (the "real" address). */
 	label: string;
+	/**
+	 * The route renders in the theme `?theme=light|dark` asks for, so the frame
+	 * follows the site theme and a dark snapshot is captured beside the light one.
+	 */
+	themed?: boolean;
 }
+
+/** The site's two color themes, as a themed demo route accepts them. */
+export type DemoTheme = 'light' | 'dark';
 
 export interface DemoSite {
 	id: string;
@@ -37,12 +45,14 @@ export const DEMO_SITES: DemoSite[] = [
 				path: '/preview/board',
 				publicPath: '/demo',
 				label: 'trips.roga.dev/dispatch',
+				themed: true,
 			},
 			{
 				id: 'dispatch-driver',
 				path: '/preview/driver',
 				publicPath: '/demo',
 				label: 'trips.roga.dev/driver',
+				themed: true,
 			},
 		],
 	},
@@ -84,7 +94,55 @@ export function publicUrl(site: DemoSite, page: DemoPage): string {
 	return site.origin + page.publicPath;
 }
 
+/** Returns `url` asking a themed demo route to render in `theme`. */
+export function themedUrl(url: string, theme: DemoTheme): string {
+	const themed = new URL(url);
+	themed.searchParams.set('theme', theme);
+	return themed.href;
+}
+
+/**
+ * Id of the snapshot for `page` in `theme`, which is also its filename stem.
+ * A themed page's dark snapshot gets a `-dark` suffix; every other snapshot,
+ * including any page's light one, uses the page id.
+ */
+export function snapshotId(page: DemoPage, theme: DemoTheme = 'light'): string {
+	return page.themed && theme === 'dark' ? `${page.id}-dark` : page.id;
+}
+
 /** Public URL of the captured fallback snapshot for a demo page. */
-export function snapshotPath(page: DemoPage): string {
-	return `/demos/${page.id}.html`;
+export function snapshotPath(page: DemoPage, theme: DemoTheme = 'light'): string {
+	return `/demos/${snapshotId(page, theme)}.html`;
+}
+
+/** One page the demo-snapshots integration captures. */
+export interface SnapshotCapture {
+	/** Snapshot id: the manifest key and the filename stem in public/demos/. */
+	id: string;
+	/** Live URL to capture. */
+	url: string;
+	/** The theme the capture must render in, for a themed page. */
+	theme?: DemoTheme;
+}
+
+/** Every snapshot to capture for `site`: one per page, two for a themed page. */
+export function snapshotCaptures(site: DemoSite): SnapshotCapture[] {
+	return site.pages.flatMap((page) => {
+		const url = demoUrl(site, page);
+		if (!page.themed) return [{ id: page.id, url }];
+		return (['light', 'dark'] as const).map((theme) => ({
+			id: snapshotId(page, theme),
+			url: themedUrl(url, theme),
+			theme,
+		}));
+	});
+}
+
+/**
+ * Returns `true` when a rendered page's root `<html>` carries the `dark`
+ * class, which is how a themed demo route renders `?theme=dark`.
+ */
+export function rendersDark(html: string): boolean {
+	const root = /<html\b[^>]*>/i.exec(html)?.[0] ?? '';
+	return /\sclass=["'][^"']*\bdark\b/i.test(root);
 }

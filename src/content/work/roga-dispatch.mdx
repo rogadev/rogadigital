@@ -46,6 +46,8 @@ This is the real application, rendered with sample data: the same components and
 <DemoFrame
 	src={demoUrl(site, board)}
 	snapshot={snapshotPath(board)}
+	snapshotDark={snapshotPath(board, 'dark')}
+	themed={board.themed}
 	label={board.label}
 	title="Roga Dispatch — the dispatcher's live board (desktop preview)"
 	href={publicUrl(site, board)}
@@ -71,6 +73,8 @@ Drivers don't get a shrunken desktop app. They get a phone screen that answers o
 		kind="phone"
 		src={demoUrl(site, driver)}
 		snapshot={snapshotPath(driver)}
+		snapshotDark={snapshotPath(driver, 'dark')}
+		themed={driver.themed}
 		title="Roga Dispatch — the driver app mid-shift (mobile preview)"
 		href={publicUrl(site, driver)}
 		hrefLabel="Open the Roga Dispatch live demo in a new tab"

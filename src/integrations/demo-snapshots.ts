@@ -7,6 +7,8 @@
  * same-origin assets (fonts, images) become data: URIs, and remaining
  * root-relative URLs are absolutized against the live origin. The result renders our own origin with zero requests
  * to the live site, so DemoFrame.astro can serve it when the live site is down.
+ * A themed page (one that accepts ?theme=) gets a light and a dark snapshot,
+ * listed by snapshotCaptures() in src/lib/demos.ts.
  *
  * Snapshots and public/demos/manifest.json are committed to git — that is the
  * "past snapshot" store. A snapshot younger than MAX_AGE_DAYS is left alone;
@@ -17,7 +19,7 @@ import type { AstroIntegration, AstroIntegrationLogger } from 'astro';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DEMO_SITES, demoUrl } from '../lib/demos';
+import { DEMO_SITES, rendersDark, snapshotCaptures } from '../lib/demos';
 import {
 	dataUriMimeType,
 	sanitizeSnapshotHtml,
@@ -55,30 +57,32 @@ async function refreshSnapshots(logger: AstroIntegrationLogger): Promise<void> {
 	let dirty = false;
 
 	for (const site of DEMO_SITES) {
-		for (const page of site.pages) {
-			const url = demoUrl(site, page);
-			const file = join(OUT_DIR, `${page.id}.html`);
-			const entry = manifest[page.id];
+		for (const { id, url, theme } of snapshotCaptures(site)) {
+			const file = join(OUT_DIR, `${id}.html`);
+			const entry = manifest[id];
 			const ageMs = entry ? Date.now() - Date.parse(entry.capturedAt) : Infinity;
 
 			if (entry && existsSync(file) && ageMs < MAX_AGE_DAYS * 86_400_000) {
-				logger.info(
-					`${page.id}: snapshot fresh (${Math.round(ageMs / 86_400_000)}d old), skipping`,
-				);
+				logger.info(`${id}: snapshot fresh (${Math.round(ageMs / 86_400_000)}d old), skipping`);
 				continue;
 			}
 
 			try {
 				// oxlint-disable-next-line no-await-in-loop -- capture pages one at a time to keep load on the live site gentle
 				const html = await archivePage(url, site.origin);
+				// A live site that predates ?theme= serves its light page; saving
+				// that as the dark snapshot would show light inside a dark site.
+				if (theme === 'dark' && !rendersDark(html)) {
+					throw new Error('the live page ignored ?theme=dark');
+				}
 				writeFileSync(file, html);
-				manifest[page.id] = { url, capturedAt: new Date().toISOString() };
+				manifest[id] = { url, capturedAt: new Date().toISOString() };
 				dirty = true;
-				logger.info(`${page.id}: captured (${Math.round(html.length / 1024)} KB)`);
+				logger.info(`${id}: captured (${Math.round(html.length / 1024)} KB)`);
 			} catch (err) {
 				const reason = err instanceof Error ? err.message : String(err);
 				const kept = existsSync(file) ? 'keeping existing snapshot' : 'no snapshot available';
-				logger.warn(`${page.id}: capture failed (${reason}) — ${kept}`);
+				logger.warn(`${id}: capture failed (${reason}) — ${kept}`);
 			}
 		}
 	}

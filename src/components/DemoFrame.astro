@@ -13,14 +13,26 @@
  * Without `href`, the embed is directly interactive. When a `snapshot` path is
  * given, a client-side reachability probe swaps the iframe to the local
  * snapshot (captured by src/integrations/demo-snapshots.ts) if the live site
- * is down.
+ * is down or answering with an error.
+ *
+ * With `themed` set, the frame follows the site's light or dark theme: the
+ * live URL carries `?theme=`, the snapshot switches to `snapshotDark` in dark
+ * mode, and both update when the visitor toggles the theme.
  */
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { themedUrl } from '../lib/demos';
+
 interface Props {
 	kind?: 'desktop' | 'phone';
 	/** URL of the live (embeddable) demo route. */
 	src: string;
 	/** Local fallback snapshot path, e.g. from snapshotPath() in src/lib/demos.ts. */
 	snapshot?: string;
+	/** The live route accepts `?theme=light|dark`; see DemoPage.themed in src/lib/demos.ts. */
+	themed?: boolean;
+	/** Dark-theme fallback snapshot path, e.g. snapshotPath(page, 'dark'). */
+	snapshotDark?: string;
 	/** Accessible iframe title. */
 	title: string;
 	/** Address shown in the browser-chrome bar (desktop frames only). */
@@ -38,6 +50,8 @@ const {
 	kind = 'desktop',
 	src,
 	snapshot,
+	themed = false,
+	snapshotDark,
 	title,
 	label,
 	href,
@@ -48,6 +62,15 @@ const {
 
 const native = kind === 'desktop' ? { w: 1280, h: 800 } : { w: 390, h: 780 };
 const chromeLabel = label ?? new URL(src).hostname;
+// The site renders dark until its head script finds a light preference, so the
+// markup asks for dark and the script below corrects it before the lazy load.
+const initialSrc = themed ? themedUrl(src, 'dark') : src;
+// A dark snapshot exists only once the live site has served ?theme=dark to a
+// capture; until then, dark mode falls back to the light snapshot.
+const darkSnapshot =
+	themed && snapshotDark && existsSync(join(process.cwd(), 'public', snapshotDark))
+		? snapshotDark
+		: undefined;
 ---
 
 <figure class:list={['demo-frame not-prose relative', className]} data-demo-frame>
@@ -80,11 +103,13 @@ const chromeLabel = label ?? new URL(src).hostname;
 			style={`aspect-ratio: ${native.w} / ${native.h}; --demo-native-w: ${native.w}px; --demo-native-h: ${native.h}px;`}
 		>
 			<iframe
-				src={src}
+				src={initialSrc}
 				title={title}
 				loading="lazy"
 				data-live-src={src}
 				data-snapshot-src={snapshot}
+				data-snapshot-dark-src={darkSnapshot}
+				data-themed={themed ? '' : undefined}
 				width={native.w}
 				height={native.h}
 				inert={href ? true : undefined}
@@ -155,6 +180,8 @@ const chromeLabel = label ?? new URL(src).hostname;
 </style>
 
 <script>
+	import { themedUrl, type DemoTheme } from '../lib/demos';
+
 	// Reachability probe, one per unique live URL. The demo sites let this origin
 	// read their demo responses (CORS), so a 404 or 500 counts as down, not only
 	// a network failure. When the CORS read itself fails, an opaque no-cors probe
@@ -185,18 +212,52 @@ const chromeLabel = label ?? new URL(src).hostname;
 		return result;
 	};
 
-	for (const iframe of document.querySelectorAll<HTMLIFrameElement>('iframe[data-snapshot-src]')) {
+	const siteTheme = (): DemoTheme =>
+		document.documentElement.classList.contains('light') ? 'light' : 'dark';
+
+	/** The URL a frame should show for the current site theme. */
+	const frameSrc = (iframe: HTMLIFrameElement, theme: DemoTheme): string | undefined => {
+		const { liveSrc, snapshotSrc, snapshotDarkSrc } = iframe.dataset;
+		const themed = iframe.dataset.themed !== undefined;
+		if (iframe.dataset.showing === 'snapshot') {
+			return themed && theme === 'dark' ? (snapshotDarkSrc ?? snapshotSrc) : snapshotSrc;
+		}
+		return liveSrc && themed ? themedUrl(liveSrc, theme) : liveSrc;
+	};
+
+	const show = (iframe: HTMLIFrameElement, theme: DemoTheme) => {
+		const next = frameSrc(iframe, theme);
+		// Reassigning an unchanged src would reload the frame for nothing.
+		if (next && iframe.src !== new URL(next, location.href).href) iframe.src = next;
+	};
+
+	const frames = [...document.querySelectorAll<HTMLIFrameElement>('iframe[data-live-src]')];
+	let theme = siteTheme();
+	for (const iframe of frames) {
+		if (iframe.dataset.themed !== undefined) show(iframe, theme);
 		const live = iframe.dataset.liveSrc;
-		const snapshot = iframe.dataset.snapshotSrc;
-		if (!live || !snapshot) continue;
+		if (!live || !iframe.dataset.snapshotSrc) continue;
 		void isUp(live).then((up) => {
 			if (up) return;
 			// Snapshots are served from our own origin, so an empty sandbox (no
 			// scripts, unique origin) keeps captured third-party HTML from acting
 			// as rogadigital.com. Set before src so the first load is sandboxed.
 			iframe.setAttribute('sandbox', '');
-			iframe.src = snapshot;
+			iframe.dataset.showing = 'snapshot';
+			show(iframe, siteTheme());
 			iframe.closest('[data-demo-frame]')?.classList.add('is-snapshot');
 		});
+	}
+
+	// The theme toggle flips html.light; other class changes (the cross-fade)
+	// leave the theme alone and are skipped.
+	const themedFrames = frames.filter((iframe) => iframe.dataset.themed !== undefined);
+	if (themedFrames.length > 0) {
+		new MutationObserver(() => {
+			const next = siteTheme();
+			if (next === theme) return;
+			theme = next;
+			for (const iframe of themedFrames) show(iframe, theme);
+		}).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 	}
 </script>
