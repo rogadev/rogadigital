@@ -12,6 +12,7 @@ import blobbiesMotion from '../assets/tools/blobbies.svg';
 import campcastShot from '../assets/tools/campcast.png';
 import converterShot from '../assets/tools/converter.png';
 import glanceShot from '../assets/tools/glance/four.png';
+import openaiImageMcpShot from '../assets/tools/openai-image-mcp.png';
 import orcPackShot from '../assets/tools/orc-pack.png';
 import pacelineShot from '../assets/tools/paceline.png';
 import passwordsShot from '../assets/tools/passwords.png';
@@ -84,6 +85,15 @@ export const TOOLS: Tool[] = [
 		description:
 			'Works your GitHub issues end to end in one Claude Code session, then a bench of specialist reviewers checks the result. 23% cheaper and 37% faster per issue than 1.x.',
 		image: orcPackShot,
+	},
+	{
+		name: 'openai-image-mcp',
+		kind: 'mod',
+		tag: 'MCP server',
+		description:
+			"Lets Claude Code and Claude Desktop generate and edit images with OpenAI's Image API on your own key. It runs on your computer, saves each image at full size, and shows a preview in the chat.",
+		image: openaiImageMcpShot,
+		unreleased: true,
 	},
 	{
 		name: 'Claude Blobbies',
