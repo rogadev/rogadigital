@@ -43,8 +43,8 @@ export interface Tool {
 	/** The dark capture, for a tool that has both themes. The card shows the one matching the site theme. */
 	imageDark?: ImageMetadata;
 	/**
-	 * An animated version of `image`. The card plays it only while hovered, and only for
-	 * visitors who allow motion, so nothing on the page moves on its own.
+	 * An animated version of `image`, starting on the same frame. The card plays it on a loop
+	 * for visitors who allow motion; visitors who ask for reduced motion see `image` instead.
 	 */
 	imageMotion?: ImageMetadata;
 	/** True while the tool is unreleased: no public repository or download yet. */
