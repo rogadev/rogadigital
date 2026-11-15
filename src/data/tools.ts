@@ -91,10 +91,10 @@ export const TOOLS: Tool[] = [
 		kind: 'mod',
 		tag: 'Claude Code MCP server',
 		href: '/tools/openai-image-mcp/',
+		repo: 'https://github.com/rogadev/openai-image-mcp',
 		description:
 			"Lets Claude Code and Claude Desktop generate and edit images with OpenAI's Image API on your own key. It runs on your computer, saves each image at full size, and shows a preview in the chat.",
 		image: openaiImageMcpShot,
-		unreleased: true,
 	},
 	{
 		name: 'Claude Blobbies',

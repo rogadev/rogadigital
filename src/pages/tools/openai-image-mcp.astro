@@ -79,16 +79,22 @@ const safety = [
 					Code and Claude Desktop two new tools that generate and edit images with OpenAI&rsquo;s
 					Image API, on your own key, from a small server that runs on your computer.
 				</p>
-				<div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+				<div class="mt-8 flex flex-wrap items-center gap-3">
 					<a
-						href="#how"
-						class="inline-flex min-h-11 items-center rounded-md bg-fg px-4 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+						href={tool.repo}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 text-sm font-medium text-bg transition-opacity hover:opacity-90"
 					>
-						See how it works
+						View on GitHub <span aria-hidden="true">↗</span>
+						<span class="sr-only">(opens in a new tab)</span>
 					</a>
-					<p class="font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
-						Private while I finish it
-					</p>
+					<a
+						href="#install"
+						class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-sm font-medium text-fg transition-colors hover:border-border-strong hover:bg-bg-elevated"
+					>
+						Install it
+					</a>
 				</div>
 			</div>
 		</div>
@@ -195,6 +201,59 @@ const safety = [
 				OpenAI asks for Organization Verification before its image models will answer. A
 				project-scoped key with a monthly spending limit is a good fit, so a runaway session can
 				never cost more than you planned.
+			</p>
+		</div>
+	</section>
+
+	<!-- Install -->
+	<section id="install" class="border-t border-border" aria-labelledby="install-heading">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="install-heading" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				Install it
+			</h2>
+			<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+				These steps are for Windows, and they need{' '}
+				<a
+					href="https://docs.astral.sh/uv/"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-fg underline underline-offset-4 hover:no-underline"
+				>
+					uv<span class="sr-only"> (opens in a new tab)</span>
+				</a>
+				. Clone the repository, install it, and store your key at a hidden prompt:
+			</p>
+			<pre
+				class="mt-6 max-w-2xl overflow-x-auto rounded-sm border border-border bg-bg-soft p-4 font-mono text-xs leading-relaxed"
+				tabindex="0"
+				role="region"
+				aria-label="Install commands"
+			><code>git clone {tool.repo}
+cd openai-image-mcp
+uv sync
+uv run store_key.py</code></pre>
+			<p class="mt-6 max-w-2xl text-fg-muted text-pretty">
+				Then register it with Claude Code, for every project, using the full path to your clone:
+			</p>
+			<pre
+				class="mt-6 max-w-2xl overflow-x-auto rounded-sm border border-border bg-bg-soft p-4 font-mono text-xs leading-relaxed"
+				tabindex="0"
+				role="region"
+				aria-label="Register with Claude Code"
+			><code>claude mcp add --scope user --transport stdio openai-images -- "&lt;clone&gt;\.venv\Scripts\openai-image-mcp.exe"</code></pre>
+			<p class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
+				For Claude Desktop, add the same path under{' '}
+				<code class="font-mono text-fg">mcpServers</code> in its config file, then quit it from the
+				system tray and reopen it. The{' '}
+				<a
+					href={`${tool.repo}#readme`}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-fg underline underline-offset-4 hover:no-underline"
+				>
+					README<span class="sr-only"> (opens in a new tab)</span>
+				</a>{' '}
+				has the exact entry, and how to check that both apps can see the server.
 			</p>
 		</div>
 	</section>
