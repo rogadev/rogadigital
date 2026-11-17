@@ -12,6 +12,7 @@ import blobbiesMotion from '../assets/tools/blobbies.svg';
 import campcastShot from '../assets/tools/campcast.png';
 import converterShot from '../assets/tools/converter.png';
 import glanceShot from '../assets/tools/glance/four.png';
+import openaiImageMcpShot from '../assets/tools/openai-image-mcp.png';
 import orcPackShot from '../assets/tools/orc-pack.png';
 import pacelineShot from '../assets/tools/paceline.png';
 import passwordsShot from '../assets/tools/passwords.png';
@@ -42,8 +43,8 @@ export interface Tool {
 	/** The dark capture, for a tool that has both themes. The card shows the one matching the site theme. */
 	imageDark?: ImageMetadata;
 	/**
-	 * An animated version of `image`. The card plays it only while hovered, and only for
-	 * visitors who allow motion, so nothing on the page moves on its own.
+	 * An animated version of `image`, starting on the same frame. The card plays it on a loop
+	 * for visitors who allow motion; visitors who ask for reduced motion see `image` instead.
 	 */
 	imageMotion?: ImageMetadata;
 	/** True while the tool is unreleased: no public repository or download yet. */
@@ -84,6 +85,16 @@ export const TOOLS: Tool[] = [
 		description:
 			'Works your GitHub issues end to end in one Claude Code session, then a bench of specialist reviewers checks the result. 23% cheaper and 37% faster per issue than 1.x.',
 		image: orcPackShot,
+	},
+	{
+		name: 'openai-image-mcp',
+		kind: 'mod',
+		tag: 'Claude Code MCP server',
+		href: '/tools/openai-image-mcp/',
+		repo: 'https://github.com/rogadev/openai-image-mcp',
+		description:
+			"Lets Claude Code and Claude Desktop generate and edit images with OpenAI's Image API on your own key. It runs on your computer, saves each image at full size, and shows a preview in the chat.",
+		image: openaiImageMcpShot,
 	},
 	{
 		name: 'Claude Blobbies',

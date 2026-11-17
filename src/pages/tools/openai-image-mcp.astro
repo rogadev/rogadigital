@@ -1,0 +1,284 @@
+---
+import { Image } from 'astro:assets';
+import ArrowIcon from '../../components/ArrowIcon.astro';
+import Base from '../../layouts/Base.astro';
+import { TOOLS } from '../../data/tools';
+
+const tool = TOOLS.find((t) => t.name === 'openai-image-mcp')!;
+
+const title = 'openai-image-mcp · Tools · Roga Digital';
+const description =
+	"openai-image-mcp is a local MCP server that lets Claude Code and Claude Desktop generate and edit images with OpenAI's Image API, on your own key.";
+
+const steps = [
+	{
+		name: 'You ask Claude',
+		body: 'In Claude Code or Claude Desktop, ask for an image in plain words. Claude picks the tool and writes the prompt.',
+	},
+	{
+		name: 'The server runs on your computer',
+		body: 'Each Claude app starts the server when it needs it. You never start it yourself, and nothing is hosted online.',
+	},
+	{
+		name: 'OpenAI draws it',
+		body: 'The server reads your key and sends the request to api.openai.com, the only address it talks to.',
+	},
+	{
+		name: 'The image comes back two ways',
+		body: 'The full-size file is saved to Pictures/Claude Images. A smaller preview and the saved path appear in the chat.',
+	},
+];
+
+const tools = [
+	{
+		name: 'generate_image',
+		body: 'Creates one to four images from a text prompt.',
+	},
+	{
+		name: 'edit_image',
+		body: 'Edits images on your computer, or combines several as references, with an optional mask. Ask for a change and Claude edits the latest version, saved as -v2, -v3, and so on, so an earlier one is always there to go back to.',
+	},
+];
+
+const options = [
+	{ name: 'size', example: 'auto, 1024x1024, 1536x1024', body: 'Square, landscape, or portrait.' },
+	{ name: 'quality', example: 'low to max', body: 'Low is fast and cheap for drafts.' },
+	{
+		name: 'background',
+		example: 'auto, transparent, opaque',
+		body: 'Transparent needs PNG or WebP.',
+	},
+	{ name: 'output_format', example: 'png, jpeg, webp', body: 'The format of the saved file.' },
+	{ name: 'n', example: '1 to 4', body: 'How many images. Each one is billed.' },
+];
+
+const safety = [
+	'Your key lives in Windows Credential Manager, never in a config file. A changed key takes effect on the next image.',
+	'The server talks only to api.openai.com. There is no account, no hosted service, and no telemetry.',
+	'Saved images are named by date, time, and prompt, and an existing file is never overwritten.',
+	'The tests never call OpenAI or read your stored key.',
+];
+---
+
+<Base {title} {description} ogPath="/og/tools.png">
+	<!-- Hero -->
+	<section class="border-b border-border">
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<div class="pt-20 pb-16 sm:pt-28 sm:pb-20">
+				<a
+					href="/tools/"
+					class="inline-flex min-h-11 items-center gap-1.5 font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors hover:text-fg"
+				>
+					<ArrowIcon direction="left" /> Tools
+				</a>
+				<h1 class="mt-4 max-w-3xl font-mono text-4xl font-medium tracking-tight break-words sm:text-5xl">
+					{tool.name}
+				</h1>
+				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
+					Claude can describe an image, but it can&rsquo;t draw one. openai-image-mcp gives Claude
+					Code and Claude Desktop two new tools that generate and edit images with OpenAI&rsquo;s
+					Image API, on your own key, from a small server that runs on your computer.
+				</p>
+				<div class="mt-8 flex flex-wrap items-center gap-3">
+					<a
+						href={tool.repo}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+					>
+						View on GitHub <span aria-hidden="true">↗</span>
+						<span class="sr-only">(opens in a new tab)</span>
+					</a>
+					<a
+						href="#install"
+						class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-sm font-medium text-fg transition-colors hover:border-border-strong hover:bg-bg-elevated"
+					>
+						Install it
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- How it works -->
+	<section class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="how">
+		<h2 id="how" class="max-w-3xl text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+			From a prompt to a file on your computer
+		</h2>
+		<p class="mt-4 mb-10 max-w-2xl text-fg-muted text-pretty">
+			The dog below came from this server. Here is the path the request took.
+		</p>
+		<figure>
+			<Image
+				src={tool.image!}
+				alt="A prompt for a dog on a misty beach goes from Claude Code or Claude Desktop to openai-image-mcp on your computer, then to api.openai.com. The result, a golden retriever on a mossy rock at sunset, is saved full size to Pictures/Claude Images, with a preview shown in the chat."
+				widths={[640, 1280, 1920]}
+				sizes="(min-width: 1280px) 1216px, 100vw"
+				class="h-auto w-full max-w-full rounded-lg border border-border"
+			/>
+		</figure>
+		<ol class="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+			{steps.map((s, i) => (
+				<li>
+					<p class="font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase tabular-nums">
+						Step {i + 1}
+					</p>
+					<h3 class="mt-2 font-medium">{s.name}</h3>
+					<p class="mt-2 text-sm text-fg-muted text-pretty">{s.body}</p>
+				</li>
+			))}
+		</ol>
+	</section>
+
+	<!-- Tools and options -->
+	<section class="border-t border-border" aria-labelledby="tools">
+		<div class="mx-auto grid w-full max-w-page gap-10 px-6 py-16 sm:px-8 sm:py-20 lg:grid-cols-[2fr_3fr]">
+			<div>
+				<h2 id="tools" class="text-2xl font-medium tracking-tight sm:text-3xl">
+					Two tools
+				</h2>
+				<p class="mt-4 text-fg-muted text-pretty">
+					Claude chooses between them on its own: a new picture is a generate, and &ldquo;make the
+					dog black&rdquo; on one it already made is an edit. Both take the same options, so you can
+					ask for a size, a transparent background, or a quick low-quality draft in plain words.
+				</p>
+				<ul class="mt-8 space-y-6">
+					{tools.map((t) => (
+						<li>
+							<code class="font-mono text-sm text-fg">{t.name}</code>
+							<p class="mt-1 text-sm text-fg-muted text-pretty">{t.body}</p>
+						</li>
+					))}
+				</ul>
+			</div>
+			<dl class="divide-y divide-border self-start border-y border-border">
+				{options.map((o) => (
+					<div class="grid gap-1 py-4 sm:grid-cols-[8rem_1fr] sm:gap-6">
+						<dt class="font-mono text-sm font-medium">{o.name}</dt>
+						<dd class="min-w-0">
+							<code class="font-mono text-xs break-words text-fg">{o.example}</code>
+							<p class="mt-1 text-sm text-fg-muted text-pretty">{o.body}</p>
+						</dd>
+					</div>
+				))}
+			</dl>
+		</div>
+	</section>
+
+	<!-- Local by design -->
+	<section class="border-t border-border" aria-labelledby="safety">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="safety" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				Local by design
+			</h2>
+			<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+				An API key that can spend money deserves care. The server keeps it out of config files and
+				sends it nowhere but OpenAI.
+			</p>
+			<ul class="mt-8 grid gap-4 sm:grid-cols-2">
+				{safety.map((item) => (
+					<li class="rounded-lg border border-border bg-bg-soft p-6 text-sm text-fg-muted text-pretty">
+						{item}
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<!-- Cost -->
+	<section class="border-t border-border" aria-labelledby="cost">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="cost" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				What it costs
+			</h2>
+			<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+				It runs on an OpenAI API key, not a ChatGPT subscription, and each image is billed to that
+				account: from a few cents to tens of cents, depending on size and quality. A detailed image
+				can take up to two minutes, so ask for low quality while you&rsquo;re still deciding what
+				you want.
+			</p>
+			<p class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
+				OpenAI asks for Organization Verification before its image models will answer. A
+				project-scoped key with a monthly spending limit is a good fit, so a runaway session can
+				never cost more than you planned.
+			</p>
+		</div>
+	</section>
+
+	<!-- Install -->
+	<section id="install" class="border-t border-border" aria-labelledby="install-heading">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="install-heading" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				Install it
+			</h2>
+			<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+				These steps are for Windows, and they need{' '}
+				<a
+					href="https://docs.astral.sh/uv/"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-fg underline underline-offset-4 hover:no-underline"
+				>
+					uv<span class="sr-only"> (opens in a new tab)</span>
+				</a>
+				. Clone the repository, install it, and store your key at a hidden prompt:
+			</p>
+			<pre
+				class="mt-6 max-w-2xl overflow-x-auto rounded-sm border border-border bg-bg-soft p-4 font-mono text-xs leading-relaxed"
+				tabindex="0"
+				role="region"
+				aria-label="Install commands"
+			><code>git clone {tool.repo}
+cd openai-image-mcp
+uv sync
+uv run store_key.py</code></pre>
+			<p class="mt-6 max-w-2xl text-fg-muted text-pretty">
+				Then register it with Claude Code, for every project, using the full path to your clone:
+			</p>
+			<pre
+				class="mt-6 max-w-2xl overflow-x-auto rounded-sm border border-border bg-bg-soft p-4 font-mono text-xs leading-relaxed"
+				tabindex="0"
+				role="region"
+				aria-label="Register with Claude Code"
+			><code>claude mcp add --scope user --transport stdio openai-images -- "&lt;clone&gt;\.venv\Scripts\openai-image-mcp.exe"</code></pre>
+			<p class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
+				For Claude Desktop, add the same path under{' '}
+				<code class="font-mono text-fg">mcpServers</code> in its config file, then quit it from the
+				system tray and reopen it. The{' '}
+				<a
+					href={`${tool.repo}#readme`}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-fg underline underline-offset-4 hover:no-underline"
+				>
+					README<span class="sr-only"> (opens in a new tab)</span>
+				</a>{' '}
+				has the exact entry, and how to check that both apps can see the server.
+			</p>
+		</div>
+	</section>
+
+	<!-- End CTA -->
+	<section class="border-t border-border bg-bg-soft">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<div class="grid gap-6 lg:grid-cols-12 lg:items-center">
+				<div class="lg:col-span-8">
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase">
+						Want tooling like this for your team?
+					</p>
+					<h2 class="mt-3 text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+						Let&rsquo;s talk about it.
+					</h2>
+				</div>
+				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
+					<a
+						href="/contact/"
+						class="inline-flex items-center gap-2 rounded-md bg-fg px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+					>
+						Get in touch
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</Base>

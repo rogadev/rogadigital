@@ -23,15 +23,16 @@
 		open = false;
 	}
 
+	function onKey(e: KeyboardEvent) {
+		if (e.key === 'Escape') close();
+	}
+
 	$effect(() => {
 		if (typeof document === 'undefined') return;
 		document.body.style.overflow = open ? 'hidden' : '';
 	});
 
 	onMount(() => {
-		const onKey = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') close();
-		};
 		window.addEventListener('keydown', onKey);
 		return () => window.removeEventListener('keydown', onKey);
 	});
