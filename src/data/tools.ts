@@ -114,6 +114,7 @@ export const TOOLS: Tool[] = [
 		name: 'stp',
 		kind: 'app',
 		tag: 'Windows · macOS · Linux',
+		href: '/tools/stp/',
 		description:
 			"Speech To Prompt. Push-to-talk dictation that works in any desktop app. It transcribes on your own computer and pastes the text where you're typing, as spoken or cleaned up.",
 		image: stpShot,
@@ -124,6 +125,7 @@ export const TOOLS: Tool[] = [
 		name: 'Launchpad',
 		kind: 'app',
 		tag: 'Windows',
+		href: '/tools/launchpad/',
 		description:
 			'A Windows tray app that opens Claude Code sessions for your projects from one grid of tiles, in place of a desktop full of shortcuts.',
 		image: launchpadShot,
