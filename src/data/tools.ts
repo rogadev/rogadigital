@@ -12,10 +12,14 @@ import blobbiesMotion from '../assets/tools/blobbies.svg';
 import campcastShot from '../assets/tools/campcast.png';
 import converterShot from '../assets/tools/converter.png';
 import glanceShot from '../assets/tools/glance/four.png';
+import launchpadShot from '../assets/tools/launchpad.png';
+import launchpadShotDark from '../assets/tools/launchpad-dark.png';
 import openaiImageMcpShot from '../assets/tools/openai-image-mcp.png';
 import orcPackShot from '../assets/tools/orc-pack.png';
 import pacelineShot from '../assets/tools/paceline.png';
 import passwordsShot from '../assets/tools/passwords.png';
+import stpShot from '../assets/tools/stp.png';
+import stpShotDark from '../assets/tools/stp-dark.png';
 
 /**
  * `mod`: something that changes Claude Code (a mod, plugin, or skill pack).
@@ -110,16 +114,22 @@ export const TOOLS: Tool[] = [
 		name: 'stp',
 		kind: 'app',
 		tag: 'Windows · macOS · Linux',
+		href: '/tools/stp/',
 		description:
 			"Speech To Prompt. Push-to-talk dictation that works in any desktop app. It transcribes on your own computer and pastes the text where you're typing, as spoken or cleaned up.",
+		image: stpShot,
+		imageDark: stpShotDark,
 		unreleased: true,
 	},
 	{
 		name: 'Launchpad',
 		kind: 'app',
 		tag: 'Windows',
+		href: '/tools/launchpad/',
 		description:
 			'A Windows tray app that opens Claude Code sessions for your projects from one grid of tiles, in place of a desktop full of shortcuts.',
+		image: launchpadShot,
+		imageDark: launchpadShotDark,
 		unreleased: true,
 	},
 	{

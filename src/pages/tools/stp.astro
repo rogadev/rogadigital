@@ -1,0 +1,176 @@
+---
+import ArrowIcon from '../../components/ArrowIcon.astro';
+import ThemedImage from '../../components/ThemedImage.astro';
+import Base from '../../layouts/Base.astro';
+import { TOOLS } from '../../data/tools';
+
+const tool = TOOLS.find((t) => t.name === 'stp')!;
+
+const title = 'stp · Tools · Roga Digital';
+const description =
+	'stp (Speech To Prompt) is push-to-talk dictation for Windows, macOS, and Linux. It transcribes on your own computer and pastes your words as said, cleaned up, or written up as a prompt for a coding agent.';
+
+const modes = [
+	{
+		name: 'Raw',
+		status: 'Works today',
+		body: 'Exactly what you said, as Whisper transcribed it.',
+	},
+	{
+		name: 'Clean',
+		status: 'Works today',
+		body: 'What you said, rewritten as concise, clear text by Claude or OpenAI. Your corrections are applied and filler goes; names, numbers, and requests stay.',
+	},
+	{
+		name: 'Prompt',
+		status: 'Next',
+		body: 'What you said, written up as a prompt for a coding agent. A small change stays a sentence or two; bigger work gets a goal, context, and a way to check the result.',
+	},
+	{
+		name: 'Auto',
+		status: 'Planned',
+		body: 'Picks Raw, Clean, or Prompt for you, one dictation at a time.',
+	},
+];
+
+const privacy = [
+	'whisper.cpp transcribes on your own computer. Your audio never leaves it.',
+	'Only Clean sends text anywhere, and only to the provider you chose: Anthropic or OpenAI.',
+	'Dictated text is never written to disk. The activity log lives in memory and is gone when stp quits.',
+	"API keys go in your system's credential store, never in a file.",
+];
+---
+
+<Base {title} {description} ogPath="/og/tools.png">
+	<!-- Hero -->
+	<section class="border-b border-border">
+		<div class="mx-auto w-full max-w-page px-6 sm:px-8">
+			<div class="pt-20 pb-16 sm:pt-28 sm:pb-20">
+				<a
+					href="/tools/"
+					class="inline-flex min-h-11 items-center gap-1.5 font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase transition-colors hover:text-fg"
+				>
+					<ArrowIcon direction="left" /> Tools
+				</a>
+				<h1 class="mt-4 max-w-3xl font-mono text-4xl font-medium tracking-tight sm:text-5xl">
+					{tool.name}
+				</h1>
+				<p class="mt-6 max-w-2xl text-lg text-fg-muted text-pretty">
+					Speech To Prompt. Press a key, talk, and press it again: stp transcribes what you said on
+					your own computer and pastes it wherever you&rsquo;re typing, in any app. The key you
+					press decides what gets pasted: your words as you said them, a cleaned-up version, or a
+					prompt for your coding agent.
+				</p>
+				<div class="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3">
+					<span class="rounded-sm border border-border bg-bg-soft px-3 py-1.5 font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+						Not released yet
+					</span>
+					<p class="text-sm text-fg-muted">Raw and Clean work today. Prompt mode is next.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- The flow -->
+	<section class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="flow">
+		<h2 id="flow" class="max-w-3xl text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+			One dictation, three results
+		</h2>
+		<p class="mt-4 mb-10 max-w-2xl text-fg-muted text-pretty">
+			There&rsquo;s no window to watch while you talk, only a small overlay near the bottom of the
+			screen that never takes the focus, so the paste lands where you were typing. Here is one
+			ramble through each key, with the overlay as it listens and as it works.
+		</p>
+		<figure>
+			<ThemedImage
+				src={tool.image!}
+				darkSrc={tool.imageDark}
+				alt="One spoken sentence with an um, a correction, and the word dev goes three ways. The Raw key pastes it as said, without the um and with dev in backticks. The Clean key pastes a concise version with the correction applied. The Prompt key pastes a short prompt with a goal, context, and a done-when line. Each lane shows the overlay: a coloured listening dot with a volume meter, then a dot for each step with a progress bar."
+				widths={[640, 1280, 1920]}
+				sizes="(min-width: 1280px) 1216px, 100vw"
+				class="block h-auto w-full max-w-full rounded-lg border border-border"
+			/>
+			<figcaption class="mt-4 max-w-2xl text-sm text-fg-muted text-pretty">
+				The flow comes from Dictate, the Windows-only version I use every day, which stp grows out
+				of. Raw&rsquo;s tidying of ums and code terms and the Prompt mode are still on their way to
+				stp.
+			</figcaption>
+		</figure>
+	</section>
+
+	<!-- Modes -->
+	<section class="border-t border-border" aria-labelledby="modes">
+		<div class="mx-auto grid w-full max-w-page gap-10 px-6 py-16 sm:px-8 sm:py-20 lg:grid-cols-[2fr_3fr]">
+			<div>
+				<h2 id="modes" class="text-2xl font-medium tracking-tight sm:text-3xl">
+					A key for each mode
+				</h2>
+				<p class="mt-4 text-fg-muted text-pretty">
+					Press a mode&rsquo;s key to start and either key to stop. Esc throws the recording away.
+					If a rewrite fails, stp pastes the plain transcript, so you never lose a dictation.
+				</p>
+				<p class="mt-4 text-sm text-fg-muted text-pretty">
+					Teach it your words: list names and terms so Whisper expects them, and add corrections for
+					the ones it still gets wrong, such as &ldquo;post gress&rdquo; to Postgres.
+				</p>
+			</div>
+			<dl class="divide-y divide-border self-start border-y border-border">
+				{modes.map((m) => (
+					<div class="grid gap-1 py-4 sm:grid-cols-[8rem_1fr] sm:gap-6">
+						<dt>
+							<span class="font-mono text-sm font-medium">{m.name}</span>
+							<span class="mt-1 block font-mono text-2xs tracking-[0.16em] text-fg-subtle uppercase">
+								{m.status}
+							</span>
+						</dt>
+						<dd class="min-w-0 text-sm text-fg-muted text-pretty">{m.body}</dd>
+					</div>
+				))}
+			</dl>
+		</div>
+	</section>
+
+	<!-- Privacy -->
+	<section class="border-t border-border" aria-labelledby="privacy">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<h2 id="privacy" class="text-2xl font-medium tracking-tight sm:text-3xl">
+				Your voice stays on your computer
+			</h2>
+			<p class="mt-4 max-w-2xl text-fg-muted text-pretty">
+				stp runs on Windows, macOS, and Linux. On Linux it needs X11 for now, because Wayland
+				doesn&rsquo;t let apps listen for global hotkeys.
+			</p>
+			<ul class="mt-8 grid gap-4 sm:grid-cols-2" role="list">
+				{privacy.map((item) => (
+					<li class="rounded-lg border border-border bg-bg-soft p-6 text-sm text-fg-muted text-pretty">
+						{item}
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<!-- End CTA -->
+	<section class="border-t border-border bg-bg-soft">
+		<div class="mx-auto w-full max-w-page px-6 py-16 sm:px-8 sm:py-20">
+			<div class="grid gap-6 lg:grid-cols-12 lg:items-center">
+				<div class="lg:col-span-8">
+					<p class="font-mono text-2xs tracking-[0.18em] text-fg-muted uppercase">
+						Want tooling like this for your team?
+					</p>
+					<h2 class="mt-3 text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+						Let&rsquo;s talk about it.
+					</h2>
+				</div>
+				<div class="flex flex-wrap items-center gap-3 lg:col-span-4 lg:justify-end">
+					<a
+						href="/contact/"
+						class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+					>
+						Get in touch
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</Base>
